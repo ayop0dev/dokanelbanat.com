@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fff5fb"/>
+      <stop offset="100%" stop-color="#ffe5f4"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="500" fill="url(#g)"/>
+  <text x="200" y="250" text-anchor="middle" font-family="Rubik, sans-serif" font-size="18" fill="#9e8e99">صورة ١</text>
+</svg>

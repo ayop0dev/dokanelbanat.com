@@ -1,0 +1,248 @@
+/**
+ * dokanelbanat Design System — CSS Custom Properties (Tokens)
+ * Light mode only. RTL-first.
+ * Drop this into the static landing page or any sub-project.
+ */
+
+:root {
+  /* ═══════════════════════════════════════════════════════════════
+     1. BRAND COLORS (Locked — Do Not Change)
+     ═══════════════════════════════════════════════════════════════ */
+  --color-primary:         #ff009f;
+  --color-secondary:       #ff2d55;
+  --color-orange:          #ff6b4a;
+  --color-yellow:          #ffbe3d;
+  --color-green:           #3db5aa;
+  --color-light:           #fff5fb; /* Canvas */
+  --color-border-brand:    #ffbfe8;
+  --color-primary-dark:    #cc007f;
+  --color-primary-light:   #ff66c4;
+  --color-green-dark:      #2a9088;
+
+  /* ═══════════════════════════════════════════════════════════════
+     2. SEMANTIC COLOR TOKENS
+     ═══════════════════════════════════════════════════════════════ */
+  --color-bg-base:         #ffffff;
+  --color-bg-canvas:       var(--color-light);
+  --color-bg-surface:      #ffffff;
+  --color-bg-surface-raised: #ffffff;
+  --color-bg-inverse:      #1a0512;
+
+  --color-text-primary:    #1a0512;
+  --color-text-secondary:  #6b5b66;
+  --color-text-muted:      #9e8e99;
+  --color-text-inverse:    #ffffff;
+  --color-text-on-primary: #ffffff;
+
+  --color-border-default:  #f0dce8;
+  --color-border-strong:   var(--color-border-brand);
+
+  --color-accent:          var(--color-primary);
+  --color-accent-hover:    var(--color-primary-dark);
+  --color-accent-light:    var(--color-primary-light);
+
+  --color-success:         var(--color-green);
+  --color-success-dark:    var(--color-green-dark);
+  --color-warning:         var(--color-yellow);
+  --color-danger:          var(--color-secondary);
+  --color-info:            var(--color-orange);
+
+  /* ═══════════════════════════════════════════════════════════════
+     3. OPACITY SCALE
+     ═══════════════════════════════════════════════════════════════ */
+  --opacity-4:   0.04;
+  --opacity-8:   0.08;
+  --opacity-16:  0.16;
+  --opacity-32:  0.32;
+  --opacity-48:  0.48;
+  --opacity-64:  0.64;
+  --opacity-80:  0.80;
+
+  /* ═══════════════════════════════════════════════════════════════
+     4. TYPOGRAPHY SCALE — ARABIC
+     Headlines & buttons: MarkaziText | Body: Rubik
+     ═══════════════════════════════════════════════════════════════ */
+  --font-headline: 'MarkaziText', 'Noto Naskh Arabic', 'Tahoma', serif;
+  --font-body:     'Rubik', 'Segoe UI', 'Helvetica Neue', sans-serif;
+
+  --type-ar-display:   600 clamp(2.8rem, 7vw, 5.6rem)/1.05 var(--font-headline);
+  --type-ar-h1:        700 clamp(2.9575rem,8.281vw,6.654375rem)/1.1 var(--font-headline);
+  --type-ar-h2:        600 clamp(1.4rem,3.85vw,3.0625rem)/1.15 var(--font-headline);
+  --type-ar-h3:        600 clamp(1.225rem,3.15vw,2.625rem)/1.2 var(--font-headline);
+  --type-ar-h4:        600 clamp(0.875rem,2.1vw,1.75rem)/1.25 var(--font-headline);
+  --type-ar-h5:        600 clamp(0.7rem,1.54vw,1.3125rem)/1.3 var(--font-headline);
+  --type-ar-h6:        600 clamp(0.6125rem,1.26vw,1.1375rem)/1.35 var(--font-headline);
+  --type-ar-body-lg:   400 1.125rem/1.8 var(--font-body);
+  --type-ar-body:      400 1rem/1.8 var(--font-body);
+  --type-ar-body-sm:   400 0.875rem/1.7 var(--font-body);
+  --type-ar-caption:   400 0.75rem/1.6 var(--font-body);
+  --type-ar-label:     500 0.9375rem/1.4 var(--font-headline);
+  --type-ar-button:    500 1rem/1.2 var(--font-headline);
+  --type-ar-mono:      400 0.6125rem/1.5 'Courier New', monospace;
+
+  --letter-spacing-ar-display: 0;
+  --letter-spacing-ar-h1:      0;
+  --letter-spacing-ar-h2:      0;
+  --letter-spacing-ar-h3:      0;
+  --letter-spacing-ar-h4:      0;
+  --letter-spacing-ar-h5:      0.01em;
+  --letter-spacing-ar-h6:      0.01em;
+  --letter-spacing-ar-body-lg: 0;
+  --letter-spacing-ar-body:    0;
+  --letter-spacing-ar-body-sm: 0;
+  --letter-spacing-ar-caption: 0.02em;
+  --letter-spacing-ar-label:   0.04em;
+  --letter-spacing-ar-button:  0.02em;
+
+  /* ═══════════════════════════════════════════════════════════════
+     5. TYPOGRAPHY SCALE — ENGLISH (Rubik)
+     ═══════════════════════════════════════════════════════════════ */
+  --font-en: 'Rubik', 'Segoe UI', 'Helvetica Neue', sans-serif;
+
+  --type-en-display:   700 clamp(2.8rem, 7vw, 5.6rem)/1.0 var(--font-en);
+  --type-en-h1:        700 clamp(2.9575rem,8.281vw,6.654375rem)/1.05 var(--font-en);
+  --type-en-h2:        700 clamp(1.4rem,3.85vw,3.0625rem)/1.1 var(--font-en);
+  --type-en-h3:        600 clamp(1.225rem,3.15vw,2.625rem)/1.15 var(--font-en);
+  --type-en-h4:        600 clamp(0.875rem,2.1vw,1.75rem)/1.2 var(--font-en);
+  --type-en-h5:        500 clamp(0.7rem,1.54vw,1.3125rem)/1.25 var(--font-en);
+  --type-en-h6:        500 clamp(0.6125rem,1.26vw,1.1375rem)/1.3 var(--font-en);
+  --type-en-body-lg:   400 1.125rem/1.6 var(--font-en);
+  --type-en-body:      400 1rem/1.6 var(--font-en);
+  --type-en-body-sm:   400 0.875rem/1.5 var(--font-en);
+  --type-en-caption:   400 0.75rem/1.4 var(--font-en);
+  --type-en-label:     500 0.9375rem/1.2 var(--font-en);
+  --type-en-button:    500 1rem/1 var(--font-en);
+  --type-en-mono:      400 0.6125rem/1.5 'Courier New', monospace;
+
+  --letter-spacing-en-display: -0.02em;
+  --letter-spacing-en-h1:      -0.02em;
+  --letter-spacing-en-h2:      -0.015em;
+  --letter-spacing-en-h3:      -0.01em;
+  --letter-spacing-en-h4:      -0.005em;
+  --letter-spacing-en-h5:      0;
+  --letter-spacing-en-h6:      0.01em;
+  --letter-spacing-en-body-lg: 0;
+  --letter-spacing-en-body:    0;
+  --letter-spacing-en-body-sm: 0.005em;
+  --letter-spacing-en-caption: 0.02em;
+  --letter-spacing-en-label:   0.06em;
+  --letter-spacing-en-button:  0.02em;
+
+  /* ═══════════════════════════════════════════════════════════════
+     6. TYPOGRAPHY — BUTTON FONT (MarkaziText)
+     ═══════════════════════════════════════════════════════════════ */
+  --font-button: var(--font-headline);
+  --type-button:       400 1.1rem/1 var(--font-button);
+
+  /* ═══════════════════════════════════════════════════════════════
+     7. SPACING SCALE (4px base unit)
+     ═══════════════════════════════════════════════════════════════ */
+  --space-0:   0px;
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-12:  48px;
+  --space-16:  64px;
+  --space-20:  80px;
+  --space-24:  96px;
+  --space-32:  128px;
+
+  /* ═══════════════════════════════════════════════════════════════
+     8. RADIUS SCALE
+     Sharp, structured UI — radii applied selectively.
+     ═══════════════════════════════════════════════════════════════ */
+  --radius-none: 0px;
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   16px;
+  --radius-pill: 9999px;
+
+  /* ═══════════════════════════════════════════════════════════════
+     9. SHADOW SCALE (Minimal by design)
+     ═══════════════════════════════════════════════════════════════ */
+  --shadow-none:   none;
+  --shadow-card:   0 1px 3px rgba(26, 5, 18, 0.06), 0 1px 2px rgba(26, 5, 18, 0.04);
+  --shadow-dropdown: 0 4px 12px rgba(26, 5, 18, 0.08), 0 2px 4px rgba(26, 5, 18, 0.04);
+  --shadow-modal:  0 16px 48px rgba(26, 5, 18, 0.12), 0 4px 12px rgba(26, 5, 18, 0.06);
+
+  /* ═══════════════════════════════════════════════════════════════
+     10. GRID SYSTEM (RTL-first)
+     ═══════════════════════════════════════════════════════════════ */
+  --grid-max-width: 1280px;
+  --grid-columns:   12;
+  --grid-gutter:    24px;
+  --grid-margin:    var(--space-6);
+  --grid-columns-tablet: 8;
+  --grid-columns-mobile: 4;
+  --grid-gutter-tablet:  var(--space-4);
+  --grid-gutter-mobile:  var(--space-4);
+
+  /* ═══════════════════════════════════════════════════════════════
+     11. BREAKPOINTS
+     ═══════════════════════════════════════════════════════════════ */
+  --bp-mobile:  640px;
+  --bp-tablet:  1024px;
+  --bp-desktop: 1440px;
+  --bp-wide:    1441px;
+
+  /* ═══════════════════════════════════════════════════════════════
+     12. Z-INDEX SCALE
+     ═══════════════════════════════════════════════════════════════ */
+  --z-base:     0;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+
+  /* ═══════════════════════════════════════════════════════════════
+     13. APPROVED GRADIENTS (Only Three)
+     ═══════════════════════════════════════════════════════════════ */
+  --gradient-hero:     linear-gradient(135deg, #fff5fb 0%, #ffe5f4 100%);
+  --gradient-press:    linear-gradient(135deg, #ff009f 0%, #cc007f 100%);
+  --gradient-numbers:  linear-gradient(120deg, #ff009f 0%, #ff2d55 100%);
+
+  /* ═══════════════════════════════════════════════════════════════
+     14. FOCUS STATE
+     2px primary-pink outline with 2px offset (WCAG 2.2 AA)
+     ═══════════════════════════════════════════════════════════════ */
+  --focus-ring: 2px solid var(--color-primary);
+  --focus-ring-offset: 2px;
+
+  /* ═══════════════════════════════════════════════════════════════
+     15. MOTION TOKENS
+     ═══════════════════════════════════════════════════════════════ */
+  --ease-editorial:       cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-editorial-quick: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-editorial-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+
+  --duration-instant: 100ms;
+  --duration-quick:   200ms;
+  --duration-default: 300ms;
+  --duration-slow:    500ms;
+
+  /* ═══════════════════════════════════════════════════════════════
+     16. LAYOUT TOKENS
+     ═══════════════════════════════════════════════════════════════ */
+  --header-height: 72px;
+  --header-height-mobile: 64px;
+  --section-padding-y: var(--space-24);
+  --section-padding-y-tablet: var(--space-16);
+  --section-padding-y-mobile: var(--space-12);
+
+  /* ═══════════════════════════════════════════════════════════════
+     17. DIRECTION
+     Arabic (RTL) is primary. Use this token to flip layouts.
+     ═══════════════════════════════════════════════════════════════ */
+  --dir: rtl;
+}
+
+/* English context override */
+[dir="ltr"],
+:lang(en) {
+  --dir: ltr;
+}

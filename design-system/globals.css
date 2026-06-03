@@ -1,0 +1,73 @@
+/**
+ * dokanelbanat Design System — Global Base Styles
+ * Heading sizes inherit from this layer.
+ * RTL-first. Arabic primary.
+ */
+
+@layer base {
+  h1 {
+    font: var(--type-ar-h1);
+    letter-spacing: var(--letter-spacing-ar-h1);
+  }
+
+  h2 {
+    font: var(--type-ar-h2);
+    letter-spacing: var(--letter-spacing-ar-h2);
+  }
+
+  h3 {
+    font: var(--type-ar-h3);
+    letter-spacing: var(--letter-spacing-ar-h3);
+  }
+
+  h4 {
+    font: var(--type-ar-h4);
+    letter-spacing: var(--letter-spacing-ar-h4);
+  }
+
+  h5 {
+    font: var(--type-ar-h5);
+    letter-spacing: var(--letter-spacing-ar-h5);
+  }
+
+  h6 {
+    font: var(--type-ar-h6);
+    letter-spacing: var(--letter-spacing-ar-h6);
+  }
+
+  [dir="ltr"] h1,
+  :lang(en) h1 {
+    font: var(--type-en-h1);
+    letter-spacing: var(--letter-spacing-en-h1);
+  }
+
+  [dir="ltr"] h2,
+  :lang(en) h2 {
+    font: var(--type-en-h2);
+    letter-spacing: var(--letter-spacing-en-h2);
+  }
+
+  [dir="ltr"] h3,
+  :lang(en) h3 {
+    font: var(--type-en-h3);
+    letter-spacing: var(--letter-spacing-en-h3);
+  }
+
+  [dir="ltr"] h4,
+  :lang(en) h4 {
+    font: var(--type-en-h4);
+    letter-spacing: var(--letter-spacing-en-h4);
+  }
+
+  [dir="ltr"] h5,
+  :lang(en) h5 {
+    font: var(--type-en-h5);
+    letter-spacing: var(--letter-spacing-en-h5);
+  }
+
+  [dir="ltr"] h6,
+  :lang(en) h6 {
+    font: var(--type-en-h6);
+    letter-spacing: var(--letter-spacing-en-h6);
+  }
+}

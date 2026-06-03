@@ -1,0 +1,41 @@
+@import "tailwindcss";
+
+/* Design System — order matters */
+@import "./design-system/tokens.css";
+@import "./design-system/globals.css";
+@import "./design-system/fonts.css";
+@import "./design-system/components.css";
+@import "./design-system/layouts.css";
+@import "./design-system/motion.css";
+@import "./design-system/utilities.css";
+
+/* Expose DS tokens to Tailwind's theme engine */
+@theme {
+  --color-primary:        var(--color-primary);
+  --color-secondary:      var(--color-secondary);
+  --color-bg-base:        var(--color-bg-base);
+  --color-bg-canvas:      var(--color-bg-canvas);
+  --color-bg-inverse:     var(--color-bg-inverse);
+  --color-text-primary:   var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted:     var(--color-text-muted);
+  --color-border-default: var(--color-border-default);
+
+  --font-headline: var(--font-headline);
+  --font-body:     var(--font-body);
+
+  --spacing-1:  var(--space-1);
+  --spacing-2:  var(--space-2);
+  --spacing-3:  var(--space-3);
+  --spacing-4:  var(--space-4);
+  --spacing-6:  var(--space-6);
+  --spacing-8:  var(--space-8);
+  --spacing-12: var(--space-12);
+  --spacing-16: var(--space-16);
+  --spacing-24: var(--space-24);
+
+  --radius-sm:   var(--radius-sm);
+  --radius-md:   var(--radius-md);
+  --radius-lg:   var(--radius-lg);
+  --radius-pill: var(--radius-pill);
+}

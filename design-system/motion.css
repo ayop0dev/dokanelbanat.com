@@ -1,0 +1,158 @@
+/**
+ * dokanelbanat Design System — Motion & Interaction
+ * Editorial, restrained motion. Reduced-motion fallbacks included.
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+   EASING CURVES
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --ease-editorial:       cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-editorial-quick: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-editorial-emphasis: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   DURATION SCALE
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --duration-instant: 100ms;
+  --duration-quick:   200ms;
+  --duration-default: 300ms;
+  --duration-slow:    500ms;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ALLOWED MOTION PATTERNS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Subtle fade-in */
+@keyframes ds-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* Fade + slight rise (for sections entering viewport) */
+@keyframes ds-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Scale hover cap at 1.02 */
+.ds-hover-scale {
+  transition: transform var(--duration-quick) var(--ease-editorial);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-hover-scale {
+    transition: none;
+  }
+}
+
+.ds-hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Marker underline draw-in */
+@keyframes ds-marker-draw {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+.ds-marker-animate::after {
+  transform-origin: right center;
+  animation: ds-marker-draw var(--duration-slow) var(--ease-editorial-emphasis) forwards;
+}
+
+[dir="ltr"] .ds-marker-animate::after {
+  transform-origin: left center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-marker-animate::after {
+    animation: none;
+    transform: scaleX(1);
+  }
+}
+
+/* Counter / number count-up animation helper */
+@keyframes ds-counter-tick {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ds-counter {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Section entrance — applied via JS IntersectionObserver */
+.ds-section-enter {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity var(--duration-slow) var(--ease-editorial),
+              transform var(--duration-slow) var(--ease-editorial);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-section-enter {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.ds-section-enter.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger children */
+.ds-stagger > * {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity var(--duration-default) var(--ease-editorial),
+              transform var(--duration-default) var(--ease-editorial);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-stagger > * {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+.ds-stagger.is-visible > *:nth-child(1) { transition-delay: 0ms;      opacity: 1; transform: translateY(0); }
+.ds-stagger.is-visible > *:nth-child(2) { transition-delay: 80ms;     opacity: 1; transform: translateY(0); }
+.ds-stagger.is-visible > *:nth-child(3) { transition-delay: 160ms;    opacity: 1; transform: translateY(0); }
+.ds-stagger.is-visible > *:nth-child(4) { transition-delay: 240ms;    opacity: 1; transform: translateY(0); }
+.ds-stagger.is-visible > *:nth-child(5) { transition-delay: 320ms;    opacity: 1; transform: translateY(0); }
+.ds-stagger.is-visible > *:nth-child(6) { transition-delay: 400ms;    opacity: 1; transform: translateY(0); }
+
+/* ═══════════════════════════════════════════════════════════════
+   FORBIDDEN MOTIONS (Documented — do not use)
+   - bounce, spring physics
+   - parallax-heavy effects
+   - glassmorphism transitions
+   - 3D transforms on UI elements
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════════
+   REDUCED MOTION FALLBACKS
+   Already inlined per component; global override here:
+   ═══════════════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,155 @@
+/**
+ * dokanelbanat Design System — Utility Classes
+ * Atomic helpers for rapid layout and spacing adjustments.
+ * Use sparingly; prefer component classes for consistency.
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+   VISIBILITY
+   ═══════════════════════════════════════════════════════════════ */
+.ds-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.ds-hidden {
+  display: none !important;
+}
+
+.ds-invisible {
+  visibility: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   TEXT UTILITIES
+   ═══════════════════════════════════════════════════════════════ */
+.ds-text-primary   { color: var(--color-text-primary); }
+.ds-text-secondary { color: var(--color-text-secondary); }
+.ds-text-muted     { color: var(--color-text-muted); }
+.ds-text-inverse   { color: var(--color-text-inverse); }
+.ds-text-accent    { color: var(--color-accent); }
+.ds-text-success   { color: var(--color-success); }
+.ds-text-warning   { color: var(--color-warning); }
+.ds-text-danger    { color: var(--color-danger); }
+
+.ds-text-center    { text-align: center; }
+.ds-text-start     { text-align: start; }
+.ds-text-end       { text-align: end; }
+
+.ds-text-wrap      { text-wrap: wrap; }
+.ds-text-nowrap    { white-space: nowrap; }
+
+/* ═══════════════════════════════════════════════════════════════
+   SPACING UTILITIES (margin & padding)
+   ═══════════════════════════════════════════════════════════════ */
+.ds-m-0  { margin: var(--space-0); }
+.ds-m-1  { margin: var(--space-1); }
+.ds-m-2  { margin: var(--space-2); }
+.ds-m-3  { margin: var(--space-3); }
+.ds-m-4  { margin: var(--space-4); }
+.ds-m-6  { margin: var(--space-6); }
+.ds-m-8  { margin: var(--space-8); }
+.ds-m-12 { margin: var(--space-12); }
+.ds-m-16 { margin: var(--space-16); }
+
+.ds-mt-0  { margin-top: var(--space-0); }
+.ds-mt-4  { margin-top: var(--space-4); }
+.ds-mt-6  { margin-top: var(--space-6); }
+.ds-mt-8  { margin-top: var(--space-8); }
+.ds-mt-12 { margin-top: var(--space-12); }
+.ds-mt-16 { margin-top: var(--space-16); }
+
+.ds-mb-0  { margin-bottom: var(--space-0); }
+.ds-mb-4  { margin-bottom: var(--space-4); }
+.ds-mb-6  { margin-bottom: var(--space-6); }
+.ds-mb-8  { margin-bottom: var(--space-8); }
+.ds-mb-12 { margin-bottom: var(--space-12); }
+.ds-mb-16 { margin-bottom: var(--space-16); }
+
+.ds-p-0  { padding: var(--space-0); }
+.ds-p-4  { padding: var(--space-4); }
+.ds-p-6  { padding: var(--space-6); }
+.ds-p-8  { padding: var(--space-8); }
+.ds-p-12 { padding: var(--space-12); }
+
+.ds-px-4  { padding-inline: var(--space-4); }
+.ds-px-6  { padding-inline: var(--space-6); }
+.ds-px-8  { padding-inline: var(--space-8); }
+
+.ds-py-4  { padding-block: var(--space-4); }
+.ds-py-6  { padding-block: var(--space-6); }
+.ds-py-8  { padding-block: var(--space-8); }
+.ds-py-12 { padding-block: var(--space-12); }
+
+/* ═══════════════════════════════════════════════════════════════
+   LAYOUT UTILITIES
+   ═══════════════════════════════════════════════════════════════ */
+.ds-block        { display: block; }
+.ds-inline       { display: inline; }
+.ds-inline-block { display: inline-block; }
+.ds-flex         { display: flex; }
+.ds-inline-flex  { display: inline-flex; }
+.ds-grid         { display: grid; }
+
+.ds-flex-col     { flex-direction: column; }
+.ds-flex-row     { flex-direction: row; }
+.ds-items-center { align-items: center; }
+.ds-items-start  { align-items: flex-start; }
+.ds-justify-between { justify-content: space-between; }
+.ds-justify-center  { justify-content: center; }
+.ds-justify-start   { justify-content: flex-start; }
+.ds-justify-end     { justify-content: flex-end; }
+
+.ds-gap-2  { gap: var(--space-2); }
+.ds-gap-3  { gap: var(--space-3); }
+.ds-gap-4  { gap: var(--space-4); }
+.ds-gap-6  { gap: var(--space-6); }
+.ds-gap-8  { gap: var(--space-8); }
+
+.ds-w-full  { width: 100%; }
+.ds-h-full  { height: 100%; }
+.ds-max-w-prose { max-width: 65ch; }
+
+/* ═══════════════════════════════════════════════════════════════
+   BACKGROUND UTILITIES
+   ═══════════════════════════════════════════════════════════════ */
+.ds-bg-base    { background: var(--color-bg-base); }
+.ds-bg-canvas  { background: var(--color-bg-canvas); }
+.ds-bg-surface { background: var(--color-bg-surface); }
+.ds-bg-inverse { background: var(--color-bg-inverse); }
+.ds-bg-primary { background: var(--color-primary); }
+
+/* ═══════════════════════════════════════════════════════════════
+   BORDER UTILITIES
+   ═══════════════════════════════════════════════════════════════ */
+.ds-border-default { border: 1px solid var(--color-border-default); }
+.ds-border-strong  { border: 1px solid var(--color-border-strong); }
+.ds-border-none    { border: none; }
+
+.ds-rounded-none { border-radius: var(--radius-none); }
+.ds-rounded-sm   { border-radius: var(--radius-sm); }
+.ds-rounded-md   { border-radius: var(--radius-md); }
+.ds-rounded-lg   { border-radius: var(--radius-lg); }
+.ds-rounded-pill { border-radius: var(--radius-pill); }
+
+/* ═══════════════════════════════════════════════════════════════
+   RESPONSIVE HIDE
+   ═══════════════════════════════════════════════════════════════ */
+@media (max-width: 640px) {
+  .ds-hide-mobile { display: none !important; }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .ds-hide-tablet { display: none !important; }
+}
+
+@media (min-width: 1025px) {
+  .ds-hide-desktop { display: none !important; }
+}

@@ -1,0 +1,345 @@
+---
+import { getPosts } from '../lib/wordpress.js';
+
+const allPosts = await getPosts(6);
+
+function stripHtml(html) {
+  return html.replace(/<[^>]*>/g, '').trim();
+}
+
+function truncate(text, len = 80) {
+  return text.length > len ? text.slice(0, len).trimEnd() + '…' : text;
+}
+
+const hasPosts = allPosts.length > 0;
+const featuredPost = allPosts[allPosts.length - 1] ?? null;
+const standardPosts = allPosts.slice(1, -1);
+---
+
+<!-- ═══════════════════════════════════════════════════════════════
+     4. MAGAZINE SECTION
+     ═══════════════════════════════════════════════════════════════ -->
+<section class="ds-landing-page__section ds-section" id="magazine" aria-labelledby="magazine-heading">
+  <div class="ds-container">
+    <div class="ds-section-enter" style="text-align:center;margin-bottom:var(--space-12);">
+      <span class="ds-section-label">متابعة مستجدات البنات</span>
+      <h2 id="magazine-heading" style="margin-top:var(--space-4);color:var(--color-text-primary);">
+        مجلة دكان البنات</h2>
+      <p class="ds-hero__body" style="margin-inline:auto;">أحدث المقالات، الاتجاهات، والمحتوى المختار لكل بنت واعية
+      </p>
+    </div>
+
+    {hasPosts ? (
+      <div class="mag-grid">
+        {/* Featured Card — right column in RTL */}
+        {featuredPost && (() => {
+          const featImg = featuredPost._embedded?.['wp:featuredmedia']?.[0];
+          const featCat = featuredPost._embedded?.['wp:term']?.[0]?.[0]?.name;
+          const featExcerpt = truncate(stripHtml(featuredPost.excerpt.rendered), 210);
+          return (
+            <article class="mag-featured">
+              {featImg?.source_url && (
+                <a href={`/blog/${featuredPost.slug}`} class="mag-featured__image-link" tabindex="-1" aria-hidden="true">
+                  <img
+                    src={featImg.source_url}
+                    alt={featImg.alt_text || ''}
+                    loading="lazy"
+                    class="mag-featured__img"
+                  />
+                </a>
+              )}
+              <div class="mag-featured__body">
+                {featCat && <span class="mag-category">{featCat}</span>}
+                <h3 class="mag-featured__title" set:html={featuredPost.title.rendered} />
+                <p class="mag-featured__excerpt" set:html={featExcerpt} />
+                <a href={`/blog/${featuredPost.slug}`} class="mag-read-more">اقرأي المزيد</a>
+              </div>
+            </article>
+          );
+        })()}
+
+        {/* Standard Cards — left column in RTL, 2×2 */}
+        <div class="mag-standard-grid">
+          {standardPosts.map((post) => {
+            const postImg = post._embedded?.['wp:featuredmedia']?.[0];
+            const postCat = post._embedded?.['wp:term']?.[0]?.[0]?.name;
+            const postExcerpt = truncate(stripHtml(post.excerpt.rendered));
+            return (
+              <article class="mag-card">
+                {postImg?.source_url && (
+                  <a href={`/blog/${post.slug}`} class="mag-card__image-link" tabindex="-1" aria-hidden="true">
+                    <img
+                      src={postImg.source_url}
+                      alt={postImg.alt_text || ''}
+                      loading="lazy"
+                      class="mag-card__img"
+                    />
+                  </a>
+                )}
+                <div class="mag-card__body">
+                  {postCat && <span class="mag-category">{postCat}</span>}
+                  <h4 class="mag-card__title">
+                    <a href={`/blog/${post.slug}`} set:html={post.title.rendered} />
+                  </h4>
+                  <p class="mag-card__excerpt" set:html={postExcerpt} />
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    ) : (
+      <div class="mag-grid" aria-hidden="true">
+        {/* Skeleton — Featured */}
+        <article class="mag-featured mag-featured--skel">
+          <div class="mag-skel mag-skel--img-featured" />
+          <div class="mag-featured__body">
+            <div class="mag-skel mag-skel--label" />
+            <div class="mag-skel mag-skel--title-lg" />
+            <div class="mag-skel mag-skel--title-lg mag-skel--w70" />
+            <div class="mag-skel mag-skel--text" />
+            <div class="mag-skel mag-skel--text mag-skel--w60" />
+            <div class="mag-skel mag-skel--btn" />
+          </div>
+        </article>
+
+        {/* Skeleton — Standard 2×2 */}
+        <div class="mag-standard-grid">
+          {[1, 2, 3, 4].map(() => (
+            <article class="mag-card mag-card--skel">
+              <div class="mag-skel mag-skel--img-card" />
+              <div class="mag-card__body">
+                <div class="mag-skel mag-skel--label" />
+                <div class="mag-skel mag-skel--title-sm" />
+                <div class="mag-skel mag-skel--title-sm mag-skel--w70" />
+                <div class="mag-skel mag-skel--text" />
+              </div>
+            </article>
+          ))}
+        </div>
+      </div>
+    )}
+
+    <!-- Magazine Banner -->
+    <div class="ds-section-enter"
+      style="margin-top:var(--space-12);padding:var(--space-8);background:var(--color-bg-canvas);border:1px solid var(--color-border-default);text-align:center;">
+      <p class="ds-hero__subtitle" style="margin:0;">عالمك في مجلة واحدة من جمال، بيزنس، وأسلوب حياة بوعي حقيقي</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* ── Outer two-column grid ───────────────────────────────────── */
+  .mag-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-6);
+    align-items: stretch;
+  }
+
+  /* ── Featured Card (right column in RTL = first in DOM) ──────── */
+  .mag-featured {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-card);
+  }
+
+  .mag-featured__image-link {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .mag-featured__img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .mag-featured__body {
+    padding: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    flex: 1;
+  }
+
+  .mag-featured__title {
+    font: var(--type-ar-h4);
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .mag-featured__excerpt {
+    font: var(--type-ar-body-lg);
+    color: var(--color-text-secondary);
+    margin: 0;
+    flex: 1;
+  }
+
+  /* ── Standard 2×2 grid (left column in RTL = second in DOM) ─── */
+  .mag-standard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+    align-content: start;
+  }
+
+  .mag-card {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-card);
+  }
+
+  .mag-card__image-link {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .mag-card__img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+
+  .mag-card__body {
+    padding: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    flex: 1;
+  }
+
+  .mag-card__title {
+    font: var(--type-ar-h6);
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .mag-card__title a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .mag-card__title a:hover,
+  .mag-card__title a:focus-visible {
+    color: var(--color-primary);
+  }
+
+  .mag-card__title a:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: var(--radius-sm);
+  }
+
+  .mag-card__excerpt {
+    font: var(--type-ar-body-sm);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  /* ── Shared: category label ─────────────────────────────────── */
+  .mag-category {
+    display: inline-block;
+    font: var(--type-ar-label);
+    letter-spacing: var(--letter-spacing-ar-label);
+    color: var(--color-primary);
+  }
+
+  /* ── Shared: read-more link ─────────────────────────────────── */
+  .mag-read-more {
+    display: inline-block;
+    align-self: flex-start;
+    font: var(--type-ar-button);
+    letter-spacing: var(--letter-spacing-ar-button);
+    color: var(--color-primary);
+    text-decoration: none;
+    border: 1px solid var(--color-primary);
+    border-radius: var(--radius-pill);
+    padding: var(--space-2) var(--space-5);
+    transition:
+      background var(--duration-quick) var(--ease-editorial-quick),
+      color var(--duration-quick) var(--ease-editorial-quick);
+  }
+
+  .mag-read-more:hover {
+    background: var(--color-primary);
+    color: var(--color-text-on-primary);
+  }
+
+  .mag-read-more:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+  }
+
+  /* ── Skeleton: pulse animation ──────────────────────────────── */
+  @keyframes mag-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.4; }
+  }
+
+  .mag-skel {
+    background: var(--color-border-default);
+    border-radius: var(--radius-sm);
+    animation: mag-pulse 1.5s ease-in-out infinite;
+  }
+
+  .mag-skel--img-featured {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 0;
+    flex-shrink: 0;
+  }
+
+  .mag-skel--img-card {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    border-radius: 0;
+    flex-shrink: 0;
+  }
+
+  .mag-skel--label   { height: var(--space-3); width: 4rem; }
+  .mag-skel--title-lg { height: var(--space-6); width: 100%; }
+  .mag-skel--title-sm { height: var(--space-4); width: 100%; }
+  .mag-skel--text    { height: var(--space-3); width: 100%; }
+  .mag-skel--btn     { height: var(--space-8); width: 7rem; border-radius: var(--radius-pill); }
+
+  .mag-skel--w70 { width: 70%; }
+  .mag-skel--w60 { width: 60%; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mag-skel { animation: none; opacity: 0.6; }
+  }
+
+  /* ── Responsive ─────────────────────────────────────────────── */
+  @media (max-width: 1024px) {
+    .mag-grid {
+      gap: var(--space-5);
+    }
+    .mag-standard-grid {
+      gap: var(--space-3);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .mag-grid {
+      grid-template-columns: 1fr;
+    }
+    .mag-standard-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .mag-standard-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

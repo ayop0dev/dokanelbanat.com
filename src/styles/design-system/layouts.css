@@ -1,0 +1,521 @@
+/**
+ * dokanelbanat Design System — Layout Patterns
+ * 6 page-level patterns for the multi-site ecosystem.
+ * RTL-first. Container-based.
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+   SHARED LAYOUT UTILITIES
+   ═══════════════════════════════════════════════════════════════ */
+.ds-container {
+  width: 100%;
+  max-width: var(--grid-max-width);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+}
+
+.ds-grid {
+  display: grid;
+  grid-template-columns: repeat(var(--grid-columns), 1fr);
+  gap: var(--grid-gutter);
+}
+
+@media (max-width: 1024px) {
+  .ds-grid {
+    grid-template-columns: repeat(var(--grid-columns-tablet), 1fr);
+    gap: var(--space-4);
+  }
+}
+
+@media (max-width: 640px) {
+  .ds-grid {
+    grid-template-columns: repeat(var(--grid-columns-mobile), 1fr);
+    gap: var(--space-4);
+  }
+}
+
+.ds-section {
+  padding-block: var(--section-padding-y);
+}
+
+@media (max-width: 1024px) {
+  .ds-section {
+    padding-block: var(--section-padding-y-tablet);
+  }
+}
+
+@media (max-width: 640px) {
+  .ds-section {
+    padding-block: var(--section-padding-y-mobile);
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   1. EDITORIAL LANDING PAGE
+   ═══════════════════════════════════════════════════════════════ */
+
+/* .ds-hero, .ds-press-release, .ds-numbers-showcase,
+   .ds-cta-banner, .ds-footer are already defined in components.css.
+   This pattern documents their assembly order. */
+
+.ds-landing-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.ds-landing-page__section + .ds-landing-page__section {
+  border-top: 1px solid var(--color-border-default);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   2. ARTICLE DETAIL PAGE (Magazine)
+   ═══════════════════════════════════════════════════════════════ */
+.ds-article-page__header {
+  padding-block: var(--space-12) var(--space-8);
+  background: var(--color-bg-canvas);
+}
+
+.ds-article-page__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.ds-article-page__category {
+  font: var(--type-ar-label);
+  letter-spacing: var(--letter-spacing-ar-label);
+  color: var(--color-accent);
+  text-transform: uppercase;
+}
+
+.ds-article-page__date {
+  font: var(--type-ar-caption);
+  letter-spacing: var(--letter-spacing-ar-caption);
+  color: var(--color-text-muted);
+}
+
+.ds-article-page__title {
+  font: var(--type-ar-h1);
+  letter-spacing: var(--letter-spacing-ar-h1);
+  color: var(--color-text-primary);
+  max-width: 24ch;
+}
+
+.ds-article-page__hero-image {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
+.ds-article-page__body {
+  padding-block: var(--space-12);
+}
+
+.ds-article-page__content {
+  max-width: 65ch;
+  margin-inline: auto;
+  font: var(--type-ar-body-lg);
+  letter-spacing: var(--letter-spacing-ar-body-lg);
+  color: var(--color-text-primary);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.ds-article-page__content h2 {
+  font: var(--type-ar-h3);
+  letter-spacing: var(--letter-spacing-ar-h3);
+  margin-top: var(--space-6);
+}
+
+.ds-article-page__content h3 {
+  font: var(--type-ar-h4);
+  letter-spacing: var(--letter-spacing-ar-h4);
+  margin-top: var(--space-5);
+}
+
+.ds-article-page__content blockquote {
+  padding: var(--space-5) var(--space-6);
+  border-inline-start: 3px solid var(--color-accent);
+  background: var(--color-bg-canvas);
+  font: var(--type-ar-h5);
+  letter-spacing: var(--letter-spacing-ar-h5);
+  color: var(--color-text-primary);
+}
+
+.ds-article-page__content img {
+  width: 100%;
+  border-radius: var(--radius-none);
+}
+
+.ds-article-page__sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.ds-article-page__layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--space-12);
+  max-width: var(--grid-max-width);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+}
+
+@media (max-width: 1024px) {
+  .ds-article-page__layout {
+    grid-template-columns: 1fr;
+  }
+  .ds-article-page__sidebar {
+    display: none; /* Collapse sidebar on tablet */
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   3. PRODUCT DETAIL PAGE (Digital Products)
+   ═══════════════════════════════════════════════════════════════ */
+.ds-product-page {
+  padding-block: var(--space-12);
+}
+
+.ds-product-page__layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-12);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .ds-product-page__layout {
+    grid-template-columns: 1fr;
+    gap: var(--space-8);
+  }
+}
+
+.ds-product-page__gallery {
+  background: var(--color-bg-canvas);
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ds-product-page__gallery img {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+}
+
+.ds-product-page__info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.ds-product-page__category {
+  font: var(--type-ar-label);
+  letter-spacing: var(--letter-spacing-ar-label);
+  color: var(--color-accent);
+  text-transform: uppercase;
+}
+
+.ds-product-page__title {
+  font: var(--type-ar-h2);
+  letter-spacing: var(--letter-spacing-ar-h2);
+  color: var(--color-text-primary);
+}
+
+.ds-product-page__price {
+  font: var(--type-ar-h3);
+  letter-spacing: var(--letter-spacing-ar-h3);
+  color: var(--color-text-primary);
+}
+
+.ds-product-page__price--free {
+  color: var(--color-success);
+}
+
+.ds-product-page__desc {
+  font: var(--type-ar-body-lg);
+  letter-spacing: var(--letter-spacing-ar-body-lg);
+  color: var(--color-text-secondary);
+}
+
+.ds-product-page__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   4. COURSE DETAIL PAGE (Academy)
+   ═══════════════════════════════════════════════════════════════ */
+.ds-course-page__hero {
+  padding-block: var(--space-12);
+  background: var(--color-bg-canvas);
+}
+
+.ds-course-page__hero-inner {
+  max-width: var(--grid-max-width);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-12);
+  align-items: center;
+}
+
+@media (max-width: 1024px) {
+  .ds-course-page__hero-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ds-course-page__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.ds-course-page__title {
+  font: var(--type-ar-h1);
+  letter-spacing: var(--letter-spacing-ar-h1);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-4);
+}
+
+.ds-course-page__excerpt {
+  font: var(--type-ar-body-lg);
+  letter-spacing: var(--letter-spacing-ar-body-lg);
+  color: var(--color-text-secondary);
+  max-width: 55ch;
+}
+
+.ds-course-page__sidebar-card {
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.ds-course-page__instructor {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ds-course-page__instructor-name {
+  font: var(--type-ar-body);
+  letter-spacing: var(--letter-spacing-ar-body);
+  font-weight: 600;
+}
+
+.ds-course-page__instructor-role {
+  font: var(--type-ar-caption);
+  letter-spacing: var(--letter-spacing-ar-caption);
+  color: var(--color-text-muted);
+}
+
+.ds-course-page__curriculum {
+  padding-block: var(--space-12);
+}
+
+.ds-course-page__curriculum-inner {
+  max-width: var(--grid-max-width);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-12);
+}
+
+@media (max-width: 1024px) {
+  .ds-course-page__curriculum-inner {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ds-course-page__lesson-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.ds-course-page__lesson {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border-default);
+  background: var(--color-bg-surface);
+  font: var(--type-ar-body);
+  letter-spacing: var(--letter-spacing-ar-body);
+}
+
+.ds-course-page__lesson-number {
+  font: var(--type-en-caption);
+  color: var(--color-text-muted);
+  min-width: 24px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   5. LISTING / ARCHIVE PAGE
+   ═══════════════════════════════════════════════════════════════ */
+.ds-archive-page {
+  padding-block: var(--space-12);
+}
+
+.ds-archive-page__header {
+  max-width: var(--grid-max-width);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+  margin-bottom: var(--space-8);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.ds-archive-page__title {
+  font: var(--type-ar-h1);
+  letter-spacing: var(--letter-spacing-ar-h1);
+  color: var(--color-text-primary);
+}
+
+.ds-archive-page__count {
+  font: var(--type-ar-body);
+  letter-spacing: var(--letter-spacing-ar-body);
+  color: var(--color-text-muted);
+}
+
+.ds-archive-page__filters {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+
+.ds-archive-page__grid {
+  max-width: var(--grid-max-width);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--grid-gutter);
+}
+
+@media (max-width: 1024px) {
+  .ds-archive-page__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-4);
+  }
+}
+
+@media (max-width: 640px) {
+  .ds-archive-page__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ds-archive-page__pagination {
+  max-width: var(--grid-max-width);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+  margin-top: var(--space-12);
+  display: flex;
+  justify-content: center;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   6. CONTACT / PARTNERSHIP INQUIRY PAGE
+   ═══════════════════════════════════════════════════════════════ */
+.ds-contact-page {
+  padding-block: var(--space-12);
+}
+
+.ds-contact-page__inner {
+  max-width: var(--grid-max-width);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-16);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .ds-contact-page__inner {
+    grid-template-columns: 1fr;
+    gap: var(--space-12);
+  }
+}
+
+.ds-contact-page__title {
+  font: var(--type-ar-h2);
+  letter-spacing: var(--letter-spacing-ar-h2);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-4);
+}
+
+.ds-contact-page__intro {
+  font: var(--type-ar-body-lg);
+  letter-spacing: var(--letter-spacing-ar-body-lg);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-8);
+  max-width: 50ch;
+}
+
+.ds-contact-page__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.ds-contact-page__detail {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.ds-contact-page__detail-label {
+  font: var(--type-ar-label);
+  letter-spacing: var(--letter-spacing-ar-label);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  min-width: 80px;
+}
+
+.ds-contact-page__detail-value {
+  font: var(--type-ar-body);
+  letter-spacing: var(--letter-spacing-ar-body);
+  color: var(--color-text-primary);
+}
+
+.ds-contact-page__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-8);
+  background: var(--color-bg-surface);
+  border: 1px solid var(--color-border-default);
+}
+
+.ds-contact-page__form-actions {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: var(--space-2);
+}
+
+[dir="ltr"] .ds-contact-page__form-actions {
+  justify-content: flex-end;
+}

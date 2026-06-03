@@ -1,0 +1,23 @@
+/**
+ * dokanelbanat Design System — Font Faces
+ * All fonts served locally from assets/fonts/
+ * Arabic (RTL) is primary; English is secondary.
+ */
+
+/* ── Rubik — Body text, paragraphs, descriptions ── */
+@font-face {
+  font-family: 'Rubik';
+  src: url('../assets/fonts/Rubik.ttf') format('truetype');
+  font-weight: 100 900; /* Variable font range */
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ── MarkaziText — Headlines, titles, buttons, primary editorial voice ── */
+@font-face {
+  font-family: 'MarkaziText';
+  src: url('../assets/fonts/MarkaziText.ttf') format('truetype');
+  font-weight: 400 700; /* Variable font range */
+  font-style: normal;
+  font-display: swap;
+}

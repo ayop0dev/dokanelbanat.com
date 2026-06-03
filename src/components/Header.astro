@@ -1,0 +1,36 @@
+---
+// props go here if needed (leave empty for now)
+---
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       1. HEADER / NAVIGATION
+       ═══════════════════════════════════════════════════════════════ -->
+  <header class="ds-header">
+    <div class="ds-header__inner">
+      <a href="/" class="ds-header__logo" aria-label="دكان البنات — الصفحة الرئيسية">
+        <img src="../assets/logo/dokanelbanatlogo-gradient.png" alt="شعار دكان البنات" height="44">
+      </a>
+
+      <nav class="ds-nav" id="main-nav" aria-label="التنقل الرئيسي">
+        <a class="ds-nav__link" href="#about">إعادة ضبط العقلية</a>
+        <a class="ds-nav__link" href="#magazine">المجلة</a>
+        <a class="ds-nav__link" href="#vision">الرؤية والرسالة</a>
+        <a class="ds-nav__link" href="#numbers">أرقامنا</a>
+        <a class="ds-nav__link" href="#products">المنتجات الرقمية</a>
+        <a class="ds-nav__link" href="#join">انضمي إلينا</a>
+      </nav>
+
+      <button class="ds-header__menu-toggle" id="menu-toggle" aria-label="فتح القائمة" aria-expanded="false"
+        aria-controls="main-nav">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="4" y1="6" x2="20" y2="6"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="18" x2="20" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Off-canvas nav overlay -->
+  <div class="ds-nav-overlay" id="nav-overlay" aria-hidden="true"></div>

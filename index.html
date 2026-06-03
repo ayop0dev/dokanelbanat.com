@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>دكان البنات | Dokanelbanat.com — أحدث مجتمع نسائي متكامل في المنطقة العربية</title>
+  <meta name="description"
+    content="من البنات وإلى البنات. نبني مجتمع نسائي يتكامل في توافر كافة عناصر الدعم الحقيقي للمرأة ومن المرأة.">
+
+  <!-- GTM container placeholder — replace GTM-XXXXXXX with real ID -->
+  <!-- <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-XXXXXXX');</script> -->
+
+  <link rel="stylesheet" href="design-system/index.css">
+
+  <!-- Hero vertical sliders + scoped enhancements (not in base design system) -->
+  <style>
+    /* ── Hero tweaks ── */
+    .ds-hero {
+      min-height: 100vh;
+      padding-block: 0;
+    }
+
+    .ds-hero__inner {
+      min-height: 100vh;
+    }
+
+    .ds-hero__content {
+      align-self: center;
+    }
+
+    .ds-landing-page__section+.ds-landing-page__section {
+      border-top: none;
+    }
+
+    /* ── Extra-large button (beyond design system) ── */
+    .ds-btn--xl {
+      padding: var(--space-5) var(--space-8);
+    }
+
+    /* ── Hero vertical sliders ── */
+    .hero-sliders {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-4);
+      position: absolute;
+      inset: -25% 0;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+      mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+    }
+
+    .hero-slider {
+      overflow: hidden;
+    }
+
+    .hero-slider__track {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+      will-change: transform;
+    }
+
+    .hero-slider--up .hero-slider__track {
+      animation: hero-slide-up 28s linear infinite;
+    }
+
+    .hero-slider--down .hero-slider__track {
+      animation: hero-slide-down 28s linear infinite;
+    }
+
+    @keyframes hero-slide-up {
+      from {
+        transform: translateY(0);
+      }
+
+      to {
+        transform: translateY(-50%);
+      }
+    }
+
+    @keyframes hero-slide-down {
+      from {
+        transform: translateY(-50%);
+      }
+
+      to {
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-slider__track {
+        animation: none !important;
+      }
+    }
+
+    .hero-slide-img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      background: var(--color-bg-canvas);
+      border: 1px solid var(--color-border-default);
+      display: block;
+      object-fit: cover;
+    }
+
+    /* ── Press release: centered with bg image overlay ── */
+    .ds-press-release {
+      position: relative;
+      background: url('https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+    }
+
+    .ds-press-release::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 0, 159, 0.92) 0%, rgba(204, 0, 127, 0.92) 100%);
+      z-index: 0;
+    }
+
+    .ds-press-release__inner {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .ds-press-release__title,
+    .ds-press-release__body {
+      margin-inline: auto;
+    }
+
+    .ds-announcement {
+      text-align: start;
+      max-width: 720px;
+      margin-inline: auto;
+      background: rgba(255, 255, 255, 0.95);
+      color: var(--color-text-primary);
+      border-inline-start: 4px solid var(--color-primary);
+      padding: var(--space-5) var(--space-5) var(--space-5) var(--space-6);
+    }
+
+    .ds-announcement__title {
+      color: var(--color-text-primary);
+    }
+
+    .ds-announcement__body {
+      max-width: 65ch;
+      color: var(--color-text-secondary);
+    }
+
+    /* ── Pillars 2×2 grid ── */
+    .pillars-2x2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--grid-gutter);
+    }
+
+    @media (max-width: 640px) {
+      .pillars-2x2 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ── Magazine 5-card layout ── */
+    .magazine-5 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--grid-gutter);
+    }
+
+    .magazine-5 .ds-article-card--featured {
+      grid-row: 1 / 3;
+    }
+
+    .magazine-5__right {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: var(--grid-gutter);
+      grid-row: 1 / 3;
+    }
+
+    @media (max-width: 1024px) {
+      .magazine-5 {
+        grid-template-columns: 1fr;
+      }
+
+      .magazine-5 .ds-article-card--featured {
+        grid-row: auto;
+      }
+
+      .magazine-5__right {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .magazine-5__right {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ── Vision / Mission icons & bigger type ── */
+    .vision-icon,
+    .mission-icon {
+      width: 48px;
+      height: 48px;
+      color: var(--color-primary);
+      margin-bottom: var(--space-3);
+    }
+
+    .ds-two-column__label {
+      font: var(--type-ar-h6);
+      letter-spacing: var(--letter-spacing-ar-h6);
+      color: var(--color-primary);
+      text-transform: uppercase;
+    }
+
+    .ds-two-column__title {
+      font: var(--type-ar-h2);
+      letter-spacing: var(--letter-spacing-ar-h2);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Google Tag Manager (noscript) -->
+  <!-- <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript> -->
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       1. HEADER / NAVIGATION
+       ═══════════════════════════════════════════════════════════════ -->
+  <header class="ds-header">
+    <div class="ds-header__inner">
+      <a href="#" class="ds-header__logo" aria-label="دكان البنات — الصفحة الرئيسية">
+        <img src="assets/logo/dokanelbanatlogo-gradient.png" alt="شعار دكان البنات" height="44">
+      </a>
+
+      <nav class="ds-nav" id="main-nav" aria-label="التنقل الرئيسي">
+        <a class="ds-nav__link" href="#about">إعادة ضبط العقلية</a>
+        <a class="ds-nav__link" href="#magazine">المجلة</a>
+        <a class="ds-nav__link" href="#vision">الرؤية والرسالة</a>
+        <a class="ds-nav__link" href="#numbers">أرقامنا</a>
+        <a class="ds-nav__link" href="#products">المنتجات الرقمية</a>
+        <a class="ds-nav__link" href="#join">انضمي إلينا</a>
+      </nav>
+
+      <button class="ds-header__menu-toggle" id="menu-toggle" aria-label="فتح القائمة" aria-expanded="false"
+        aria-controls="main-nav">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <line x1="4" y1="6" x2="20" y2="6"></line>
+          <line x1="4" y1="12" x2="20" y2="12"></line>
+          <line x1="4" y1="18" x2="20" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Off-canvas nav overlay -->
+  <div class="ds-nav-overlay" id="nav-overlay" aria-hidden="true"></div>
+
+  <main class="ds-landing-page">
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         2. HERO SECTION
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-hero" id="hero" aria-label="مقدمة الموقع">
+      <div class="ds-hero__inner">
+        <div class="ds-hero__content ds-section-enter">
+          <h1 class="ds-section-label" style="margin:0;">منذ عام 2018</h1>
+          <div class="ds-hero__title" style="display:flex;flex-direction:column;gap:var(--space-2);">
+            <h1 style="margin:0;">
+              دكان البنات</h1>
+            <h2 lang="en" style="color:var(--color-primary);margin:0;font-family:var(--font-en);">
+              Dokanelbanat.com</h2>
+          </div>
+          <p class="ds-hero__subtitle">أحدث مجتمع نسائي متكامل في المنطقة العربية</p>
+          <p class="ds-hero__body">من البنات وإلى البنات. نبني مجتمع نسائي يتكامل في توافر كافة عناصر الدعم الحقيقي
+            للمرأة ومن المرأة، بهدف دعم وتطوير نمط حياة المرأة العربية العصرية.</p>
+          <div class="ds-hero__actions">
+            <a class="ds-btn ds-btn--primary-solid ds-btn--xl ds-btn--pill" href="https://blog.dokanelbanat.com">مجلة
+              دكان البنات</a>
+            <a class="ds-btn ds-btn--secondary-outline ds-btn--xl ds-btn--pill" href="#about">إعادة ضبط عقليتك</a>
+          </div>
+        </div>
+        <div class="ds-hero__media ds-section-enter" style="position:relative;min-height:480px;">
+          <div class="hero-sliders" aria-hidden="true">
+            <!-- Slider: moves UP -->
+            <div class="hero-slider hero-slider--up">
+              <div class="hero-slider__track">
+                <!-- Original set -->
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+                <!-- Duplicated set for seamless loop -->
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1488716820095-cbe80883c496?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+              </div>
+            </div>
+            <!-- Slider: moves DOWN -->
+            <div class="hero-slider hero-slider--down">
+              <div class="hero-slider__track">
+                <!-- Original set -->
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1554151228-14d9def656e4?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1513001900722-370f803f498d?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+                <!-- Duplicated set for seamless loop -->
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1502823403499-6ccfcf4fb453?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1554151228-14d9def656e4?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1520813792240-56fc4a3765a7?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+                <div class="hero-slider__item">
+                  <img src="https://images.unsplash.com/photo-1513001900722-370f803f498d?w=400&h=500&fit=crop&q=80" alt="صورة بنت" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         3. ABOUT / RESET YOUR MINDSET
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-landing-page__section" id="about" aria-labelledby="about-heading">
+      <!-- Press Release Statement -->
+      <div class="ds-press-release">
+        <div class="ds-press-release__inner ds-section-enter">
+          <span class="ds-section-label" style="color:var(--color-text-inverse);opacity:var(--opacity-80);">استعدي
+            لمغامرة جريئة</span>
+          <div id="about-heading"
+            style="display:flex;flex-direction:column;gap:var(--space-2);margin-bottom:var(--space-5);">
+            <h2 style="margin:0;">اعادة ضبط العقلية
+            </h2>
+            <h2 lang="en" style="opacity:var(--opacity-80);margin:0;">
+              Reset your Mindset</h2>
+          </div>
+          <p class="ds-press-release__body" style="margin-bottom:var(--space-5);">انتي لا تحتاجي إلى شراء قطعة تكمل ما
+            ينقصك</p>
+          <div class="ds-announcement" style="margin-top:var(--space-6);border-radius:var(--radius-sm);">
+            <h3 class="ds-announcement__title">على مر العقود، تنفق القوى الاقتصادية المليارات في صياغة خطاب يوهمك بنقص
+              لا وجود له.</h3>
+            <p class="ds-announcement__body">كل ذلك ليقنعوك بأن جوهرك لا يكتمل إلا بمزيد من الاستهلاك، وأن قيمتك وجمالك
+              رهن ما تقتنيه، بينما الحقيقة أنك تزدادين رقيا كلما أدركت أنك، في ذاتك، كافية ومكتملة.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Four Pillars -->
+      <div class="ds-section" style="background:var(--color-bg-base);">
+        <div class="ds-container">
+          <div class="pillars-2x2 ds-stagger" style="margin-top:var(--space-8);">
+            <!-- Pillar 1 -->
+            <div class="ds-pillar-card" style="--pillar-color: var(--color-primary);">
+              <div class="ds-pillar-card__index ds-index-number">01</div>
+              <h3 class="ds-pillar-card__title" style="margin-bottom:var(--space-3);">
+                الاكتفاء الذاتي <span lang="en"
+                  style="font:var(--type-en-body-sm);letter-spacing:var(--letter-spacing-en-body-sm);color:var(--color-text-muted);display:block;margin-top:var(--space-1);">Self-Sufficiency</span>
+                </h4>
+                <p class="ds-pillar-card__body">انت الاصل والجوهر؛ قيمتك نابعة من داخلك وليست انعكاسا لما تقتنيه. اليقين
+                  بانك كاملة بذاتك هو الحصن المنيع ضد زيف الوعود الاستهلاكية التي تحاول رهن رضاك النفسي بمشتريات مادية.
+                </p>
+            </div>
+            <!-- Pillar 2 -->
+            <div class="ds-pillar-card" style="--pillar-color: var(--color-secondary);">
+              <div class="ds-pillar-card__index ds-index-number">02</div>
+              <h3 class="ds-pillar-card__title" style="margin-bottom:var(--space-3);">
+                الوعي <span lang="en"
+                  style="font:var(--type-en-body-sm);letter-spacing:var(--letter-spacing-en-body-sm);color:var(--color-text-muted);display:block;margin-top:var(--space-1);">Conscious
+                  Awareness</span></h4>
+                <p class="ds-pillar-card__body">الوعي هو البوصلة وجوهر الانوثة الحقيقية. من خلال ادراكك لذاتك وللعالم من
+                  حولك، تنبثق القوة التي تمكنك من اتخاذ قرارات حرة، مستقلة، وبعيدة عن اي تبعية فكرية او دعائية.</p>
+            </div>
+            <!-- Pillar 3 -->
+            <div class="ds-pillar-card" style="--pillar-color: var(--color-green);">
+              <div class="ds-pillar-card__index ds-index-number">03</div>
+              <h3 class="ds-pillar-card__title" style="margin-bottom:var(--space-3);">
+                النظام <span lang="en"
+                  style="font:var(--type-en-body-sm);letter-spacing:var(--letter-spacing-en-body-sm);color:var(--color-text-muted);display:block;margin-top:var(--space-1);">Routine</span>
+                </h4>
+                <p class="ds-pillar-card__body">الجمال الحقيقي هو انعكاس للنظام لا للفوضى. يبدا التميز من صياغة نظام
+                  داخلي واع ينظم الفكر والسلوك، فكل مظهر خارجي جذاب هو في الحقيقة نتاج توازن ورؤية مرتبة للاولويات.</p>
+            </div>
+            <!-- Pillar 4 -->
+            <div class="ds-pillar-card" style="--pillar-color: var(--color-orange);">
+              <div class="ds-pillar-card__index ds-index-number">04</div>
+              <h3 class="ds-pillar-card__title" style="margin-bottom:var(--space-3);">
+                بيئة داعمة <span lang="en"
+                  style="font:var(--type-en-body-sm);letter-spacing:var(--letter-spacing-en-body-sm);color:var(--color-text-muted);display:block;margin-top:var(--space-1);">Empowering
+                  Community</span></h4>
+                <p class="ds-pillar-card__body">النمو لا يحدث في عزلة، بل في بيئة تحتضن تطلعاتك. النجاح الحقيقي هو ثمرة
+                  التواجد في مجتمع يرى اكتمالك ويدعمه، ويرفض الانخراط في ثقافة النقص التي تثبط العزائم.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         4. MAGAZINE SECTION
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-landing-page__section ds-section" id="magazine" aria-labelledby="magazine-heading">
+      <div class="ds-container">
+        <div class="ds-section-enter" style="text-align:center;margin-bottom:var(--space-12);">
+          <span class="ds-section-label">متابعة مستجدات البنات</span>
+          <h2 id="magazine-heading" style="margin-top:var(--space-4);color:var(--color-text-primary);">
+            مجلة دكان البنات</h2>
+          <p class="ds-hero__body" style="margin-inline:auto;">أحدث المقالات، الاتجاهات، والمحتوى المختار لكل بنت واعية
+          </p>
+        </div>
+
+        <!-- NOTE: Article cards below are static placeholders.
+             In Phase 2, fetch latest posts from:
+             blog.dokanelbanat.com/wp-json/wp/v2/posts -->
+        <div class="magazine-5 ds-stagger">
+          <!-- Featured Article (primary, half screen) -->
+          <article class="ds-article-card ds-article-card--featured">
+            <div class="ds-article-card__image">
+              <div
+                style="width:100%;height:100%;background:linear-gradient(135deg,var(--color-bg-canvas),var(--color-border-default));display:flex;align-items:center;justify-content:center;">
+                <span style="font:var(--type-ar-caption);color:var(--color-text-muted);">صورة الغلاف</span>
+              </div>
+            </div>
+            <div class="ds-article-card__body">
+              <span class="ds-article-card__category">جمال</span>
+              <h3 class="ds-article-card__title">أحدث اتجاهات العناية بالبشرة لعام 2026</h3>
+              <p class="ds-article-card__excerpt">استكشفي أهم التقنيات والمنتجات التي تعيد تعريف الجمال الواعي هذا
+                العام.</p>
+            </div>
+          </article>
+
+          <!-- Right half: 2×2 grid -->
+          <div class="magazine-5__right">
+            <!-- Standard Article 1 -->
+            <article class="ds-article-card">
+              <div class="ds-article-card__image">
+                <div
+                  style="width:100%;height:100%;background:linear-gradient(135deg,var(--color-bg-canvas),var(--color-border-default));display:flex;align-items:center;justify-content:center;">
+                  <span style="font:var(--type-ar-caption);color:var(--color-text-muted);">صورة الغلاف</span>
+                </div>
+              </div>
+              <div class="ds-article-card__body">
+                <span class="ds-article-card__category">لايف ستايل</span>
+                <h3 class="ds-article-card__title">كيف تبنين نظاماً يومياً يدعم وعيك</h3>
+                <p class="ds-article-card__excerpt">خطوات عملية لتصميم روتين صباحي ومسائي يعزز تركيزك وطاقتك.</p>
+              </div>
+            </article>
+
+            <!-- Standard Article 2 -->
+            <article class="ds-article-card">
+              <div class="ds-article-card__image">
+                <div
+                  style="width:100%;height:100%;background:linear-gradient(135deg,var(--color-bg-canvas),var(--color-border-default));display:flex;align-items:center;justify-content:center;">
+                  <span style="font:var(--type-ar-caption);color:var(--color-text-muted);">صورة الغلاف</span>
+                </div>
+              </div>
+              <div class="ds-article-card__body">
+                <span class="ds-article-card__category">بيزنس</span>
+                <h3 class="ds-article-card__title">من الفكرة إلى البراند: دليلك الأول</h3>
+                <p class="ds-article-card__excerpt">كل ما تحتاجين معرفته لتحويل شغفك إلى مشروع ناجح ومستدام.</p>
+              </div>
+            </article>
+
+            <!-- Standard Article 3 -->
+            <article class="ds-article-card">
+              <div class="ds-article-card__image">
+                <div
+                  style="width:100%;height:100%;background:linear-gradient(135deg,var(--color-bg-canvas),var(--color-border-default));display:flex;align-items:center;justify-content:center;">
+                  <span style="font:var(--type-ar-caption);color:var(--color-text-muted);">صورة الغلاف</span>
+                </div>
+              </div>
+              <div class="ds-article-card__body">
+                <span class="ds-article-card__category">وعي</span>
+                <h3 class="ds-article-card__title">فن القول "لا" بثقة</h3>
+                <p class="ds-article-card__excerpt">كيف تحمين طاقتك وحدودك دون شعور بالذنب.</p>
+              </div>
+            </article>
+
+            <!-- Standard Article 4 -->
+            <article class="ds-article-card">
+              <div class="ds-article-card__image">
+                <div
+                  style="width:100%;height:100%;background:linear-gradient(135deg,var(--color-bg-canvas),var(--color-border-default));display:flex;align-items:center;justify-content:center;">
+                  <span style="font:var(--type-ar-caption);color:var(--color-text-muted);">صورة الغلاف</span>
+                </div>
+              </div>
+              <div class="ds-article-card__body">
+                <span class="ds-article-card__category">تغذية</span>
+                <h3 class="ds-article-card__title">غذاء يغذي العقل قبل الجسد</h3>
+                <p class="ds-article-card__excerpt">نصائح بسيطة لنظام غذائي يدعم وعيك وتركيزك اليومي.</p>
+              </div>
+            </article>
+          </div>
+        </div>
+
+        <!-- Magazine Banner -->
+        <!-- NOTE: No dedicated .ds-magazine-banner in design system; composed from existing tokens -->
+        <div class="ds-section-enter"
+          style="margin-top:var(--space-12);padding:var(--space-8);background:var(--color-bg-canvas);border:1px solid var(--color-border-default);text-align:center;">
+          <p class="ds-hero__subtitle" style="margin:0;">عالمك في مجلة واحدة من جمال، بيزنس، وأسلوب حياة بوعي حقيقي</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         5. VISION & MISSION
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-two-column ds-landing-page__section" id="vision" aria-labelledby="vision-heading">
+      <div class="ds-two-column__inner">
+        <div class="ds-two-column__block ds-section-enter">
+          <svg class="vision-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"></path>
+            <circle cx="12" cy="12" r="3"></circle>
+          </svg>
+          <h3 class="ds-two-column__label" style="margin:0;">رؤيتنا</h3>
+          <h2 class="ds-two-column__title" id="vision-heading">مستقبل يؤمن بقوة المرأة العربية</h2>
+          <p class="ds-two-column__text">أن يكون دكان البنات المرجع الأول والوجهة الأكثر ثقة للمرأة العربية في مجالات
+            الـ Lifestyle وريادة الأعمال ضمن بيئة تدعم الجمال القائم على الوعي والنجاح القائم على المعرفة والتنفيذ
+            الفعلي.</p>
+        </div>
+        <div class="ds-two-column__block ds-section-enter">
+          <svg class="mission-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path d="M9 12l2 2 4-4"></path>
+          </svg>
+          <h3 class="ds-two-column__label" style="margin:0;">رسالتنا</h3>
+          <h2 class="ds-two-column__title">تمكين بلا حدود</h2>
+          <p class="ds-two-column__text">تمكين البنات وصاحبات البيزنس من خلال محتوى تعليمي راقٍ، ورش عمل احترافية،
+            منتجات رقمية، وشبكة موردين موثوقة — لتختصري الطريق وتحولي كل فكرة إلى براند حقيقي ومستدام.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         6. SOCIAL PROOF NUMBERS
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-numbers-showcase ds-landing-page__section" id="numbers" aria-labelledby="numbers-heading">
+      <div class="ds-numbers-showcase__inner ds-stagger">
+        <h2 class="ds-sr-only" id="numbers-heading">أرقام دكان البنات</h2>
+
+        <div class="ds-stat">
+          <div class="ds-stat__number ds-counter"><span class="ds-stat__plus">+</span>١٠٠,٠٠٠</div>
+          <div class="ds-stat__label">قصة ثقة</div>
+          <p class="ds-stat__desc">منذ انطلاقتنا عام 2018، لم نكن مجرد وجهة للتسوق، بل كنا رفيقا مخلصا لأكثر من مئة ألف
+            عروس وفتاة. شاركناهن لحظاتهن الفارقة، وقدمنا لهنّ الحلول التي تُعزز جمالهن الداخلي والخارجي بكل حب وصدق.</p>
+        </div>
+
+        <div class="ds-stat">
+          <div class="ds-stat__number ds-counter"><span class="ds-stat__plus">+</span>١٠٠ م</div>
+          <div class="ds-stat__label">بصمة وعي</div>
+          <p class="ds-stat__desc">وبفضل محتوى لامس قلوب الفتيات وعقولهن، حققنا وصول طبيعي (Organic Reach) تجاوز المئة
+            مليون مشاهدة. هذا الرقم هو دليلنا على أن الكلمة الصادقة والوعي الحقيقي يصلان إلى القلوب دون الحاجة لضجيج
+            الإعلانات الممولة.</p>
+        </div>
+
+        <div class="ds-stat">
+          <div class="ds-stat__number ds-counter">٨</div>
+          <div class="ds-stat__label">سنوات من العطاء المُستدام</div>
+          <p class="ds-stat__desc">ثمانية أعوام ونحن نبني كيان ينمو معكن وبكن. انتقلنا فيها من مرحلة التأسيس إلى مرحلة
+            التمكين، لنثبت أن الاستمرارية هي سر النجاح، وأن رحلة الوعي لا تنتهي بل تتجدد في كل مرحلة.</p>
+        </div>
+
+        <div class="ds-stat">
+          <div class="ds-stat__number ds-counter">١</div>
+          <div class="ds-stat__label">رسالة واضحة</div>
+          <p class="ds-stat__desc">كل هذا التأثير كان الدافع وراء تحولنا الأكبر في 2026 لننتقل من بيع المنتجات إلى صناعة
+            المحتوى الذي يُعيد ضبط العقلية (Reset Your Mindset)، لنبني مجتمع يؤمن بأن الجمال يبدأ من الوعي.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         7. DIGITAL PRODUCTS SECTION
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-landing-page__section ds-section" id="products" aria-labelledby="products-heading">
+      <div class="ds-container">
+        <div class="ds-section-enter" style="text-align:center;margin-bottom:var(--space-12);">
+          <span class="ds-section-label">اختيارك التعليمي</span>
+          <h2 id="products-heading" style="margin-top:var(--space-4);color:var(--color-text-primary);">
+            منتجات رقمية مختارة</h2>
+          <p class="ds-hero__body" style="margin-inline:auto;">أدوات عملية صممناها خصيصاً لتختصري الوقت وتبدئي بثقة</p>
+        </div>
+
+        <!-- NOTE: Product cards below are static placeholders.
+             In Phase 3, fetch from academy.dokanelbanat.com REST API -->
+        <div class="ds-products-grid ds-stagger">
+          <!-- Product 1 -->
+          <div class="ds-product-card">
+            <div class="ds-product-card__mockup">
+              <div
+                style="width:80%;height:80%;background:var(--color-bg-base);border:1px solid var(--color-border-default);display:flex;align-items:center;justify-content:center;">
+                <span style="font:var(--type-ar-caption);color:var(--color-text-muted);">غلاف المنتج</span>
+              </div>
+            </div>
+            <span class="ds-product-card__category">قالب</span>
+            <h4 class="ds-product-card__title">خطة محتوى شهرية احترافية</h4>
+            <p class="ds-product-card__desc">قابل للتعديل فوراً — يناسب كل مجال ويوفر ساعات من التخطيط.</p>
+            <div class="ds-product-card__footer">
+              <span class="ds-product-card__price">مجاني</span>
+              <a class="ds-btn ds-btn--primary-solid ds-btn--sm" href="https://academy.dokanelbanat.com">احصلي عليه</a>
+            </div>
+          </div>
+
+          <!-- Product 2 -->
+          <div class="ds-product-card">
+            <div class="ds-product-card__mockup">
+              <div
+                style="width:80%;height:80%;background:var(--color-bg-base);border:1px solid var(--color-border-default);display:flex;align-items:center;justify-content:center;">
+                <span style="font:var(--type-ar-caption);color:var(--color-text-muted);">غلاف المنتج</span>
+              </div>
+            </div>
+            <span class="ds-product-card__category">دليل</span>
+            <h4 class="ds-product-card__title">دليل بناء البراند من الصفر</h4>
+            <p class="ds-product-card__desc">خطوات عملية من الفكرة إلى الهوية البصرية الكاملة لعلامتك التجارية.</p>
+            <div class="ds-product-card__footer">
+              <span class="ds-product-card__price">$29</span>
+              <a class="ds-btn ds-btn--primary-solid ds-btn--sm" href="https://academy.dokanelbanat.com">اشترِ الآن</a>
+            </div>
+          </div>
+
+          <!-- Product 3 -->
+          <div class="ds-product-card">
+            <div class="ds-product-card__mockup">
+              <div
+                style="width:80%;height:80%;background:var(--color-bg-base);border:1px solid var(--color-border-default);display:flex;align-items:center;justify-content:center;">
+                <span style="font:var(--type-ar-caption);color:var(--color-text-muted);">غلاف المنتج</span>
+              </div>
+            </div>
+            <span class="ds-product-card__category">كتاب إلكتروني</span>
+            <h4 class="ds-product-card__title">نظام الجمال الداخلي</h4>
+            <p class="ds-product-card__desc">رحلة واعية لاكتشاف علاقتك بجمالك بعيداً عن الضغوط الاستهلاكية.</p>
+            <div class="ds-product-card__footer">
+              <span class="ds-product-card__price">$15</span>
+              <a class="ds-btn ds-btn--primary-solid ds-btn--sm" href="https://academy.dokanelbanat.com">اشترِ الآن</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="ds-section-enter" style="text-align:center;margin-top:var(--space-12);">
+          <a class="ds-btn ds-btn--secondary-outline ds-btn--md ds-btn--pill"
+            href="https://academy.dokanelbanat.com">تصفحي كل المنتجات الرقمية</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         8. CTA BANNER SECTION
+         ═══════════════════════════════════════════════════════════════ -->
+    <section class="ds-cta-banner ds-landing-page__section" id="join" aria-labelledby="join-heading">
+      <div class="ds-cta-banner__inner ds-section-enter">
+        <span class="ds-cta-banner__eyebrow">لازالنا في بداية الرحلة</span>
+        <h2 class="ds-cta-banner__title" id="join-heading">هل تريدين أن تكوني جزءاً من هذا؟</h2>
+        <p class="ds-cta-banner__body">دكان البنات لازال يبدأ الرحلة، ونرحب بكل من يؤمنون بقوة المرأة العربية ويريدون أن
+          يكونوا جزءاً من أحدث Ecosystem نسائي حقيقي في المنطقة.</p>
+        <a class="ds-btn ds-btn--primary-solid ds-btn--md ds-btn--pill" href="mailto:hello@dokanelbanat.com"
+          style="margin-top:var(--space-4);">تواصلي معنا</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       9. FOOTER
+       ═══════════════════════════════════════════════════════════════ -->
+  <footer class="ds-footer">
+    <div class="ds-footer__inner">
+      <!-- Brand Column -->
+      <div class="ds-footer__brand">
+        <a href="#" aria-label="الصفحة الرئيسية">
+          <img class="ds-footer__logo" src="assets/logo/dokanelbanatlogo.png" alt="شعار دكان البنات" width="160"
+            height="40">
+        </a>
+        <p class="ds-footer__tagline">أحدث مجتمع نسائي متكامل في المنطقة العربية</p>
+        <ul class="ds-social-row" aria-label="حسابات التواصل الاجتماعي">
+          <li>
+            <a class="ds-social-row__link" href="https://instagram.com/dokanelbanat" aria-label="إنستغرام"
+              target="_blank" rel="noopener">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a class="ds-social-row__link" href="https://tiktok.com/@dokanelbanat" aria-label="تيك توك" target="_blank"
+              rel="noopener">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5"></path>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a class="ds-social-row__link" href="https://youtube.com/@dokanelbanat" aria-label="يوتيوب" target="_blank"
+              rel="noopener">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path
+                  d="M22.54 6.42a2.78 2.78 0 0 0-1.94-2C18.88 4 12 4 12 4s-6.88 0-8.6.46a2.78 2.78 0 0 0-1.94 2A29 29 0 0 0 1 11.75a29 29 0 0 0 .46 5.33A2.78 2.78 0 0 0 3.4 19.54C5.12 20 12 20 12 20s6.88 0 8.6-.46a2.78 2.78 0 0 0 1.94-2 29 29 0 0 0 .46-5.33 29 29 0 0 0-.46-5.33z">
+                </path>
+                <polygon points="9.75 15.02 15.5 11.75 9.75 8.48 9.75 15.02"></polygon>
+              </svg>
+            </a>
+          </li>
+          <li>
+            <a class="ds-social-row__link" href="https://x.com/dokanelbanat" aria-label="إكس (تويتر)" target="_blank"
+              rel="noopener">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 4l11.5 16L20 20"></path>
+                <path d="M20 4L8.5 20l-4.5-4"></path>
+              </svg>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Links Column -->
+      <div class="ds-footer__column">
+        <h3 class="ds-footer__column-title">روابط تهمك</h3>
+        <ul class="ds-footer__links">
+          <li><a class="ds-footer__link" href="https://business.dokanelbanat.com" target="_blank" rel="noopener">العمل
+              مع دكان البنات</a></li>
+          <li><a class="ds-footer__link" href="https://stores.dokanelbanat.com" target="_blank" rel="noopener">ابدأي
+              متجرك مع دكان البنات</a></li>
+          <li><a class="ds-footer__link" href="https://academy.dokanelbanat.com" target="_blank" rel="noopener">اكاديمية
+              دكان البنات</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Column -->
+      <div class="ds-footer__column">
+        <h3 class="ds-footer__column-title">تواصلي معنا</h3>
+        <ul class="ds-footer__links">
+          <li><a class="ds-footer__link" href="#">سياسة الخصوصية</a></li>
+          <li><a class="ds-footer__link" href="#">الشروط والاحكام</a></li>
+          <li><a class="ds-footer__link" href="mailto:hello@dokanelbanat.com">تواصل معنا</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="ds-footer__bottom">
+      <p class="ds-footer__copyright">جميع الحقوق محفوظة — دكان البنات 2018 إلى 2026</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+
+</html>

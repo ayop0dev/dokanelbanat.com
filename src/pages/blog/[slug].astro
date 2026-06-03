@@ -1,0 +1,254 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Header from '../../components/Header.astro';
+import { getPostBySlug, getAllPostSlugs } from '../../lib/wordpress.js';
+
+export async function getStaticPaths() {
+  return await getAllPostSlugs();
+}
+
+const { slug } = Astro.params;
+const post = await getPostBySlug(slug);
+
+if (!post) {
+  return Astro.redirect('/404');
+}
+
+const title = post.title?.rendered
+  ? post.title.rendered.replace(/<[^>]*>/g, '')
+  : 'مقال دكان البنات';
+
+const description = post.excerpt?.rendered
+  ? post.excerpt.rendered.replace(/<[^>]*>/g, '').slice(0, 160)
+  : '';
+
+const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? '';
+const category = post._embedded?.['wp:term']?.[0]?.[0]?.name ?? '';
+const author = post._embedded?.author?.[0]?.name ?? '';
+const date = new Date(post.date).toLocaleDateString('ar-SA', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<BaseLayout title={`${title} — دكان البنات`} description={description} ogImage={featuredImage}>
+  <Header />
+
+  <main>
+    {featuredImage && (
+      <div class="article-hero">
+        <img
+          class="article-hero__img"
+          src={featuredImage}
+          alt={title}
+          loading="eager"
+        />
+      </div>
+    )}
+
+    <div class="article-container">
+      {category && <span class="article-category">{category}</span>}
+
+      <h1 class="article-title" set:html={post.title.rendered} />
+
+      <div class="article-meta">
+        <time datetime={post.date}>{date}</time>
+        {author && (
+          <>
+            <span class="article-meta__sep" aria-hidden="true">·</span>
+            <span class="article-author">{author}</span>
+          </>
+        )}
+      </div>
+
+      <div class="article-prose" set:html={post.content.rendered} />
+
+      <a class="article-back" href="/#magazine">← العودة إلى المجلة</a>
+    </div>
+  </main>
+</BaseLayout>
+
+<style>
+  /* ── Hero ── */
+  .article-hero {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .article-hero__img {
+    width: 100%;
+    max-width: 720px;
+    margin-inline: auto;
+    display: block;
+    max-height: none;
+    object-fit: contain;
+    border-radius: var(--radius-lg);
+    margin-top: 20px;
+  }
+
+  /* ── Container ── */
+  .article-container {
+    max-width: 720px;
+    margin-inline: auto;
+    padding-inline: var(--space-6);
+    padding-block: var(--space-12) var(--space-16);
+  }
+
+  /* ── Category label ── */
+  .article-category {
+    display: inline-block;
+    font: var(--type-ar-label);
+    letter-spacing: var(--letter-spacing-ar-label);
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin-bottom: var(--space-4);
+  }
+
+  /* ── Title ── */
+  .article-title {
+    font: var(--type-ar-h2);
+    letter-spacing: var(--letter-spacing-ar-h2);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--space-4);
+  }
+
+  /* ── Meta row ── */
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font: var(--type-ar-body-sm);
+    letter-spacing: var(--letter-spacing-ar-body-sm);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--space-8);
+  }
+
+  .article-meta__sep {
+    color: var(--color-text-muted);
+    margin-inline: var(--space-1);
+  }
+
+  .article-author {
+    font: var(--type-ar-body-sm);
+    letter-spacing: var(--letter-spacing-ar-body-sm);
+  }
+
+  /* ── Prose ── */
+  .article-prose :global(p) {
+    font: var(--type-ar-body-lg);
+    letter-spacing: var(--letter-spacing-ar-body-lg);
+    margin-bottom: var(--space-6);
+  }
+
+  .article-prose :global(h2) {
+    font: var(--type-ar-h3);
+    letter-spacing: var(--letter-spacing-ar-h3);
+    color: var(--color-text-primary);
+    margin-top: var(--space-12);
+    margin-bottom: var(--space-4);
+  }
+
+  .article-prose :global(h3) {
+    font: var(--type-ar-h4);
+    letter-spacing: var(--letter-spacing-ar-h4);
+    color: var(--color-text-primary);
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-3);
+  }
+
+  .article-prose :global(ul),
+  .article-prose :global(ol) {
+    padding-inline-start: var(--space-6);
+    margin-bottom: var(--space-6);
+  }
+
+  .article-prose :global(li) {
+    font: var(--type-ar-body-lg);
+    letter-spacing: var(--letter-spacing-ar-body-lg);
+    margin-bottom: var(--space-3);
+  }
+
+  .article-prose :global(a) {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--duration-quick) var(--ease-editorial);
+  }
+
+  .article-prose :global(a:hover) {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+  }
+
+  .article-prose :global(a:focus-visible) {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: var(--radius-sm);
+  }
+
+  .article-prose :global(strong) {
+    font-weight: 700;
+  }
+
+  .article-prose :global(img) {
+    width: 100%;
+    display: block;
+    border-radius: var(--radius-md);
+    margin-block: var(--space-8);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .article-prose :global(a) {
+      transition: none;
+    }
+  }
+
+  /* ── Back link ── */
+  .article-back {
+    display: inline-block;
+    margin-top: var(--space-12);
+    font: var(--type-ar-body);
+    letter-spacing: var(--letter-spacing-ar-body);
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--duration-quick) var(--ease-editorial);
+  }
+
+  .article-back:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+  }
+
+  .article-back:focus-visible {
+    outline: var(--focus-ring);
+    outline-offset: var(--focus-ring-offset);
+    border-radius: var(--radius-sm);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .article-back {
+      transition: none;
+    }
+  }
+
+  /* ── Mobile ── */
+@media (max-width: 640px) {
+  .article-hero__img {
+    height: auto;
+    max-height: none;
+    margin-top: 10px;
+    padding-inline: var(--space-4);
+    border-radius: var(--radius-md);
+  }
+
+    .article-container {
+      padding-inline: var(--space-4);
+    }
+
+    .article-prose :global(p),
+    .article-prose :global(li) {
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+  }
+</style>
