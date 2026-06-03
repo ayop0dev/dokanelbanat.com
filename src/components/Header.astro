@@ -3,7 +3,7 @@
 ---
 
   <!-- ═══════════════════════════════════════════════════════════════
-       1. HEADER / NAVIGATION
+       1. HEADER
        ═══════════════════════════════════════════════════════════════ -->
   <header class="ds-header">
     <div class="ds-header__inner">
@@ -11,94 +11,198 @@
         <img src="/assets/logo/dokanelbanatlogo-gradient.png" alt="شعار دكان البنات" height="44">
       </a>
 
-      <nav class="ds-nav" id="main-nav" aria-label="التنقل الرئيسي">
-        <!-- Drawer top: logo + close button -->
-        <div class="ds-drawer-top">
-          <a href="/" aria-label="دكان البنات — الصفحة الرئيسية">
-            <img src="/assets/logo/dokanelbanatlogo-gradient.png" alt="دكان البنات" width="140">
-          </a>
-          <button id="drawer-close" class="ds-drawer-close" aria-label="إغلاق القائمة">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-        </div>
-
-        <a class="ds-nav__link" href="#magazine">المجلة</a>
-        <a class="ds-nav__link" href="#about">من نحن</a>
-        <a class="ds-nav__link" href="#vision">رؤيتنا</a>
-        <a class="ds-nav__link" href="#products">منتجاتنا</a>
-        <a class="ds-nav__link" href="#cta">تواصلي معنا</a>
-      </nav>
-
-      <button class="ds-header__menu-toggle" id="menu-toggle" aria-label="فتح القائمة" aria-expanded="false"
-        aria-controls="main-nav">
+      <button id="canvas-trigger" class="canvas-trigger" aria-label="فتح القائمة">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
           stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="4" y1="6" x2="20" y2="6"></line>
-          <line x1="4" y1="12" x2="20" y2="12"></line>
-          <line x1="4" y1="18" x2="20" y2="18"></line>
+          <line x1="4" y1="6" x2="20" y2="6"/>
+          <line x1="4" y1="12" x2="20" y2="12"/>
+          <line x1="4" y1="18" x2="20" y2="18"/>
         </svg>
       </button>
     </div>
   </header>
 
-  <!-- Off-canvas nav overlay -->
-  <div class="ds-nav-overlay" id="nav-overlay" aria-hidden="true"></div>
+  <!-- ═══════════════════════════════════════════════════════════════
+       SIDE CANVAS
+       ═══════════════════════════════════════════════════════════════ -->
+  <div id="side-canvas" aria-label="القائمة الجانبية">
+
+    <!-- Section 1: Logo + close button -->
+    <div class="canvas-logo-area">
+      <a href="/" aria-label="دكان البنات — الصفحة الرئيسية">
+        <img src="/assets/logo/dokanelbanatlogo-gradient.png" width="130" alt="دكان البنات">
+      </a>
+      <button id="canvas-close" aria-label="إغلاق القائمة">&#xd7;</button>
+    </div>
+
+    <!-- Section 2: Navigation -->
+    <nav aria-label="التنقل الرئيسي">
+      <a href="#magazine">المجلة</a>
+      <a href="#about">من نحن</a>
+      <a href="#vision">رؤيتنا</a>
+      <a href="#products">منتجاتنا</a>
+      <a href="#cta">تواصلي معنا</a>
+    </nav>
+
+    <!-- Section 3: Social media icons -->
+    <div class="canvas-social">
+      <a href="https://instagram.com/dokanelbanat" target="_blank" rel="noopener" aria-label="إنستغرام">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+      <a href="https://tiktok.com/@dokanelbanat" target="_blank" rel="noopener" aria-label="تيك توك">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9.35a8.16 8.16 0 004.77 1.52V7.42a4.85 4.85 0 01-1-.73z"/></svg>
+      </a>
+      <a href="https://youtube.com/@dokanelbanat" target="_blank" rel="noopener" aria-label="يوتيوب">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+      </a>
+      <a href="https://x.com/dokanelbanat" target="_blank" rel="noopener" aria-label="إكس (تويتر)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.737-8.847L2.25 2.25H8.08l4.261 5.638L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Dark overlay -->
+  <div id="canvas-overlay" aria-hidden="true"></div>
 
 <style is:global>
-  /* Drawer: explicit overrides so variable resolution can never produce a dark background */
-  #main-nav {
-    background: #fff5fb;
-    z-index: 9999;
-    position: fixed;
-  }
-
-  /* Overlay must sit just below the drawer */
-  .ds-nav-overlay {
-    z-index: 9998;
-  }
-
-  /* Drawer top row: logo + close button side by side */
-  .ds-drawer-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding-bottom: 1rem;
-    margin-bottom: 0.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    flex-shrink: 0;
-  }
-
-  /* Close (X) button inside the drawer */
-  .ds-drawer-close {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  /* ── Menu trigger button ── */
+  .canvas-trigger {
     background: none;
     border: none;
     cursor: pointer;
     padding: 0.5rem;
-    color: #1a0512;
+    color: var(--color-text-primary);
+    z-index: 100;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .canvas-trigger:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
     border-radius: 4px;
+  }
+
+  /* ── Side canvas panel ── */
+  #side-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    height: 100vh;
+    background: #fff5fb;
+    z-index: 9999;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1.5rem;
+    gap: 2rem;
+    overflow-y: auto;
+  }
+
+  #side-canvas.is-open {
+    transform: translateX(0);
+  }
+
+  /* ── Dark overlay ── */
+  #canvas-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 9998;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  #canvas-overlay.is-open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* ── Logo area (section 1) ── */
+  .canvas-logo-area {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .canvas-logo-area img {
+    display: block;
+  }
+
+  /* Close button */
+  #canvas-close {
+    background: none;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    font-size: 1.4rem;
     line-height: 1;
+    color: #1a1a1a;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s ease, color 0.2s ease;
   }
 
-  .ds-drawer-close:hover,
-  .ds-drawer-close:focus-visible {
-    color: #ff009f;
-    outline: none;
+  #canvas-close:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--color-primary);
   }
 
-  /* Nav links inside drawer: dark text on light background */
-  #main-nav .ds-nav__link {
-    color: #1a0512;
+  /* ── Navigation (section 2) ── */
+  #side-canvas nav {
+    display: flex;
+    flex-direction: column;
   }
 
-  #main-nav .ds-nav__link:hover,
-  #main-nav .ds-nav__link:focus-visible {
-    color: #ff009f;
+  #side-canvas nav a {
+    display: block;
+    font-family: var(--font-heading);
+    font-size: 1.4rem;
+    color: #1a1a1a;
+    padding: 0.5rem 0;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
+    transition: color 0.2s ease;
+  }
+
+  #side-canvas nav a:last-child {
+    border-bottom: none;
+  }
+
+  #side-canvas nav a:hover {
+    color: var(--color-primary);
+  }
+
+  /* ── Social icons row (section 3) ── */
+  .canvas-social {
+    display: flex;
+    gap: 1rem;
+    margin-top: auto;
+  }
+
+  .canvas-social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #1a1a1a;
+    transition: color 0.2s ease;
+  }
+
+  .canvas-social a svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+  }
+
+  .canvas-social a:hover {
+    color: var(--color-primary);
   }
 </style>

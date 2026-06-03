@@ -1,71 +1,46 @@
 /**
  * dokanelbanat Landing Page — Main JavaScript
- * Static HTML/CSS/JS. Zero framework.
  *
  * Handles:
- * - Mobile navigation toggle (hamburger, close button, overlay, Escape, anchor clicks)
+ * - Off-canvas side navigation
  * - Section entrance animations (IntersectionObserver)
- * - Staggered children reveals
- * - Smooth scroll offset for sticky header (non-drawer links only)
+ * - Smooth scroll offset for sticky header
  */
+
+/* ═══════════════════════════════════════════════════════════════
+   OFF-CANVAS SIDE NAVIGATION
+   ═══════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', function () {
+  var trigger  = document.getElementById('canvas-trigger');
+  var canvas   = document.getElementById('side-canvas');
+  var overlay  = document.getElementById('canvas-overlay');
+  var closeBtn = document.getElementById('canvas-close');
+
+  function openCanvas() {
+    canvas.classList.add('is-open');
+    overlay.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeCanvas() {
+    canvas.classList.remove('is-open');
+    overlay.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  if (trigger)  trigger.addEventListener('click', openCanvas);
+  if (closeBtn) closeBtn.addEventListener('click', closeCanvas);
+  if (overlay)  overlay.addEventListener('click', closeCanvas);
+
+  document.querySelectorAll('#side-canvas nav a[href^="#"]').forEach(function (link) {
+    link.addEventListener('click', function () {
+      setTimeout(closeCanvas, 300);
+    });
+  });
+});
 
 (function () {
   'use strict';
-
-  /* ═══════════════════════════════════════════════════════════════
-     MOBILE NAVIGATION
-     ═══════════════════════════════════════════════════════════════ */
-  var menuToggle  = document.getElementById('menu-toggle');
-  var mainNav     = document.getElementById('main-nav');
-  var navOverlay  = document.getElementById('nav-overlay');
-  var drawerClose = document.getElementById('drawer-close');
-
-  function setNavOpen(isOpen) {
-    if (!mainNav) return;
-    mainNav.classList.toggle('is-open', isOpen);
-    if (navOverlay) navOverlay.classList.toggle('is-open', isOpen);
-    if (menuToggle) {
-      menuToggle.setAttribute('aria-expanded', String(isOpen));
-      menuToggle.setAttribute('aria-label', isOpen ? 'إغلاق القائمة' : 'فتح القائمة');
-    }
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-  }
-
-  if (menuToggle && mainNav) {
-    // Hamburger opens / toggles the drawer
-    menuToggle.addEventListener('click', function () {
-      setNavOpen(!mainNav.classList.contains('is-open'));
-    });
-
-    // X button: close immediately
-    if (drawerClose) {
-      drawerClose.addEventListener('click', function () {
-        setNavOpen(false);
-      });
-    }
-
-    // Overlay: close immediately
-    if (navOverlay) {
-      navOverlay.addEventListener('click', function () {
-        setNavOpen(false);
-      });
-    }
-
-    // Drawer nav links: let the browser navigate naturally (no preventDefault),
-    // then close the drawer after 300ms so the scroll destination is already reached.
-    mainNav.querySelectorAll('a[href^="#"]').forEach(function (link) {
-      link.addEventListener('click', function () {
-        setTimeout(function () { setNavOpen(false); }, 300);
-      });
-    });
-
-    // Escape key closes the drawer
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Escape' && mainNav.classList.contains('is-open')) {
-        setNavOpen(false);
-      }
-    });
-  }
 
   /* ═══════════════════════════════════════════════════════════════
      SECTION ENTRANCE ANIMATIONS
@@ -91,8 +66,8 @@
 
   /* ═══════════════════════════════════════════════════════════════
      SMOOTH SCROLL OFFSET (sticky header compensation)
-     Drawer nav links are excluded — they rely on browser-native
-     anchor navigation and must not receive preventDefault.
+     Canvas nav links are excluded — browser handles their scroll,
+     then the canvas closes after 300ms.
      ═══════════════════════════════════════════════════════════════ */
   var headerHeight = parseInt(
     getComputedStyle(document.documentElement).getPropertyValue('--header-height'),
@@ -100,8 +75,7 @@
   ) || 72;
 
   document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
-    // Skip links that live inside the drawer — they handle navigation themselves
-    if (mainNav && mainNav.contains(anchor)) return;
+    if (anchor.closest('#side-canvas')) return;
 
     anchor.addEventListener('click', function (e) {
       var targetId = anchor.getAttribute('href');
