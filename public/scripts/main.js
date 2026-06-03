@@ -6,7 +6,7 @@
  * - Mobile navigation toggle (hamburger, close button, overlay, Escape, anchor clicks)
  * - Section entrance animations (IntersectionObserver)
  * - Staggered children reveals
- * - Smooth scroll offset for sticky header
+ * - Smooth scroll offset for sticky header (non-drawer links only)
  */
 
 (function () {
@@ -15,10 +15,10 @@
   /* ═══════════════════════════════════════════════════════════════
      MOBILE NAVIGATION
      ═══════════════════════════════════════════════════════════════ */
-  const menuToggle  = document.getElementById('menu-toggle');
-  const mainNav     = document.getElementById('main-nav');
-  const navOverlay  = document.getElementById('nav-overlay');
-  const drawerClose = document.getElementById('drawer-close');
+  var menuToggle  = document.getElementById('menu-toggle');
+  var mainNav     = document.getElementById('main-nav');
+  var navOverlay  = document.getElementById('nav-overlay');
+  var drawerClose = document.getElementById('drawer-close');
 
   function setNavOpen(isOpen) {
     if (!mainNav) return;
@@ -37,24 +37,25 @@
       setNavOpen(!mainNav.classList.contains('is-open'));
     });
 
-    // X button inside the drawer closes it
+    // X button: close immediately
     if (drawerClose) {
       drawerClose.addEventListener('click', function () {
         setNavOpen(false);
       });
     }
 
-    // Clicking the dim overlay closes the drawer
+    // Overlay: close immediately
     if (navOverlay) {
       navOverlay.addEventListener('click', function () {
         setNavOpen(false);
       });
     }
 
-    // Clicking any anchor link inside the drawer closes it
+    // Drawer nav links: let the browser navigate naturally (no preventDefault),
+    // then close the drawer after 300ms so the scroll destination is already reached.
     mainNav.querySelectorAll('a[href^="#"]').forEach(function (link) {
       link.addEventListener('click', function () {
-        setNavOpen(false);
+        setTimeout(function () { setNavOpen(false); }, 300);
       });
     });
 
@@ -90,6 +91,8 @@
 
   /* ═══════════════════════════════════════════════════════════════
      SMOOTH SCROLL OFFSET (sticky header compensation)
+     Drawer nav links are excluded — they rely on browser-native
+     anchor navigation and must not receive preventDefault.
      ═══════════════════════════════════════════════════════════════ */
   var headerHeight = parseInt(
     getComputedStyle(document.documentElement).getPropertyValue('--header-height'),
@@ -97,6 +100,9 @@
   ) || 72;
 
   document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+    // Skip links that live inside the drawer — they handle navigation themselves
+    if (mainNav && mainNav.contains(anchor)) return;
+
     anchor.addEventListener('click', function (e) {
       var targetId = anchor.getAttribute('href');
       if (targetId === '#') return;
