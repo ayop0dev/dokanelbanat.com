@@ -12,6 +12,18 @@
       </a>
 
       <nav class="ds-nav" id="main-nav" aria-label="التنقل الرئيسي">
+        <!-- Drawer top: logo + close button -->
+        <div class="ds-drawer-top">
+          <img src="/assets/logo/dokanelbanatlogo-gradient.png" alt="دكان البنات" width="140">
+          <button id="drawer-close" class="ds-drawer-close" aria-label="إغلاق القائمة">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
         <a class="ds-nav__link" href="#magazine">المجلة</a>
         <a class="ds-nav__link" href="#about">من نحن</a>
         <a class="ds-nav__link" href="#vision">رؤيتنا</a>
@@ -33,3 +45,58 @@
 
   <!-- Off-canvas nav overlay -->
   <div class="ds-nav-overlay" id="nav-overlay" aria-hidden="true"></div>
+
+<style is:global>
+  /* Drawer: explicit overrides so variable resolution can never produce a dark background */
+  #main-nav {
+    background: #fff5fb;
+    z-index: 9999;
+    position: fixed;
+  }
+
+  /* Overlay must sit just below the drawer */
+  .ds-nav-overlay {
+    z-index: 9998;
+  }
+
+  /* Drawer top row: logo + close button side by side */
+  .ds-drawer-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+  }
+
+  /* Close (X) button inside the drawer */
+  .ds-drawer-close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+    color: #1a0512;
+    border-radius: 4px;
+    line-height: 1;
+  }
+
+  .ds-drawer-close:hover,
+  .ds-drawer-close:focus-visible {
+    color: #ff009f;
+    outline: none;
+  }
+
+  /* Nav links inside drawer: dark text on light background */
+  #main-nav .ds-nav__link {
+    color: #1a0512;
+  }
+
+  #main-nav .ds-nav__link:hover,
+  #main-nav .ds-nav__link:focus-visible {
+    color: #ff009f;
+  }
+</style>
