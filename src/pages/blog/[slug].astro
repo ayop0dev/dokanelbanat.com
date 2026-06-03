@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Header from '../../components/Header.astro';
 import { getPostBySlug, getAllPostSlugs } from '../../lib/wordpress.js';
 
 export async function getStaticPaths() {
@@ -33,8 +32,6 @@ const date = new Date(post.date).toLocaleDateString('ar-SA', {
 ---
 
 <BaseLayout title={`${title} — دكان البنات`} description={description} ogImage={featuredImage}>
-  <Header />
-
   <main>
     {featuredImage && (
       <div class="article-hero">

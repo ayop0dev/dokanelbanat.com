@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import Header from '../components/Header.astro';
 const {
   title = "دكان البنات",
   description = "مجتمع نسائي متكامل للمرأة العربية العصرية",
@@ -16,6 +17,7 @@ const {
     <meta name="description" content={description} />
     {ogImage && <meta property="og:image" content={ogImage} />}
     <title>{title}</title>
+    <!-- TODO: Replace GTM-XXXXXXX with real container ID before running any ads -->
     <!-- Google Tag Manager — replace GTM-XXXXXXX with your container ID -->
     <script>
       (function(w,d,s,l,i){
@@ -33,6 +35,7 @@ const {
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXXX" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
+    <Header />
     <slot />
     <script src="/scripts/main.js" defer></script>
   </body>

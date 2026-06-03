@@ -89,6 +89,19 @@ select {
   background: var(--color-accent);
 }
 
+@media (max-width: 768px) {
+  .ds-section-label {
+    text-align: center;
+    margin-inline: auto;
+  }
+  .ds-section-title {
+    text-align: center;
+  }
+  .ds-section-subtitle {
+    text-align: center;
+  }
+}
+
 /* ── Index Number ── */
 .ds-index-number {
   font: var(--type-en-display);
@@ -1334,7 +1347,7 @@ textarea.ds-input {
   width: min(320px, 80vw);
   flex-direction: column;
   gap: 0;
-  background: var(--color-bg-canvas);
+  background: var(--color-light);
   border-inline-end: 1px solid var(--color-border-default);
   padding: var(--space-6);
   padding-top: calc(var(--header-height) + var(--space-4));
@@ -1343,6 +1356,16 @@ textarea.ds-input {
   transform: translateX(-100%);
   transition: transform var(--duration-default) var(--ease-editorial);
   pointer-events: none;
+}
+
+.ds-nav .ds-nav__link {
+  color: var(--color-text-primary);
+}
+
+.ds-nav .ds-nav__link:hover,
+.ds-nav .ds-nav__link:focus-visible {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
 }
 
 [dir="ltr"] .ds-nav {
@@ -1471,6 +1494,18 @@ textarea.ds-input {
 @media (max-width: 1024px) {
   .ds-hero__actions {
     justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .ds-hero__actions {
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+  }
+  .ds-hero__actions .ds-btn {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.85rem;
   }
 }
 
