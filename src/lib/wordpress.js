@@ -29,6 +29,12 @@ export async function getAllPostSlugs() {
   return (data ?? []).map((p) => ({ params: { slug: p.slug } }));
 }
 
+/** All posts for archive page */
+export async function getAllPosts(perPage = 100) {
+  const data = await wpFetch(`/posts?per_page=${perPage}&_embed&orderby=date&order=desc`);
+  return data ?? [];
+}
+
 /** Digital products (custom post type) */
 export async function getProducts(perPage = 3) {
   const data = await wpFetch(`/products?per_page=${perPage}&_embed`);
