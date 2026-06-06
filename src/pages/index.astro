@@ -46,6 +46,12 @@ import Footer from '../components/Footer.astro';
       position: relative;
       z-index: 1;
     }
+    .ds-btn--secondary-outline {
+      background-color: rgba(255, 245, 251, 0.88);
+    }
+    .ds-btn--secondary-outline:hover:not(:disabled) {
+      background-color: var(--color-primary);
+    }
   }
 
   .ds-landing-page__section+.ds-landing-page__section {
