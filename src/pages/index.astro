@@ -37,6 +37,17 @@ import Footer from '../components/Footer.astro';
     align-self: center;
   }
 
+  @media (max-width: 1024px) {
+    .ds-hero__content {
+      position: relative;
+      z-index: 2;
+    }
+    .ds-hero__media {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
   .ds-landing-page__section+.ds-landing-page__section {
     border-top: none;
   }
