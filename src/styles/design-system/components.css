@@ -1785,6 +1785,23 @@ textarea.ds-input {
   .ds-footer__inner {
     grid-template-columns: 1fr;
     gap: var(--space-8);
+    text-align: center;
+  }
+
+  .ds-footer__brand {
+    align-items: center;
+  }
+
+  .ds-footer__tagline {
+    text-align: center;
+  }
+
+  .ds-footer__links {
+    align-items: center;
+  }
+
+  .ds-social-row {
+    justify-content: center;
   }
 }
 
