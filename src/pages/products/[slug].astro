@@ -1,0 +1,151 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Footer from '../../components/Footer.astro';
+import { getAllProductSlugs, getProductBySlug } from '../../lib/woocommerce.js';
+
+export async function getStaticPaths() {
+  return await getAllProductSlugs();
+}
+
+const { slug } = Astro.params;
+const product = await getProductBySlug(slug);
+
+if (!product) {
+  return Astro.redirect('/404');
+}
+
+const title = `${product.name} - دكان البنات`;
+const description = product.shortDescription || 'منتج رقمي من دكان البنات.';
+const image = product.image?.src ?? '';
+---
+
+<BaseLayout title={title} description={description} ogImage={image}>
+  <main>
+    <section class="ds-product-page product-detail">
+      <div class="product-detail__container">
+        <a class="product-detail__back" href="/products">← كل المنتجات</a>
+
+        <div class="ds-product-page__layout">
+          <div class="ds-product-page__gallery product-detail__gallery">
+            {product.image ? (
+              <img src={product.image.src} alt={product.image.alt} loading="eager" />
+            ) : (
+              <span>غلاف المنتج</span>
+            )}
+          </div>
+
+          <article class="ds-product-page__info product-detail__info">
+            {product.category && <span class="ds-product-page__category">{product.category}</span>}
+            <h1 class="ds-product-page__title">{product.name}</h1>
+            <p class:list={['ds-product-page__price', product.price === 'مجاني' && 'ds-product-page__price--free']}>
+              {product.price}
+            </p>
+
+            {product.shortDescription && <p class="ds-product-page__desc">{product.shortDescription}</p>}
+
+            <div class="product-detail__note">
+              <strong>منتج رقمي</strong>
+              <span>بعد إتمام الطلب، تابعي تعليمات التحميل أو الوصول من رسالة الطلب.</span>
+            </div>
+
+            <div class="ds-product-page__actions">
+              <a class="ds-btn ds-btn--primary-solid ds-btn--lg ds-btn--pill" href={product.checkoutUrl}>
+                {product.price === 'مجاني' ? 'احصلي عليه الآن' : 'إتمام الشراء'}
+              </a>
+              <a class="ds-btn ds-btn--secondary-outline ds-btn--lg ds-btn--pill" href="/products">
+                تصفح منتجات أخرى
+              </a>
+            </div>
+          </article>
+        </div>
+
+        {product.description && (
+          <section class="product-detail__description" aria-labelledby="product-desc-heading">
+            <h2 id="product-desc-heading">تفاصيل المنتج</h2>
+            <div class="product-detail__prose" set:html={product.description} />
+          </section>
+        )}
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .product-detail {
+    background: var(--color-bg-base);
+  }
+
+  .product-detail__container {
+    max-width: var(--grid-max-width);
+    margin-inline: auto;
+    padding-inline: var(--grid-margin);
+  }
+
+  .product-detail__back {
+    display: inline-block;
+    margin-bottom: var(--space-8);
+    font: var(--type-ar-body-sm);
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .product-detail__gallery {
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+
+  .product-detail__gallery img {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    max-height: none;
+    object-fit: cover;
+  }
+
+  .product-detail__info {
+    padding-block: var(--space-4);
+  }
+
+  .product-detail__note {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-4);
+    background: var(--color-bg-canvas);
+    border: 1px solid var(--color-border-default);
+  }
+
+  .product-detail__note strong {
+    font: var(--type-ar-h6);
+    color: var(--color-text-primary);
+  }
+
+  .product-detail__note span {
+    font: var(--type-ar-body-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .product-detail__description {
+    margin-top: var(--space-14);
+    padding-top: var(--space-10);
+    border-top: 1px solid var(--color-border-default);
+  }
+
+  .product-detail__description h2 {
+    font: var(--type-ar-h3);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--space-5);
+  }
+
+  .product-detail__prose :global(p),
+  .product-detail__prose :global(li) {
+    font: var(--type-ar-body-lg);
+    color: var(--color-text-secondary);
+    line-height: 1.9;
+  }
+
+  .product-detail__prose :global(img) {
+    max-width: 100%;
+    border-radius: var(--radius-md);
+  }
+</style>

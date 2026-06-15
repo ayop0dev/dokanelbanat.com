@@ -28,6 +28,14 @@ function stripHtml(value = "") {
   return decodeHtml(value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim());
 }
 
+function getCheckoutUrl(productId) {
+  return `/checkout?product=${encodeURIComponent(productId)}`;
+}
+
+function getInternalProductUrl(slug) {
+  return `/products/${slug}`;
+}
+
 function formatStorePrice(prices) {
   if (!prices) return "";
 
@@ -66,7 +74,10 @@ function normalizeStoreProduct(product) {
     slug: product.slug,
     type: product.type,
     permalink: product.permalink,
+    productUrl: getInternalProductUrl(product.slug),
+    checkoutUrl: getCheckoutUrl(product.id),
     shortDescription: stripHtml(product.short_description || product.description || ""),
+    description: product.description || "",
     price: formatStorePrice(product.prices),
     isInStock: product.is_in_stock,
     image: image
@@ -75,6 +86,10 @@ function normalizeStoreProduct(product) {
           alt: image.alt || product.name,
         }
       : null,
+    images: (product.images ?? []).map((item) => ({
+      src: item.src,
+      alt: item.alt || product.name,
+    })),
     category: category?.name ?? "",
   };
 }
@@ -89,7 +104,10 @@ function normalizeAdminProduct(product) {
     slug: product.slug,
     type: product.type,
     permalink: product.permalink,
+    productUrl: getInternalProductUrl(product.slug),
+    checkoutUrl: getCheckoutUrl(product.id),
     shortDescription: stripHtml(product.short_description || product.description || ""),
+    description: product.description || "",
     price: formatAdminPrice(product),
     isInStock: product.stock_status === "instock",
     image: image
@@ -98,6 +116,10 @@ function normalizeAdminProduct(product) {
           alt: image.alt || product.name,
         }
       : null,
+    images: (product.images ?? []).map((item) => ({
+      src: item.src,
+      alt: item.alt || product.name,
+    })),
     category: category?.name ?? "",
   };
 }
@@ -132,3 +154,15 @@ async function getStoreProducts(perPage) {
 export async function getProducts(perPage = 6) {
   return (await getAdminProducts(perPage)) ?? (await getStoreProducts(perPage));
 }
+
+export async function getAllProductSlugs(perPage = 100) {
+  const products = await getProducts(perPage);
+  return products.map((product) => ({ params: { slug: product.slug } }));
+}
+
+export async function getProductBySlug(slug) {
+  const products = await getProducts(100);
+  return products.find((product) => product.slug === slug) ?? null;
+}
+
+export { WOO_STORE_API };

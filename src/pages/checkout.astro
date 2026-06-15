@@ -1,0 +1,430 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Footer from '../components/Footer.astro';
+import { WOO_STORE_API } from '../lib/woocommerce.js';
+---
+
+<BaseLayout
+  title="إتمام الطلب - دكان البنات"
+  description="أكملي بياناتك لإتمام طلب المنتج الرقمي داخل دكان البنات."
+>
+  <main>
+    <section class="checkout-page" data-store-api={WOO_STORE_API}>
+      <div class="checkout-page__container">
+        <a class="checkout-page__back" href="/products">← العودة للمنتجات</a>
+
+        <header class="checkout-page__header">
+          <span class="ds-section-label">إتمام الطلب</span>
+          <h1>بيانات بسيطة ونكمل طلبك</h1>
+          <p>كل العملية تتم هنا داخل دكان البنات. لو احتاجت وسيلة الدفع خطوة إضافية، هنوضحها لك في نفس الصفحة.</p>
+        </header>
+
+        <div class="checkout-page__layout">
+          <form class="checkout-form" id="db-checkout-form">
+            <div class="checkout-panel">
+              <h2>بيانات التواصل</h2>
+              <div class="checkout-grid">
+                <label class="ds-form-group">
+                  <span class="ds-form-group__label">الاسم الأول <span class="ds-form-group__required">*</span></span>
+                  <input class="ds-input" name="first_name" autocomplete="given-name" required />
+                </label>
+                <label class="ds-form-group">
+                  <span class="ds-form-group__label">اسم العائلة</span>
+                  <input class="ds-input" name="last_name" autocomplete="family-name" />
+                </label>
+              </div>
+
+              <label class="ds-form-group">
+                <span class="ds-form-group__label">البريد الإلكتروني <span class="ds-form-group__required">*</span></span>
+                <input class="ds-input" name="email" type="email" autocomplete="email" required />
+              </label>
+
+              <label class="ds-form-group">
+                <span class="ds-form-group__label">رقم الهاتف <span class="ds-form-group__required">*</span></span>
+                <input class="ds-input" name="phone" type="tel" autocomplete="tel" required />
+              </label>
+            </div>
+
+            <div class="checkout-panel">
+              <h2>بيانات الفاتورة</h2>
+              <div class="checkout-grid">
+                <label class="ds-form-group">
+                  <span class="ds-form-group__label">المدينة</span>
+                  <input class="ds-input" name="city" autocomplete="address-level2" value="Alexandria" />
+                </label>
+                <label class="ds-form-group">
+                  <span class="ds-form-group__label">الدولة</span>
+                  <input class="ds-input" name="country" autocomplete="country-name" value="EG" />
+                </label>
+              </div>
+
+              <label class="ds-form-group">
+                <span class="ds-form-group__label">العنوان</span>
+                <input class="ds-input" name="address_1" autocomplete="address-line1" />
+              </label>
+
+              <label class="ds-form-group">
+                <span class="ds-form-group__label">ملاحظات الطلب</span>
+                <textarea class="ds-input" name="customer_note" rows="4"></textarea>
+              </label>
+            </div>
+
+            <div class="checkout-message" id="db-checkout-message" role="status" aria-live="polite"></div>
+
+            <button class="ds-btn ds-btn--primary-solid ds-btn--lg ds-btn--pill checkout-submit" type="submit">
+              إتمام الطلب
+            </button>
+          </form>
+
+          <aside class="checkout-summary" aria-labelledby="checkout-summary-heading">
+            <h2 id="checkout-summary-heading">ملخص الطلب</h2>
+            <div class="checkout-summary__body" id="db-checkout-summary">
+              <div class="checkout-loading">جاري تجهيز المنتج...</div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<script>
+  const page = document.querySelector('.checkout-page');
+  const storeApi = page?.dataset.storeApi;
+  const form = document.querySelector('#db-checkout-form');
+  const summary = document.querySelector('#db-checkout-summary');
+  const message = document.querySelector('#db-checkout-message');
+  const submitButton = form?.querySelector('button[type="submit"]');
+  const params = new URLSearchParams(window.location.search);
+  const productId = params.get('product');
+
+  let cartToken = window.localStorage.getItem('db_cart_token') || '';
+  let nonce = '';
+  let paymentMethods = [];
+
+  function setMessage(text, type = 'info') {
+    if (!message) return;
+    message.textContent = text;
+    message.dataset.type = type;
+    message.hidden = !text;
+  }
+
+  function formatPrice(total) {
+    const amount = Number(total.total_price || 0) / 10 ** Number(total.currency_minor_unit || 2);
+    if (!amount) return 'مجاني';
+    return new Intl.NumberFormat('ar-EG', {
+      style: 'currency',
+      currency: total.currency_code || 'EGP',
+      maximumFractionDigits: Number(total.currency_minor_unit || 2),
+    }).format(amount);
+  }
+
+  function getHeaders(extra = {}) {
+    const headers = { 'Content-Type': 'application/json', ...extra };
+    if (nonce) headers.Nonce = nonce;
+    if (cartToken) headers['Cart-Token'] = cartToken;
+    return headers;
+  }
+
+  async function storeFetch(path, options = {}) {
+    const res = await fetch(`${storeApi}${path}`, {
+      mode: 'cors',
+      ...options,
+      headers: getHeaders(options.headers || {}),
+    });
+
+    const nextNonce = res.headers.get('Nonce');
+    const nextCartToken = res.headers.get('Cart-Token');
+    if (nextNonce) nonce = nextNonce;
+    if (nextCartToken) {
+      cartToken = nextCartToken;
+      window.localStorage.setItem('db_cart_token', cartToken);
+    }
+
+    const data = await res.json().catch(() => null);
+    if (!res.ok) {
+      throw new Error(data?.message || 'تعذر تنفيذ الطلب حاليا.');
+    }
+    return data;
+  }
+
+  function renderSummary(cart) {
+    paymentMethods = cart.payment_methods || [];
+    const item = cart.items?.[0];
+
+    if (!item) {
+      summary.innerHTML = '<p class="checkout-empty">لم يتم اختيار منتج بعد.</p>';
+      submitButton.disabled = true;
+      return;
+    }
+
+    summary.innerHTML = `
+      <article class="checkout-item">
+        <img src="${item.images?.[0]?.src || ''}" alt="${item.images?.[0]?.alt || item.name}" />
+        <div>
+          <h3>${item.name}</h3>
+          <p>الكمية: ${item.quantity}</p>
+          <strong>${formatPrice(cart.totals)}</strong>
+        </div>
+      </article>
+      <dl class="checkout-total">
+        <div><dt>الإجمالي</dt><dd>${formatPrice(cart.totals)}</dd></div>
+      </dl>
+    `;
+    submitButton.disabled = false;
+  }
+
+  async function prepareCheckout() {
+    if (!storeApi || !productId) {
+      summary.innerHTML = '<p class="checkout-empty">افتحي صفحة المنتج واختاري إتمام الطلب.</p>';
+      submitButton.disabled = true;
+      return;
+    }
+
+    try {
+      setMessage('');
+      const existingCart = await storeFetch('/cart');
+      for (const item of existingCart.items || []) {
+        await storeFetch(`/cart/items/${encodeURIComponent(item.key)}`, { method: 'DELETE' });
+      }
+      const cart = await storeFetch('/cart/add-item', {
+        method: 'POST',
+        body: JSON.stringify({ id: Number(productId), quantity: 1 }),
+      });
+      renderSummary(cart);
+    } catch (err) {
+      summary.innerHTML = '<p class="checkout-empty">لم نتمكن من تجهيز السلة.</p>';
+      setMessage(`${err.message} قد تحتاج إعدادات CORS في ووكوميرس إلى السماح لدومين dokanelbanat.com.`, 'error');
+      submitButton.disabled = true;
+    }
+  }
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    submitButton.disabled = true;
+    submitButton.classList.add('ds-btn--loading');
+    setMessage('جاري إنشاء الطلب...');
+
+    const data = new FormData(form);
+    const billing = {
+      first_name: data.get('first_name') || '',
+      last_name: data.get('last_name') || '',
+      company: '',
+      address_1: data.get('address_1') || '',
+      address_2: '',
+      city: data.get('city') || '',
+      state: 'EGALX',
+      postcode: '',
+      country: data.get('country') || 'EG',
+      email: data.get('email') || '',
+      phone: data.get('phone') || '',
+    };
+
+    try {
+      const result = await storeFetch('/checkout', {
+        method: 'POST',
+        body: JSON.stringify({
+          billing_address: billing,
+          shipping_address: billing,
+          payment_method: paymentMethods[0] || '',
+          payment_data: [],
+          customer_note: data.get('customer_note') || '',
+        }),
+      });
+
+      const redirectUrl = result.payment_result?.redirect_url;
+      if (redirectUrl) {
+        setMessage('تم إنشاء الطلب. سيتم فتح خطوة الدفع النهائية الآن.', 'success');
+        window.location.href = redirectUrl;
+        return;
+      }
+
+      setMessage(`تم إنشاء الطلب بنجاح. رقم الطلب: ${result.order_id || result.order_number || ''}`, 'success');
+      form.reset();
+    } catch (err) {
+      setMessage(err.message, 'error');
+      submitButton.disabled = false;
+    } finally {
+      submitButton.classList.remove('ds-btn--loading');
+    }
+  });
+
+  prepareCheckout();
+</script>
+
+<style>
+  .checkout-page {
+    background: var(--color-bg-base);
+    padding-block: var(--space-12) var(--space-16);
+  }
+
+  .checkout-page__container {
+    max-width: var(--grid-max-width);
+    margin-inline: auto;
+    padding-inline: var(--grid-margin);
+  }
+
+  .checkout-page__back {
+    display: inline-block;
+    margin-bottom: var(--space-8);
+    font: var(--type-ar-body-sm);
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .checkout-page__header {
+    max-width: 760px;
+    margin-bottom: var(--space-10);
+  }
+
+  .checkout-page__header h1 {
+    font: var(--type-ar-h2);
+    color: var(--color-text-primary);
+    margin: var(--space-4) 0;
+  }
+
+  .checkout-page__header p {
+    font: var(--type-ar-body-lg);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .checkout-page__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+    gap: var(--space-8);
+    align-items: start;
+  }
+
+  .checkout-form,
+  .checkout-summary {
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .checkout-panel,
+  .checkout-summary {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-default);
+    padding: var(--space-6);
+  }
+
+  .checkout-panel h2,
+  .checkout-summary h2 {
+    font: var(--type-ar-h5);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--space-5);
+  }
+
+  .checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  .checkout-message {
+    padding: var(--space-4);
+    border: 1px solid var(--color-border-default);
+    background: var(--color-bg-canvas);
+    font: var(--type-ar-body-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .checkout-message:empty,
+  .checkout-message[hidden] {
+    display: none;
+  }
+
+  .checkout-message[data-type="error"] {
+    border-color: var(--color-error);
+    color: var(--color-error);
+  }
+
+  .checkout-message[data-type="success"] {
+    border-color: var(--color-success);
+    color: var(--color-success);
+  }
+
+  .checkout-submit {
+    justify-self: start;
+  }
+
+  .checkout-item {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: var(--space-4);
+    align-items: center;
+  }
+
+  .checkout-item img {
+    width: 120px;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    background: var(--color-bg-canvas);
+  }
+
+  .checkout-item h3 {
+    font: var(--type-ar-h6);
+    color: var(--color-text-primary);
+    margin: 0 0 var(--space-2);
+  }
+
+  .checkout-item p {
+    font: var(--type-ar-body-sm);
+    color: var(--color-text-secondary);
+    margin: 0 0 var(--space-2);
+  }
+
+  .checkout-item strong {
+    font: var(--type-ar-h6);
+    color: var(--color-text-primary);
+  }
+
+  .checkout-total {
+    margin: var(--space-6) 0 0;
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--color-border-default);
+  }
+
+  .checkout-total div {
+    display: flex;
+    justify-content: space-between;
+    gap: var(--space-4);
+    font: var(--type-ar-h6);
+    color: var(--color-text-primary);
+  }
+
+  .checkout-total dt,
+  .checkout-total dd {
+    margin: 0;
+  }
+
+  .checkout-loading,
+  .checkout-empty {
+    font: var(--type-ar-body);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  @media (max-width: 900px) {
+    .checkout-page__layout {
+      grid-template-columns: 1fr;
+    }
+
+    .checkout-summary {
+      order: -1;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .checkout-grid,
+    .checkout-item {
+      grid-template-columns: 1fr;
+    }
+
+    .checkout-item img {
+      width: 100%;
+    }
+  }
+</style>

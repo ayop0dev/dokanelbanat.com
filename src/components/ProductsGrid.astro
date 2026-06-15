@@ -21,7 +21,7 @@ const hasProducts = products.length > 0;
       <div class="ds-products-grid ds-stagger">
         {products.map((product) => (
           <article class="ds-product-card">
-            <a class="ds-product-card__mockup" href={product.permalink} target="_blank" rel="noopener">
+            <a class="ds-product-card__mockup" href={product.productUrl}>
               {product.image ? (
                 <img src={product.image.src} alt={product.image.alt} loading="lazy" />
               ) : (
@@ -39,7 +39,7 @@ const hasProducts = products.length > 0;
               <span class:list={['ds-product-card__price', product.price === 'مجاني' && 'ds-product-card__price--free']}>
                 {product.price}
               </span>
-              <a class="ds-btn ds-btn--primary-solid ds-btn--sm" href={product.permalink} target="_blank" rel="noopener">
+              <a class="ds-btn ds-btn--primary-solid ds-btn--sm" href={product.checkoutUrl}>
                 {product.price === 'مجاني' ? 'احصلي عليه' : 'اشتري الآن'}
               </a>
             </div>
