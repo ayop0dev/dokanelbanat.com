@@ -1,0 +1,157 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Footer from '../../components/Footer.astro';
+import { getProducts } from '../../lib/woocommerce.js';
+
+const products = await getProducts(24);
+---
+
+<BaseLayout
+  title="منتجات دكان البنات الرقمية"
+  description="تصفحي المنتجات الرقمية المختارة من دكان البنات: أدلة، قوالب، وملفات عملية تساعدك تبدأي بثقة."
+>
+  <main>
+    <section class="products-header ds-section-enter" aria-labelledby="products-page-heading">
+      <div class="products-header__inner">
+        <a class="products-back" href="/">← الرئيسية</a>
+        <span class="ds-section-label">منتجات دكان البنات</span>
+        <h1 id="products-page-heading">كل المنتجات الرقمية</h1>
+        <p>
+          اختيارات عملية وخفيفة تساعدك تنظمي أفكارك، تبني مشروعك، وتكملي رحلتك بوعي.
+        </p>
+      </div>
+    </section>
+
+    <section class="products-section">
+      <div class="products-container">
+        {products.length > 0 ? (
+          <div class="products-grid">
+            {products.map((product) => (
+              <article class="ds-product-card">
+                <a class="ds-product-card__mockup" href={product.permalink} target="_blank" rel="noopener">
+                  {product.image ? (
+                    <img src={product.image.src} alt={product.image.alt} loading="lazy" />
+                  ) : (
+                    <div class="product-card__placeholder">
+                      <span>غلاف المنتج</span>
+                    </div>
+                  )}
+                </a>
+
+                {product.category && <span class="ds-product-card__category">{product.category}</span>}
+                <h2 class="ds-product-card__title">{product.name}</h2>
+                {product.shortDescription && <p class="ds-product-card__desc">{product.shortDescription}</p>}
+
+                <div class="ds-product-card__footer">
+                  <span class:list={['ds-product-card__price', product.price === 'مجاني' && 'ds-product-card__price--free']}>
+                    {product.price}
+                  </span>
+                  <a class="ds-btn ds-btn--primary-solid ds-btn--sm" href={product.permalink} target="_blank" rel="noopener">
+                    {product.price === 'مجاني' ? 'احصلي عليه' : 'اشتري الآن'}
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p class="products-empty">المنتجات غير متاحة حاليا. جربي مرة أخرى قريبا.</p>
+        )}
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  .products-header {
+    background: var(--gradient-hero);
+    padding-block: var(--space-20) var(--space-14);
+    text-align: center;
+  }
+
+  .products-header__inner {
+    max-width: 760px;
+    margin-inline: auto;
+    padding-inline: var(--grid-margin);
+  }
+
+  .products-back {
+    display: inline-block;
+    margin-bottom: var(--space-8);
+    font: var(--type-ar-body-sm);
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .products-header h1 {
+    font: var(--type-ar-display);
+    letter-spacing: var(--letter-spacing-ar-display);
+    color: var(--color-text-primary);
+    margin: var(--space-4) 0;
+  }
+
+  .products-header p {
+    font: var(--type-ar-body-lg);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .products-section {
+    background: var(--color-bg-base);
+    padding-block: var(--space-16);
+  }
+
+  .products-container {
+    max-width: var(--grid-max-width);
+    margin-inline: auto;
+    padding-inline: var(--grid-margin);
+  }
+
+  .products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+
+  .product-card__placeholder {
+    width: 80%;
+    height: 80%;
+    background: var(--color-bg-base);
+    border: 1px solid var(--color-border-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-card__placeholder span {
+    font: var(--type-ar-caption);
+    color: var(--color-text-muted);
+  }
+
+  .products-empty {
+    font: var(--type-ar-body-lg);
+    color: var(--color-text-secondary);
+    text-align: center;
+  }
+
+  @media (max-width: 1024px) {
+    .products-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .products-header {
+      padding-block: var(--space-12) var(--space-10);
+    }
+
+    .products-header h1 {
+      font: var(--type-ar-h2);
+      letter-spacing: var(--letter-spacing-ar-h2);
+    }
+
+    .products-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
