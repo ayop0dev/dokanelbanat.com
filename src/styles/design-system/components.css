@@ -929,18 +929,20 @@ textarea.ds-input {
 }
 
 .ds-product-card__mockup {
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 16 / 9;
   background: var(--color-bg-canvas);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: var(--space-4);
+  overflow: hidden;
 }
 
 .ds-product-card__mockup img {
-  max-height: 80%;
-  max-width: 80%;
-  object-fit: contain;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
 }
 
 .ds-product-card__category {
