@@ -2,3 +2,6 @@
 node_modules/
 dist/
 .astro/
+.vscode/sftp.json
+wordpress-plugin/*.zip
+.playwright-mcp/

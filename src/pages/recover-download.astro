@@ -1,0 +1,272 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout
+  title="استعادة طلبك - دكان البنات"
+  description="أعيدي طلبك ورابط تحميل منتجك الرقمي باستخدام رقم الطلب والبريد الإلكتروني."
+>
+  <main>
+    <section class="recover-page" dir="rtl">
+      <div class="recover-page__container">
+        <a class="recover-page__back" href="/">← الرئيسية</a>
+
+        <header class="recover-page__header">
+          <span class="ds-section-label">استعادة الطلب</span>
+          <h1>أعيدي رابط التحميل</h1>
+          <p>
+            أدخلي رقم الطلب والبريد الإلكتروني الذي استخدمتِه عند الطلب وسنُرسل لك رابط التحميل مجددًا.
+            ستجدين رقم الطلب في رسالة التأكيد الأولى مكتوبًا بشكل مثل: <strong>#1234</strong>.
+          </p>
+        </header>
+
+        <div class="recover-card" aria-labelledby="recover-form-heading">
+          <h2 id="recover-form-heading" class="sr-only">نموذج استعادة الطلب</h2>
+
+          <form id="db-recover-form" novalidate aria-label="نموذج استعادة الطلب">
+            <input type="text" name="website" class="recover-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+            <label class="ds-form-group" for="db-order-number">
+              <span class="ds-form-group__label">
+                رقم الطلب <span class="ds-form-group__required" aria-label="مطلوب">*</span>
+              </span>
+              <input
+                class="ds-input"
+                id="db-order-number"
+                name="order_number"
+                type="text"
+                inputmode="numeric"
+                autocomplete="off"
+                required
+                aria-required="true"
+                aria-describedby="db-order-number-error"
+                placeholder="مثال: 1234"
+              />
+              <span class="ds-form-group__error" id="db-order-number-error" role="alert" aria-live="assertive"></span>
+            </label>
+
+            <label class="ds-form-group" for="db-recover-email">
+              <span class="ds-form-group__label">
+                البريد الإلكتروني <span class="ds-form-group__required" aria-label="مطلوب">*</span>
+              </span>
+              <input
+                class="ds-input"
+                id="db-recover-email"
+                name="email"
+                type="email"
+                inputmode="email"
+                autocomplete="email"
+                required
+                aria-required="true"
+                aria-describedby="db-recover-email-error"
+              />
+              <span class="ds-form-group__error" id="db-recover-email-error" role="alert" aria-live="assertive"></span>
+            </label>
+
+            <div class="recover-message" id="db-recover-message" role="status" aria-live="polite" hidden></div>
+
+            <button
+              class="ds-btn ds-btn--primary-solid ds-btn--lg ds-btn--pill"
+              type="submit"
+              id="db-recover-submit"
+            >
+              <span class="recover-submit__label">أرسلي لي رابط التحميل</span>
+              <span class="recover-submit__loading" hidden aria-hidden="true">جارٍ المعالجة...</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('db-recover-form') as HTMLFormElement | null;
+  const submitBtn = document.getElementById('db-recover-submit') as HTMLButtonElement | null;
+  const submitLabel = submitBtn?.querySelector('.recover-submit__label');
+  const submitLoading = submitBtn?.querySelector('.recover-submit__loading');
+  const msgEl = document.getElementById('db-recover-message');
+
+  let submitting = false;
+
+  function setMessage(text: string, type = 'info') {
+    if (!msgEl) return;
+    msgEl.textContent = text;
+    msgEl.dataset.type = type;
+    msgEl.hidden = !text;
+  }
+
+  function clearFieldError(id: string) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '';
+  }
+
+  function setFieldError(id: string, msg: string) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = msg;
+  }
+
+  function setLoading(on: boolean) {
+    if (!submitBtn) return;
+    submitBtn.disabled = on;
+    submitLabel?.toggleAttribute('hidden', on);
+    submitLoading?.toggleAttribute('hidden', !on);
+  }
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (submitting) return;
+
+    clearFieldError('db-order-number-error');
+    clearFieldError('db-recover-email-error');
+    setMessage('');
+
+    const data = new FormData(form);
+
+    if (data.get('website')) return;
+
+    const orderNumber = (data.get('order_number') ?? '').toString().trim().replace(/^#/, '');
+    const email = (data.get('email') ?? '').toString().trim();
+
+    let valid = true;
+    if (!orderNumber || !/^\d+$/.test(orderNumber)) {
+      setFieldError('db-order-number-error', 'يرجى إدخال رقم طلب صحيح (أرقام فقط).');
+      valid = false;
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setFieldError('db-recover-email-error', 'يرجى إدخال بريد إلكتروني صحيح.');
+      valid = false;
+    }
+    if (!valid) return;
+
+    submitting = true;
+    setLoading(true);
+    setMessage('جارٍ المعالجة...');
+
+    try {
+      const res = await fetch('/api/recover-download', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ order_number: orderNumber, email }),
+      });
+      const json = await res.json().catch(() => ({}));
+      const msg = typeof json?.message === 'string'
+        ? json.message
+        : 'إذا كانت المعلومات صحيحة، ستصل رسالة إلكترونية جديدة خلال دقائق.';
+      setMessage(msg, 'success');
+      form.reset();
+    } catch {
+      setMessage('تعذّر إرسال الطلب. تحققي من اتصالك بالإنترنت وحاولي مرة أخرى.', 'error');
+    } finally {
+      submitting = false;
+      setLoading(false);
+    }
+  });
+</script>
+
+<style>
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
+
+  .recover-honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .recover-page {
+    background: var(--color-bg-base);
+    min-height: 80vh;
+    padding-block: var(--space-16);
+  }
+
+  .recover-page__container {
+    max-width: 600px;
+    margin-inline: auto;
+    padding-inline: var(--grid-margin);
+  }
+
+  .recover-page__back {
+    display: inline-block;
+    margin-bottom: var(--space-8);
+    font: var(--type-ar-body-sm);
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .recover-page__header {
+    margin-bottom: var(--space-10);
+  }
+
+  .recover-page__header h1 {
+    font: var(--type-ar-h2);
+    color: var(--color-text-primary);
+    margin: var(--space-4) 0;
+  }
+
+  .recover-page__header p {
+    font: var(--type-ar-body);
+    color: var(--color-text-secondary);
+    margin: 0;
+  }
+
+  .recover-card {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-default);
+    padding: var(--space-8);
+    display: grid;
+    gap: var(--space-5);
+  }
+
+  .ds-form-group {
+    display: grid;
+    gap: var(--space-2);
+  }
+
+  .ds-form-group__label {
+    font: var(--type-ar-body-sm);
+    color: var(--color-text-secondary);
+    font-weight: 600;
+  }
+
+  .ds-form-group__required {
+    color: var(--color-error, #ef4444);
+  }
+
+  .ds-form-group__error {
+    font: var(--type-ar-caption, 0.8rem/1.4 inherit);
+    color: var(--color-error, #ef4444);
+    min-height: 1.2em;
+  }
+
+  .recover-message {
+    padding: var(--space-4);
+    border: 1px solid var(--color-border-default);
+    background: var(--color-bg-canvas);
+    font: var(--type-ar-body-sm);
+    color: var(--color-text-secondary);
+  }
+
+  .recover-message[data-type="error"] {
+    border-color: var(--color-error, #ef4444);
+    color: var(--color-error, #ef4444);
+  }
+
+  .recover-message[data-type="success"] {
+    border-color: var(--color-success, #22c55e);
+    color: var(--color-success, #22c55e);
+  }
+</style>

@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getPostBySlug, getAllPostSlugs } from '../../lib/wordpress.js';
+import { getPostBySlug, getAllPostSlugs, proxyWpImageUrl, rewriteContentImages } from '../../lib/wordpress.js';
 
 export async function getStaticPaths() {
   return await getAllPostSlugs();
@@ -21,7 +21,7 @@ const description = post.excerpt?.rendered
   ? post.excerpt.rendered.replace(/<[^>]*>/g, '').slice(0, 160)
   : '';
 
-const featuredImage = post._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? '';
+const featuredImage = proxyWpImageUrl(post._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? '');
 const category = post._embedded?.['wp:term']?.[0]?.[0]?.name ?? '';
 const author = post._embedded?.author?.[0]?.name ?? '';
 const date = new Date(post.date).toLocaleDateString('ar-SA', {
@@ -59,7 +59,7 @@ const date = new Date(post.date).toLocaleDateString('ar-SA', {
         )}
       </div>
 
-      <div class="article-prose" set:html={post.content.rendered} />
+      <div class="article-prose" set:html={rewriteContentImages(post.content.rendered)} />
 
       <a class="article-back" href="/#magazine">← العودة إلى المجلة</a>
     </div>
