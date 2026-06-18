@@ -1,6 +1,29 @@
-const WP_API = import.meta.env.WP_API_URL;
+const WP_API = import.meta.env.WP_API_URL ?? "";
+
+export function proxyWpImageUrl(src) {
+  if (!src) return "";
+  try {
+    const u = new URL(src);
+    return `/api/image?url=${encodeURIComponent(u.pathname + u.search)}`;
+  } catch {
+    return "";
+  }
+}
+
+export function rewriteContentImages(html) {
+  if (!html) return "";
+  return html.replace(
+    /(<img\b[^>]*?\ssrc=["'])([^"']+)(["'][^>]*>)/gi,
+    (_, before, src, after) => {
+      if (src.startsWith('/') || src.startsWith('data:')) return _;
+      const proxied = proxyWpImageUrl(src);
+      return proxied ? before + proxied + after : _;
+    }
+  );
+}
 
 async function wpFetch(endpoint) {
+  if (!WP_API) return null;
   try {
     const res = await fetch(`${WP_API}${endpoint}`);
     if (!res.ok) throw new Error(`WP REST API ${res.status}: ${endpoint}`);

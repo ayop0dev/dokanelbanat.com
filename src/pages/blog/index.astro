@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getAllPosts } from '../../lib/wordpress.js';
+import { getAllPosts, proxyWpImageUrl } from '../../lib/wordpress.js';
 
 const posts = await getAllPosts(100);
 
@@ -51,7 +51,7 @@ function truncate(text, len = 90) {
                   {img?.source_url && (
                     <a href={`/blog/${post.slug}`} class="arc-card__img-link" tabindex="-1" aria-hidden="true">
                       <img
-                        src={img.source_url}
+                        src={proxyWpImageUrl(img.source_url)}
                         alt={img.alt_text || ''}
                         loading="lazy"
                         class="arc-card__img"

@@ -1,13 +1,23 @@
-const WOO_STORE_API =
-  import.meta.env.WOO_STORE_API_URL ?? "https://blog.dokanelbanat.com/wp-json/wc/store/v1";
-const WOO_API = import.meta.env.WOO_API_URL ?? "https://blog.dokanelbanat.com/wp-json/wc/v3";
+const WOO_STORE_API = import.meta.env.WOO_STORE_API_URL ?? "";
+const WOO_API = import.meta.env.WOO_API_URL ?? "";
 const WOO_CONSUMER_KEY = import.meta.env.WOO_CONSUMER_KEY;
 const WOO_CONSUMER_SECRET = import.meta.env.WOO_CONSUMER_SECRET;
 
+function proxyImageUrl(src) {
+  if (!src) return "";
+  try {
+    const u = new URL(src);
+    return `/api/image?url=${encodeURIComponent(u.pathname + u.search)}`;
+  } catch {
+    return "";
+  }
+}
+
 async function wooFetch(url, source) {
+  if (!url) return null;
   try {
     const res = await fetch(url);
-    if (!res.ok) throw new Error(`${source} ${res.status}: ${url}`);
+    if (!res.ok) throw new Error(`${source} ${res.status}`);
     return await res.json();
   } catch (err) {
     console.error("[woocommerce.js]", err.message);
@@ -82,12 +92,12 @@ function normalizeStoreProduct(product) {
     isInStock: product.is_in_stock,
     image: image
       ? {
-          src: image.src,
+          src: proxyImageUrl(image.src),
           alt: image.alt || product.name,
         }
       : null,
     images: (product.images ?? []).map((item) => ({
-      src: item.src,
+      src: proxyImageUrl(item.src),
       alt: item.alt || product.name,
     })),
     category: category?.name ?? "",
@@ -112,12 +122,12 @@ function normalizeAdminProduct(product) {
     isInStock: product.stock_status === "instock",
     image: image
       ? {
-          src: image.src,
+          src: proxyImageUrl(image.src),
           alt: image.alt || product.name,
         }
       : null,
     images: (product.images ?? []).map((item) => ({
-      src: item.src,
+      src: proxyImageUrl(item.src),
       alt: item.alt || product.name,
     })),
     category: category?.name ?? "",
@@ -125,7 +135,7 @@ function normalizeAdminProduct(product) {
 }
 
 async function getAdminProducts(perPage) {
-  if (!WOO_CONSUMER_KEY || !WOO_CONSUMER_SECRET) return null;
+  if (!WOO_CONSUMER_KEY || !WOO_CONSUMER_SECRET || !WOO_API) return null;
 
   const params = new URLSearchParams({
     per_page: String(perPage),
@@ -141,6 +151,8 @@ async function getAdminProducts(perPage) {
 }
 
 async function getStoreProducts(perPage) {
+  if (!WOO_STORE_API) return [];
+
   const params = new URLSearchParams({
     per_page: String(perPage),
     orderby: "date",
@@ -165,4 +177,7 @@ export async function getProductBySlug(slug) {
   return products.find((product) => product.slug === slug) ?? null;
 }
 
-export { WOO_STORE_API };
+export async function getProductById(id) {
+  const products = await getProducts(100);
+  return products.find((product) => product.id === id) ?? null;
+}

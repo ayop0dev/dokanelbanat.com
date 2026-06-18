@@ -1,85 +1,183 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Footer from '../components/Footer.astro';
-import { WOO_STORE_API } from '../lib/woocommerce.js';
+import { getProductById } from '../lib/woocommerce.js';
+
+const rawProductId    = Astro.url.searchParams.get('product') ?? '';
+const numericProductId = rawProductId && /^\d+$/.test(rawProductId) ? Number(rawProductId) : 0;
+
+let product = null;
+
+if (numericProductId > 0) {
+  product = await getProductById(numericProductId);
+}
 ---
 
 <BaseLayout
   title="إتمام الطلب - دكان البنات"
-  description="أكملي بياناتك لإتمام طلب المنتج الرقمي داخل دكان البنات."
+  description="أكملي بياناتك لإتمام طلبك في دكان البنات."
 >
   <main>
-    <section class="checkout-page" data-store-api={WOO_STORE_API}>
+    <section class="checkout-page" dir="rtl">
       <div class="checkout-page__container">
         <a class="checkout-page__back" href="/products">← العودة للمنتجات</a>
 
         <header class="checkout-page__header">
           <span class="ds-section-label">إتمام الطلب</span>
-          <h1>بيانات بسيطة ونكمل طلبك</h1>
-          <p>كل العملية تتم هنا داخل دكان البنات. لو احتاجت وسيلة الدفع خطوة إضافية، هنوضحها لك في نفس الصفحة.</p>
+          <h1>بيانات بسيطة ونُرسل لك المنتج</h1>
+          <p>ستصل تفاصيل المنتج إلى بريدك الإلكتروني مباشرةً. لا يوجد دفع لهذا المنتج.</p>
         </header>
 
         <div class="checkout-page__layout">
-          <form class="checkout-form" id="db-checkout-form">
+          <form
+            class="checkout-form"
+            id="db-checkout-form"
+            novalidate
+            aria-label="نموذج الطلب"
+          >
+            <input type="text" name="website" class="checkout-honeypot" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
             <div class="checkout-panel">
               <h2>بيانات التواصل</h2>
-              <div class="checkout-grid">
-                <label class="ds-form-group">
-                  <span class="ds-form-group__label">الاسم الأول <span class="ds-form-group__required">*</span></span>
-                  <input class="ds-input" name="first_name" autocomplete="given-name" required />
-                </label>
-                <label class="ds-form-group">
-                  <span class="ds-form-group__label">اسم العائلة</span>
-                  <input class="ds-input" name="last_name" autocomplete="family-name" />
-                </label>
-              </div>
 
-              <label class="ds-form-group">
-                <span class="ds-form-group__label">البريد الإلكتروني <span class="ds-form-group__required">*</span></span>
-                <input class="ds-input" name="email" type="email" autocomplete="email" required />
+              <label class="ds-form-group" for="db-first-name">
+                <span class="ds-form-group__label">
+                  الاسم <span class="ds-form-group__required" aria-label="مطلوب">*</span>
+                </span>
+                <input
+                  class="ds-input"
+                  id="db-first-name"
+                  name="first_name"
+                  type="text"
+                  autocomplete="given-name"
+                  required
+                  aria-required="true"
+                  aria-describedby="db-first-name-error"
+                />
+                <span class="ds-form-group__error" id="db-first-name-error" role="alert" aria-live="assertive"></span>
               </label>
 
-              <label class="ds-form-group">
-                <span class="ds-form-group__label">رقم الهاتف <span class="ds-form-group__required">*</span></span>
-                <input class="ds-input" name="phone" type="tel" autocomplete="tel" required />
+              <label class="ds-form-group" for="db-email">
+                <span class="ds-form-group__label">
+                  البريد الإلكتروني <span class="ds-form-group__required" aria-label="مطلوب">*</span>
+                </span>
+                <input
+                  class="ds-input"
+                  id="db-email"
+                  name="email"
+                  type="email"
+                  autocomplete="email"
+                  inputmode="email"
+                  required
+                  aria-required="true"
+                  aria-describedby="db-email-error"
+                />
+                <span class="ds-form-group__error" id="db-email-error" role="alert" aria-live="assertive"></span>
+              </label>
+
+              <label class="ds-form-group" for="db-phone">
+                <span class="ds-form-group__label">رقم الهاتف (اختياري)</span>
+                <input
+                  class="ds-input"
+                  id="db-phone"
+                  name="phone"
+                  type="tel"
+                  autocomplete="tel"
+                  inputmode="tel"
+                  aria-describedby="db-phone-error"
+                />
+                <span class="ds-form-group__error" id="db-phone-error" role="alert" aria-live="assertive"></span>
               </label>
             </div>
 
             <div class="checkout-panel">
-              <h2>بيانات الفاتورة</h2>
-              <div class="checkout-grid">
-                <label class="ds-form-group">
-                  <span class="ds-form-group__label">المدينة</span>
-                  <input class="ds-input" name="city" autocomplete="address-level2" value="Alexandria" />
-                </label>
-                <label class="ds-form-group">
-                  <span class="ds-form-group__label">الدولة</span>
-                  <input class="ds-input" name="country" autocomplete="country-name" value="EG" />
-                </label>
-              </div>
+              <h2>الموافقة والشروط</h2>
 
-              <label class="ds-form-group">
-                <span class="ds-form-group__label">العنوان</span>
-                <input class="ds-input" name="address_1" autocomplete="address-line1" />
+              <label class="ds-form-group ds-form-group--checkbox">
+                <input
+                  class="ds-checkbox"
+                  id="db-privacy"
+                  name="privacy_accepted"
+                  type="checkbox"
+                  required
+                  aria-required="true"
+                  aria-describedby="db-privacy-error"
+                />
+                <span>
+                  أوافق على
+                  <a href="/privacy" target="_blank" rel="noopener">سياسة الخصوصية</a>
+                  و<a href="/terms" target="_blank" rel="noopener">شروط الاستخدام</a>
+                  اللازمة لإتمام الطلب وإرسال المنتج.
+                  <span class="ds-form-group__required" aria-label="مطلوب">*</span>
+                </span>
               </label>
+              <span class="ds-form-group__error" id="db-privacy-error" role="alert" aria-live="assertive"></span>
 
-              <label class="ds-form-group">
-                <span class="ds-form-group__label">ملاحظات الطلب</span>
-                <textarea class="ds-input" name="customer_note" rows="4"></textarea>
+              <label class="ds-form-group ds-form-group--checkbox" style="margin-top: var(--space-4);">
+                <input
+                  class="ds-checkbox"
+                  id="db-marketing"
+                  name="marketing_consent"
+                  type="checkbox"
+                />
+                <span>أرغب في تلقي رسائل عن المنتجات والعروض الجديدة (اختياري).</span>
               </label>
             </div>
 
-            <div class="checkout-message" id="db-checkout-message" role="status" aria-live="polite"></div>
+            <div class="checkout-message" id="db-checkout-message" role="status" aria-live="polite" hidden></div>
 
-            <button class="ds-btn ds-btn--primary-solid ds-btn--lg ds-btn--pill checkout-submit" type="submit">
-              إتمام الطلب
+            <button
+              class="ds-btn ds-btn--primary-solid ds-btn--lg ds-btn--pill checkout-submit"
+              type="submit"
+              id="db-submit"
+            >
+              <span class="checkout-submit__label">احصلي على المنتج مجانًا</span>
+              <span class="checkout-submit__loading" hidden aria-hidden="true">جارٍ المعالجة...</span>
             </button>
+
+            <p class="checkout-note">لا يوجد دفع — المنتج مجاني تمامًا.</p>
           </form>
 
           <aside class="checkout-summary" aria-labelledby="checkout-summary-heading">
             <h2 id="checkout-summary-heading">ملخص الطلب</h2>
-            <div class="checkout-summary__body" id="db-checkout-summary">
-              <div class="checkout-loading">جاري تجهيز المنتج...</div>
+            {product ? (
+              <article class="checkout-item">
+                {product.image ? (
+                  <img
+                    src={product.image.src}
+                    alt={product.image.alt}
+                    class="checkout-item__img"
+                    loading="lazy"
+                  />
+                ) : (
+                  <div class="checkout-item__placeholder" aria-hidden="true">
+                    <span>غلاف المنتج</span>
+                  </div>
+                )}
+                <div class="checkout-item__details">
+                  <h3>{product.name}</h3>
+                  {product.shortDescription && (
+                    <p>{product.shortDescription}</p>
+                  )}
+                  <strong class="checkout-item__price">
+                    {product.price === 'مجاني' ? 'مجاني' : product.price}
+                  </strong>
+                </div>
+              </article>
+              <dl class="checkout-total">
+                <div>
+                  <dt>الإجمالي</dt>
+                  <dd>مجاني</dd>
+                </div>
+              </dl>
+            ) : (
+              <p class="checkout-empty">
+                لم يتم اختيار منتج. <a href="/products">تصفحي المنتجات</a>
+              </p>
+            )}
+
+            <div class="checkout-recovery-hint">
+              <p>إذا لم تصل رسالة التأكيد، يمكنك <a href="/recover-download">استعادة طلبك لاحقًا</a> برقم الطلب والبريد الإلكتروني.</p>
             </div>
           </aside>
         </div>
@@ -89,171 +187,143 @@ import { WOO_STORE_API } from '../lib/woocommerce.js';
   <Footer />
 </BaseLayout>
 
-<script>
-  const page = document.querySelector('.checkout-page');
-  const storeApi = page?.dataset.storeApi;
-  const form = document.querySelector('#db-checkout-form');
-  const summary = document.querySelector('#db-checkout-summary');
-  const message = document.querySelector('#db-checkout-message');
-  const submitButton = form?.querySelector('button[type="submit"]');
-  const params = new URLSearchParams(window.location.search);
-  const productId = params.get('product');
+<script define:vars={{ serverProductId: product?.id ?? null }}>
+  const form = document.getElementById('db-checkout-form');
+  const submitBtn = document.getElementById('db-submit');
+  const submitLabel = submitBtn?.querySelector('.checkout-submit__label');
+  const submitLoading = submitBtn?.querySelector('.checkout-submit__loading');
+  const msgEl = document.getElementById('db-checkout-message');
 
-  let cartToken = window.localStorage.getItem('db_cart_token') || '';
-  let nonce = '';
-  let paymentMethods = [];
+  function generateIdempotencyKey() {
+    const arr = new Uint8Array(16);
+    crypto.getRandomValues(arr);
+    return Array.from(arr, (b) => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  let idempotencyKey = generateIdempotencyKey();
+  let submitting = false;
 
   function setMessage(text, type = 'info') {
-    if (!message) return;
-    message.textContent = text;
-    message.dataset.type = type;
-    message.hidden = !text;
+    if (!msgEl) return;
+    msgEl.textContent = text;
+    msgEl.dataset.type = type;
+    msgEl.hidden = !text;
   }
 
-  function formatPrice(total) {
-    const amount = Number(total.total_price || 0) / 10 ** Number(total.currency_minor_unit || 2);
-    if (!amount) return 'مجاني';
-    return new Intl.NumberFormat('ar-EG', {
-      style: 'currency',
-      currency: total.currency_code || 'EGP',
-      maximumFractionDigits: Number(total.currency_minor_unit || 2),
-    }).format(amount);
+  function clearFieldError(id) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = '';
   }
 
-  function getHeaders(extra = {}) {
-    const headers = { 'Content-Type': 'application/json', ...extra };
-    if (nonce) headers.Nonce = nonce;
-    if (cartToken) headers['Cart-Token'] = cartToken;
-    return headers;
+  function setFieldError(id, msg) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = msg;
   }
 
-  async function storeFetch(path, options = {}) {
-    const res = await fetch(`${storeApi}${path}`, {
-      mode: 'cors',
-      ...options,
-      headers: getHeaders(options.headers || {}),
-    });
-
-    const nextNonce = res.headers.get('Nonce');
-    const nextCartToken = res.headers.get('Cart-Token');
-    if (nextNonce) nonce = nextNonce;
-    if (nextCartToken) {
-      cartToken = nextCartToken;
-      window.localStorage.setItem('db_cart_token', cartToken);
-    }
-
-    const data = await res.json().catch(() => null);
-    if (!res.ok) {
-      throw new Error(data?.message || 'تعذر تنفيذ الطلب حاليا.');
-    }
-    return data;
+  function setLoading(on) {
+    if (!submitBtn) return;
+    submitBtn.disabled = on;
+    submitLabel?.toggleAttribute('hidden', on);
+    submitLoading?.toggleAttribute('hidden', !on);
   }
 
-  function renderSummary(cart) {
-    paymentMethods = cart.payment_methods || [];
-    const item = cart.items?.[0];
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (submitting) return;
 
-    if (!item) {
-      summary.innerHTML = '<p class="checkout-empty">لم يتم اختيار منتج بعد.</p>';
-      submitButton.disabled = true;
-      return;
-    }
-
-    summary.innerHTML = `
-      <article class="checkout-item">
-        <img src="${item.images?.[0]?.src || ''}" alt="${item.images?.[0]?.alt || item.name}" />
-        <div>
-          <h3>${item.name}</h3>
-          <p>الكمية: ${item.quantity}</p>
-          <strong>${formatPrice(cart.totals)}</strong>
-        </div>
-      </article>
-      <dl class="checkout-total">
-        <div><dt>الإجمالي</dt><dd>${formatPrice(cart.totals)}</dd></div>
-      </dl>
-    `;
-    submitButton.disabled = false;
-  }
-
-  async function prepareCheckout() {
-    if (!storeApi || !productId) {
-      summary.innerHTML = '<p class="checkout-empty">افتحي صفحة المنتج واختاري إتمام الطلب.</p>';
-      submitButton.disabled = true;
-      return;
-    }
-
-    try {
-      setMessage('');
-      const existingCart = await storeFetch('/cart');
-      for (const item of existingCart.items || []) {
-        await storeFetch(`/cart/items/${encodeURIComponent(item.key)}`, { method: 'DELETE' });
-      }
-      const cart = await storeFetch('/cart/add-item', {
-        method: 'POST',
-        body: JSON.stringify({ id: Number(productId), quantity: 1 }),
-      });
-      renderSummary(cart);
-    } catch (err) {
-      summary.innerHTML = '<p class="checkout-empty">لم نتمكن من تجهيز السلة.</p>';
-      setMessage(`${err.message} قد تحتاج إعدادات CORS في ووكوميرس إلى السماح لدومين dokanelbanat.com.`, 'error');
-      submitButton.disabled = true;
-    }
-  }
-
-  form?.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    submitButton.disabled = true;
-    submitButton.classList.add('ds-btn--loading');
-    setMessage('جاري إنشاء الطلب...');
+    clearFieldError('db-first-name-error');
+    clearFieldError('db-email-error');
+    clearFieldError('db-phone-error');
+    clearFieldError('db-privacy-error');
+    setMessage('');
 
     const data = new FormData(form);
-    const billing = {
-      first_name: data.get('first_name') || '',
-      last_name: data.get('last_name') || '',
-      company: '',
-      address_1: data.get('address_1') || '',
-      address_2: '',
-      city: data.get('city') || '',
-      state: 'EGALX',
-      postcode: '',
-      country: data.get('country') || 'EG',
-      email: data.get('email') || '',
-      phone: data.get('phone') || '',
-    };
+
+    if (data.get('website')) return;
+
+    const firstName = (data.get('first_name') ?? '').toString().trim();
+    const email = (data.get('email') ?? '').toString().trim();
+    const phone = (data.get('phone') ?? '').toString().trim();
+    const privacyAccepted = !!data.get('privacy_accepted');
+    const marketingConsent = !!data.get('marketing_consent');
+
+    let valid = true;
+
+    if (!firstName) {
+      setFieldError('db-first-name-error', 'الاسم مطلوب.');
+      valid = false;
+    }
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setFieldError('db-email-error', 'يرجى إدخال بريد إلكتروني صحيح.');
+      valid = false;
+    }
+
+    if (!privacyAccepted) {
+      setFieldError('db-privacy-error', 'يجب الموافقة على سياسة الخصوصية والشروط لإتمام الطلب.');
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    const productId = serverProductId;
+    if (!productId) {
+      setMessage('لم يتم تحديد المنتج. يرجى العودة واختيار المنتج مرة أخرى.', 'error');
+      return;
+    }
+
+    submitting = true;
+    setLoading(true);
+    setMessage('جارٍ إرسال طلبك...');
 
     try {
-      const result = await storeFetch('/checkout', {
+      const res = await fetch('/api/checkout/free', {
         method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          billing_address: billing,
-          shipping_address: billing,
-          payment_method: paymentMethods[0] || '',
-          payment_data: [],
-          customer_note: data.get('customer_note') || '',
+          product_id: productId,
+          first_name: firstName,
+          email,
+          phone: phone || undefined,
+          marketing_consent: marketingConsent,
+          privacy_accepted: privacyAccepted,
+          idempotency_key: idempotencyKey,
         }),
       });
 
-      const redirectUrl = result.payment_result?.redirect_url;
-      if (redirectUrl) {
-        setMessage('تم إنشاء الطلب. سيتم فتح خطوة الدفع النهائية الآن.', 'success');
-        window.location.href = redirectUrl;
+      const json = await res.json().catch(() => ({}));
+
+      if (res.ok && json.success) {
+        const params = new URLSearchParams({
+          order: json.order_number ?? '',
+          email: json.masked_email ?? '',
+        });
+        window.location.href = `/order-confirmation?${params}`;
         return;
       }
 
-      setMessage(`تم إنشاء الطلب بنجاح. رقم الطلب: ${result.order_id || result.order_number || ''}`, 'success');
-      form.reset();
-    } catch (err) {
-      setMessage(err.message, 'error');
-      submitButton.disabled = false;
+      const msg = typeof json.message === 'string' ? json.message : 'حدث خطأ، يرجى المحاولة مرة أخرى.';
+      setMessage(msg, 'error');
+      idempotencyKey = generateIdempotencyKey();
+    } catch {
+      setMessage('تعذّر إرسال الطلب. تحققي من اتصالك بالإنترنت وحاولي مرة أخرى.', 'error');
+      idempotencyKey = generateIdempotencyKey();
     } finally {
-      submitButton.classList.remove('ds-btn--loading');
+      submitting = false;
+      setLoading(false);
     }
   });
-
-  prepareCheckout();
 </script>
 
 <style>
+  .checkout-honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
   .checkout-page {
     background: var(--color-bg-base);
     padding-block: var(--space-12) var(--space-16);
@@ -292,35 +362,57 @@ import { WOO_STORE_API } from '../lib/woocommerce.js';
 
   .checkout-page__layout {
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+    grid-template-columns: minmax(0, 1.2fr) minmax(300px, 0.8fr);
     gap: var(--space-8);
     align-items: start;
   }
 
-  .checkout-form,
-  .checkout-summary {
+  .checkout-form {
+    display: grid;
+    gap: var(--space-5);
+    position: relative;
+  }
+
+  .checkout-panel {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-default);
+    padding: var(--space-6);
     display: grid;
     gap: var(--space-5);
   }
 
-  .checkout-panel,
-  .checkout-summary {
-    background: var(--color-bg-surface);
-    border: 1px solid var(--color-border-default);
-    padding: var(--space-6);
-  }
-
-  .checkout-panel h2,
-  .checkout-summary h2 {
+  .checkout-panel h2 {
     font: var(--type-ar-h5);
     color: var(--color-text-primary);
-    margin: 0 0 var(--space-5);
+    margin: 0;
   }
 
-  .checkout-grid {
+  .ds-form-group {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-4);
+    gap: var(--space-2);
+  }
+
+  .ds-form-group--checkbox {
+    grid-template-columns: auto 1fr;
+    gap: var(--space-3);
+    align-items: start;
+    cursor: pointer;
+  }
+
+  .ds-form-group__label {
+    font: var(--type-ar-body-sm);
+    color: var(--color-text-secondary);
+    font-weight: 600;
+  }
+
+  .ds-form-group__required {
+    color: var(--color-error, #ef4444);
+  }
+
+  .ds-form-group__error {
+    font: var(--type-ar-caption, 0.8rem/1.4 inherit);
+    color: var(--color-error, #ef4444);
+    min-height: 1.2em;
   }
 
   .checkout-message {
@@ -331,59 +423,84 @@ import { WOO_STORE_API } from '../lib/woocommerce.js';
     color: var(--color-text-secondary);
   }
 
-  .checkout-message:empty,
-  .checkout-message[hidden] {
-    display: none;
-  }
-
   .checkout-message[data-type="error"] {
-    border-color: var(--color-error);
-    color: var(--color-error);
+    border-color: var(--color-error, #ef4444);
+    color: var(--color-error, #ef4444);
   }
 
   .checkout-message[data-type="success"] {
-    border-color: var(--color-success);
-    color: var(--color-success);
+    border-color: var(--color-success, #22c55e);
+    color: var(--color-success, #22c55e);
   }
 
   .checkout-submit {
     justify-self: start;
   }
 
-  .checkout-item {
-    display: grid;
-    grid-template-columns: 120px 1fr;
-    gap: var(--space-4);
-    align-items: center;
+  .checkout-note {
+    font: var(--type-ar-caption, 0.8rem/1.4 inherit);
+    color: var(--color-text-muted);
+    margin: 0;
   }
 
-  .checkout-item img {
-    width: 120px;
-    aspect-ratio: 16 / 10;
+  .checkout-summary {
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-default);
+    padding: var(--space-6);
+    display: grid;
+    gap: var(--space-4);
+  }
+
+  .checkout-summary h2 {
+    font: var(--type-ar-h5);
+    color: var(--color-text-primary);
+    margin: 0;
+  }
+
+  .checkout-item {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: var(--space-4);
+    align-items: start;
+  }
+
+  .checkout-item__img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
     object-fit: cover;
     background: var(--color-bg-canvas);
   }
 
-  .checkout-item h3 {
+  .checkout-item__placeholder {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background: var(--color-bg-canvas);
+    border: 1px solid var(--color-border-default);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .checkout-item__details h3 {
     font: var(--type-ar-h6);
     color: var(--color-text-primary);
     margin: 0 0 var(--space-2);
   }
 
-  .checkout-item p {
+  .checkout-item__details p {
     font: var(--type-ar-body-sm);
     color: var(--color-text-secondary);
     margin: 0 0 var(--space-2);
   }
 
-  .checkout-item strong {
+  .checkout-item__price {
     font: var(--type-ar-h6);
-    color: var(--color-text-primary);
+    color: var(--color-primary);
   }
 
   .checkout-total {
-    margin: var(--space-6) 0 0;
-    padding-top: var(--space-5);
+    margin: 0;
+    padding-top: var(--space-4);
     border-top: 1px solid var(--color-border-default);
   }
 
@@ -400,11 +517,22 @@ import { WOO_STORE_API } from '../lib/woocommerce.js';
     margin: 0;
   }
 
-  .checkout-loading,
   .checkout-empty {
     font: var(--type-ar-body);
     color: var(--color-text-secondary);
     margin: 0;
+  }
+
+  .checkout-recovery-hint {
+    border-top: 1px solid var(--color-border-default);
+    padding-top: var(--space-4);
+    font: var(--type-ar-body-sm);
+    color: var(--color-text-muted);
+  }
+
+  .checkout-recovery-hint a {
+    color: var(--color-primary);
+    text-decoration: underline;
   }
 
   @media (max-width: 900px) {
@@ -418,13 +546,8 @@ import { WOO_STORE_API } from '../lib/woocommerce.js';
   }
 
   @media (max-width: 640px) {
-    .checkout-grid,
     .checkout-item {
-      grid-template-columns: 1fr;
-    }
-
-    .checkout-item img {
-      width: 100%;
+      grid-template-columns: 80px 1fr;
     }
   }
 </style>
