@@ -69,9 +69,18 @@ const isFree = product.price === 'مجاني';
       <div class="value-statement__container">
         <h2 class="value-statement__title">خطوة صغيرة لنفسك ممكن تعمل فرق كبير</h2>
         <ul class="value-statement__list">
-          <li>منتج رقمي</li>
-          <li>استخدام بسيط</li>
-          <li>وصول سريع</li>
+          <li>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            <span>منتج رقمي</span>
+          </li>
+          <li>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <span>استخدام بسيط</span>
+          </li>
+          <li>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            <span>وصول سريع</span>
+          </li>
         </ul>
       </div>
     </section>
@@ -111,6 +120,9 @@ const isFree = product.price === 'مجاني';
     {/* 6. Final Conversion Section */}
     <section class="final-conversion">
       <div class="final-conversion__container">
+        {product.image && (
+          <img src={product.image.src} alt={product.image.alt} class="final-conversion__cover" loading="lazy" />
+        )}
         <h2 class="final-conversion__title">{product.name}</h2>
         <p class:list={["final-conversion__price", { "final-conversion__price--free": isFree }]}>{product.price}</p>
         <p class="final-conversion__subtitle">جاهزة تعملي خطوة صغيرة لنفسك؟</p>
@@ -142,8 +154,14 @@ const isFree = product.price === 'مجاني';
 
 /* 1. Masthead */
 .product-masthead {
-  padding-block: var(--space-8) var(--space-16);
+  padding-block: var(--space-4) var(--space-12);
   background: var(--color-bg-canvas);
+}
+
+@media (min-width: 1024px) {
+  .product-masthead {
+    padding-block: var(--space-8) var(--space-16);
+  }
 }
 
 .product-masthead__container {
@@ -153,7 +171,13 @@ const isFree = product.price === 'مجاني';
 }
 
 .product-masthead__nav {
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-4);
+}
+
+@media (min-width: 1024px) {
+  .product-masthead__nav {
+    margin-bottom: var(--space-8);
+  }
 }
 
 .product-masthead__layout {
@@ -179,7 +203,15 @@ const isFree = product.price === 'مجاني';
 .product-masthead__content {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  text-align: center;
+}
+
+@media (min-width: 1024px) {
+  .product-masthead__content {
+    align-items: flex-start;
+    text-align: right;
+  }
 }
 
 .product-masthead__title {
@@ -200,13 +232,19 @@ const isFree = product.price === 'مجاني';
 .product-masthead__cta-box {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   gap: var(--space-4);
   padding-top: var(--space-6);
   margin-top: var(--space-4);
   border-top: 1px solid var(--color-border-default);
   width: 100%;
   max-width: 400px;
+}
+
+@media (min-width: 1024px) {
+  .product-masthead__cta-box {
+    align-items: flex-start;
+  }
 }
 
 .product-masthead__price {
@@ -277,30 +315,50 @@ const isFree = product.price === 'مجاني';
   font: var(--type-ar-h4);
   color: var(--color-primary);
   max-width: 25ch;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .value-statement__title {
+    text-align: right;
+  }
 }
 
 .value-statement__list {
   list-style: none;
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
   gap: var(--space-6);
   font: var(--type-ar-label);
   color: var(--color-text-primary);
 }
 
+@media (min-width: 768px) {
+  .value-statement__list {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
 .value-statement__list li {
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
+  text-align: center;
   gap: var(--space-2);
 }
 
-.value-statement__list li::before {
-  content: '';
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  background: var(--color-accent);
-  border-radius: 50%;
+@media (min-width: 768px) {
+  .value-statement__list li {
+    flex-direction: row;
+  }
+}
+
+.value-statement__list li svg {
+  color: var(--color-primary);
+  width: 1.5rem;
+  height: 1.5rem;
 }
 
 /* 3. Product Story */
@@ -374,12 +432,12 @@ const isFree = product.price === 'مجاني';
 .how-to-get__steps {
   list-style: none;
   display: grid;
-  gap: var(--space-8);
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-2);
 }
 
 @media (min-width: 768px) {
   .how-to-get__steps {
-    grid-template-columns: repeat(3, 1fr);
     gap: var(--space-6);
   }
 }
@@ -389,17 +447,35 @@ const isFree = product.price === 'مجاني';
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: var(--space-4);
+  gap: var(--space-2);
+}
+
+@media (min-width: 768px) {
+  .how-to-get__steps li {
+    gap: var(--space-4);
+  }
 }
 
 .how-to-get__number {
-  font-size: 5rem;
+  font-size: 2.5rem;
   line-height: 1;
 }
 
+@media (min-width: 768px) {
+  .how-to-get__number {
+    font-size: 5rem;
+  }
+}
+
 .how-to-get__text {
-  font: var(--type-ar-h5);
+  font: var(--type-ar-label);
   color: var(--color-text-primary);
+}
+
+@media (min-width: 768px) {
+  .how-to-get__text {
+    font: var(--type-ar-h5);
+  }
 }
 
 /* 6. Final Conversion Section */
@@ -417,6 +493,21 @@ const isFree = product.price === 'مجاني';
   flex-direction: column;
   align-items: center;
   gap: var(--space-4);
+}
+
+.final-conversion__cover {
+  width: 140px;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-4);
+}
+
+@media (min-width: 768px) {
+  .final-conversion__cover {
+    width: 200px;
+  }
 }
 
 .final-conversion__title {
