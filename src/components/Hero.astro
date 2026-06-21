@@ -10,9 +10,9 @@
         <div class="ds-hero__content ds-section-enter">
           <h1 class="ds-section-label" style="margin-block:0;">منذ عام 2018</h1>
           <div class="ds-hero__title" style="display:flex;flex-direction:column;gap:var(--space-2);">
-            <h1 style="margin:0;">
+            <h1 class="hero-brand__arabic" style="margin:0;">
               دكان البنات</h1>
-            <h2 lang="en" style="color:var(--color-primary);margin:0;font-family:var(--font-en);">
+            <h2 class="hero-brand__english" lang="en" style="color:var(--color-primary);margin:0;font-family:var(--font-en);">
               Dokanelbanat.com</h2>
           </div>
           <p class="ds-hero__subtitle">أحدث مجتمع نسائي متكامل في المنطقة العربية</p>
@@ -92,3 +92,15 @@
         </div>
       </div>
     </section>
+
+<style>
+  .hero-brand__arabic {
+    font-size: clamp(3.5rem, 9vw, 7.5rem);
+    line-height: 0.95;
+  }
+
+  .hero-brand__english {
+    font-size: clamp(1.35rem, 3vw, 2.4rem);
+    line-height: 1.1;
+  }
+</style>
