@@ -26,7 +26,7 @@ const isFree = product.price === 'مجاني';
     {/* 1. Editorial Product Masthead */}
     <header class="product-masthead">
       <div class="product-masthead__container">
-        <nav class="product-masthead__nav">
+        <nav class="product-masthead__nav" aria-label="العودة للمنتجات">
           <a href="/products" class="ds-btn ds-btn--ghost ds-btn--sm">← كل المنتجات</a>
         </nav>
 
@@ -43,9 +43,9 @@ const isFree = product.price === 'مجاني';
                   {isFree ? 'احصلي عليه مجانًا' : 'إتمام الشراء'}
                 </a>
               ) : (
-                <span class="ds-btn ds-btn--primary-solid ds-btn--lg ds-btn--pill product-masthead__btn" aria-disabled="true">
+                <button class="ds-btn ds-btn--primary-solid ds-btn--lg ds-btn--pill product-masthead__btn" disabled>
                   غير متاح حاليًا
-                </span>
+                </button>
               )}
               {product.isInStock ? (
                 <p class="product-masthead__note">منتج رقمي يصلك بعد إتمام الطلب</p>
@@ -70,15 +70,15 @@ const isFree = product.price === 'مجاني';
         <h2 class="value-statement__title">خطوة صغيرة لنفسك ممكن تعمل فرق كبير</h2>
         <ul class="value-statement__list">
           <li>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            <svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
             <span>منتج رقمي</span>
           </li>
           <li>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+            <svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
             <span>استخدام بسيط</span>
           </li>
           <li>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            <svg aria-hidden="true" focusable="false" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
             <span>وصول سريع</span>
           </li>
         </ul>
@@ -100,17 +100,17 @@ const isFree = product.price === 'مجاني';
       <div class="how-to-get__container">
         <ol class="how-to-get__steps">
           <li>
-            <span class="how-to-get__number ds-index-number">1</span>
+            <span class="how-to-get__number ds-index-number">١</span>
             <span class="how-to-get__text">
               {isFree ? 'اضغطي على “احصلي عليه مجانًا”' : 'اضغطي على “إتمام الشراء”'}
             </span>
           </li>
           <li>
-            <span class="how-to-get__number ds-index-number">2</span>
+            <span class="how-to-get__number ds-index-number">٢</span>
             <span class="how-to-get__text">كمّلي بيانات الطلب</span>
           </li>
           <li>
-            <span class="how-to-get__number ds-index-number">3</span>
+            <span class="how-to-get__number ds-index-number">٣</span>
             <span class="how-to-get__text">حمّلي منتجك وابدئي استخدامه</span>
           </li>
         </ol>
@@ -131,9 +131,9 @@ const isFree = product.price === 'مجاني';
             {isFree ? 'احصلي عليه مجانًا' : 'إتمام الشراء'}
           </a>
         ) : (
-          <span class="ds-btn ds-btn--primary-solid ds-btn--lg ds-btn--pill final-conversion__btn" aria-disabled="true">
+          <button class="ds-btn ds-btn--primary-solid ds-btn--lg ds-btn--pill final-conversion__btn" disabled>
             غير متاح حاليًا
-          </span>
+          </button>
         )}
         {product.isInStock ? (
           <p class="final-conversion__note">منتج رقمي يصلك بعد إتمام الطلب</p>
@@ -154,7 +154,7 @@ const isFree = product.price === 'مجاني';
 
 /* 1. Masthead */
 .product-masthead {
-  padding-block: var(--space-4) var(--space-12);
+  padding-block: var(--space-4) var(--space-8);
   background: var(--color-bg-canvas);
 }
 
@@ -183,13 +183,13 @@ const isFree = product.price === 'مجاني';
 .product-masthead__layout {
   display: flex;
   flex-direction: column-reverse;
-  gap: var(--space-12);
+  gap: var(--space-6);
 }
 
 @media (min-width: 1024px) {
   .product-masthead__layout {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.2fr 1fr;
     gap: var(--space-16);
     align-items: center;
   }
@@ -217,7 +217,8 @@ const isFree = product.price === 'مجاني';
 .product-masthead__title {
   font: var(--type-ar-display);
   color: var(--color-text-primary);
-  margin-block: var(--space-4) var(--space-6);
+  margin-top: var(--space-4);
+  margin-bottom: var(--space-2);
   letter-spacing: var(--letter-spacing-ar-display);
 }
 
@@ -233,7 +234,6 @@ const isFree = product.price === 'مجاني';
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-4);
   padding-top: var(--space-6);
   margin-top: var(--space-4);
   border-top: 1px solid var(--color-border-default);
@@ -250,6 +250,7 @@ const isFree = product.price === 'مجاني';
 .product-masthead__price {
   font: var(--type-ar-h3);
   color: var(--color-text-primary);
+  margin-bottom: var(--space-4);
 }
 
 .product-masthead__price--free {
@@ -258,6 +259,7 @@ const isFree = product.price === 'مجاني';
 
 .product-masthead__btn {
   width: 100%;
+  margin-bottom: var(--space-3);
 }
 
 .product-masthead__note {
@@ -270,6 +272,8 @@ const isFree = product.price === 'مجاني';
 .product-masthead__visual {
   position: relative;
   width: 100%;
+  max-width: 320px;
+  margin-inline: auto;
   aspect-ratio: 3 / 4;
   background: var(--color-bg-canvas);
   border-radius: var(--radius-sm);
@@ -277,6 +281,13 @@ const isFree = product.price === 'مجاني';
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (min-width: 1024px) {
+  .product-masthead__visual {
+    max-width: none;
+    margin-inline: 0;
+  }
 }
 
 .product-masthead__cover {
@@ -289,9 +300,15 @@ const isFree = product.price === 'مجاني';
 
 /* 2. Value Statement */
 .value-statement {
-  padding-block: var(--space-12);
+  padding-block: var(--space-8);
   border-bottom: 1px solid var(--color-border-default);
   background: var(--color-bg-base);
+}
+
+@media (min-width: 768px) {
+  .value-statement {
+    padding-block: var(--space-12);
+  }
 }
 
 .value-statement__container {
@@ -312,9 +329,9 @@ const isFree = product.price === 'مجاني';
 }
 
 .value-statement__title {
-  font: var(--type-ar-h4);
+  font: var(--type-ar-h2);
   color: var(--color-primary);
-  max-width: 25ch;
+  max-width: 20ch;
   text-align: center;
 }
 
@@ -363,8 +380,14 @@ const isFree = product.price === 'مجاني';
 
 /* 3. Product Story */
 .product-story {
-  padding-block: var(--space-16);
+  padding-block: var(--space-12);
   background: var(--color-bg-base);
+}
+
+@media (min-width: 768px) {
+  .product-story {
+    padding-block: var(--space-16);
+  }
 }
 
 .product-story__container {
@@ -374,9 +397,9 @@ const isFree = product.price === 'مجاني';
 }
 
 .product-story__heading {
-  font: var(--type-ar-h2);
+  font: var(--type-ar-h1);
   color: var(--color-text-primary);
-  margin-bottom: var(--space-8);
+  margin-bottom: var(--space-12);
   text-align: center;
 }
 
@@ -418,9 +441,15 @@ const isFree = product.price === 'مجاني';
 
 /* 5. How to get the product */
 .how-to-get {
-  padding-block: var(--space-16);
+  padding-block: var(--space-12);
   background: var(--color-bg-base);
   border-top: 1px solid var(--color-border-default);
+}
+
+@media (min-width: 768px) {
+  .how-to-get {
+    padding-block: var(--space-16);
+  }
 }
 
 .how-to-get__container {
@@ -433,12 +462,12 @@ const isFree = product.price === 'مجاني';
   list-style: none;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: var(--space-2);
+  gap: var(--space-4);
 }
 
 @media (min-width: 768px) {
   .how-to-get__steps {
-    gap: var(--space-6);
+    gap: var(--space-8);
   }
 }
 
@@ -457,14 +486,9 @@ const isFree = product.price === 'مجاني';
 }
 
 .how-to-get__number {
-  font-size: 2.5rem;
+  font: var(--type-ar-display);
+  color: var(--color-primary);
   line-height: 1;
-}
-
-@media (min-width: 768px) {
-  .how-to-get__number {
-    font-size: 5rem;
-  }
 }
 
 .how-to-get__text {
@@ -480,9 +504,15 @@ const isFree = product.price === 'مجاني';
 
 /* 6. Final Conversion Section */
 .final-conversion {
-  padding-block: var(--space-20);
+  padding-block: var(--space-12);
   background: var(--gradient-hero);
   text-align: center;
+}
+
+@media (min-width: 768px) {
+  .final-conversion {
+    padding-block: var(--space-20);
+  }
 }
 
 .final-conversion__container {
@@ -492,7 +522,6 @@ const isFree = product.price === 'مجاني';
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-4);
 }
 
 .final-conversion__cover {
@@ -501,7 +530,7 @@ const isFree = product.price === 'مجاني';
   aspect-ratio: 3 / 4;
   object-fit: contain;
   border-radius: var(--radius-sm);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-8);
 }
 
 @media (min-width: 768px) {
@@ -511,13 +540,15 @@ const isFree = product.price === 'مجاني';
 }
 
 .final-conversion__title {
-  font: var(--type-ar-h2);
+  font: var(--type-ar-h1);
   color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
 }
 
 .final-conversion__price {
   font: var(--type-ar-h3);
   color: var(--color-text-primary);
+  margin-bottom: var(--space-6);
 }
 
 .final-conversion__price--free {
@@ -527,12 +558,13 @@ const isFree = product.price === 'مجاني';
 .final-conversion__subtitle {
   font: var(--type-ar-body-lg);
   color: var(--color-text-secondary);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-8);
 }
 
 .final-conversion__btn {
   width: 100%;
   max-width: 320px;
+  margin-bottom: var(--space-3);
 }
 
 .final-conversion__note {
