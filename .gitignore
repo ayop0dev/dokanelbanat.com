@@ -5,3 +5,4 @@ dist/
 .vscode/sftp.json
 wordpress-plugin/*.zip
 .playwright-mcp/
+docs/*.pdf

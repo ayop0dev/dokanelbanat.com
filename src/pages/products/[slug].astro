@@ -17,53 +17,116 @@ if (!product) {
 const title = `${product.name} - دكان البنات`;
 const description = product.shortDescription || 'منتج رقمي من دكان البنات.';
 const image = product.image?.src ?? '';
+
+const isFree = product.price === 'مجاني';
 ---
 
 <BaseLayout title={title} description={description} ogImage={image}>
-  <main>
-    <section class="ds-product-page product-detail">
-      <div class="product-detail__container">
-        <a class="product-detail__back" href="/products">← كل المنتجات</a>
+  <main class="product-landing">
+    {/* 1. Editorial Product Masthead */}
+    <header class="product-masthead">
+      <div class="product-masthead__container">
+        <nav class="product-masthead__nav">
+          <a href="/products" class="ds-btn ds-btn--ghost ds-btn--sm">← كل المنتجات</a>
+        </nav>
 
-        <div class="ds-product-page__layout">
-          <div class="ds-product-page__gallery product-detail__gallery">
-            {product.image ? (
-              <img src={product.image.src} alt={product.image.alt} loading="eager" />
-            ) : (
-              <span>غلاف المنتج</span>
-            )}
+        <div class:list={["product-masthead__layout", { "product-masthead__layout--no-image": !product.image }]}>
+          <div class="product-masthead__content">
+            {product.category && <span class="ds-section-label">{product.category}</span>}
+            <h1 class="product-masthead__title">{product.name}</h1>
+            {product.shortDescription && <p class="product-masthead__short-desc">{product.shortDescription}</p>}
+
+            <div class="product-masthead__cta-box">
+              <span class:list={["product-masthead__price", { "product-masthead__price--free": isFree }]}>{product.price}</span>
+              {product.isInStock ? (
+                <a href={product.checkoutUrl} class="ds-btn ds-btn--primary-solid ds-btn--lg ds-btn--pill product-masthead__btn">
+                  {isFree ? 'احصلي عليه مجانًا' : 'إتمام الشراء'}
+                </a>
+              ) : (
+                <span class="ds-btn ds-btn--primary-solid ds-btn--lg ds-btn--pill product-masthead__btn" aria-disabled="true">
+                  غير متاح حاليًا
+                </span>
+              )}
+              {product.isInStock ? (
+                <p class="product-masthead__note">منتج رقمي يصلك بعد إتمام الطلب</p>
+              ) : (
+                <p class="product-masthead__note">هنعلن بمجرد ما يكون المنتج متاح</p>
+              )}
+            </div>
           </div>
 
-          <article class="ds-product-page__info product-detail__info">
-            {product.category && <span class="ds-product-page__category">{product.category}</span>}
-            <h1 class="ds-product-page__title">{product.name}</h1>
-            <p class:list={['ds-product-page__price', product.price === 'مجاني' && 'ds-product-page__price--free']}>
-              {product.price}
-            </p>
-
-            {product.shortDescription && <p class="ds-product-page__desc">{product.shortDescription}</p>}
-
-            <div class="product-detail__note">
-              <strong>منتج رقمي</strong>
-              <span>بعد إتمام الطلب، تابعي تعليمات التحميل أو الوصول من رسالة الطلب.</span>
+          {product.image && (
+            <div class="product-masthead__visual">
+              <img src={product.image.src} alt={product.image.alt} class="product-masthead__cover" />
             </div>
-
-            <div class="ds-product-page__actions">
-              <a class="ds-btn ds-btn--primary-solid ds-btn--lg ds-btn--pill" href={product.checkoutUrl}>
-                {product.price === 'مجاني' ? 'احصلي عليه الآن' : 'إتمام الشراء'}
-              </a>
-              <a class="ds-btn ds-btn--secondary-outline ds-btn--lg ds-btn--pill" href="/products">
-                تصفح منتجات أخرى
-              </a>
-            </div>
-          </article>
+          )}
         </div>
+      </div>
+    </header>
 
-        {product.description && (
-          <section class="product-detail__description" aria-labelledby="product-desc-heading">
-            <h2 id="product-desc-heading">تفاصيل المنتج</h2>
-            <div class="product-detail__prose" set:html={product.description} />
-          </section>
+    {/* 2. Value Statement */}
+    <section class="value-statement">
+      <div class="value-statement__container">
+        <h2 class="value-statement__title">خطوة صغيرة لنفسك ممكن تعمل فرق كبير</h2>
+        <ul class="value-statement__list">
+          <li>منتج رقمي</li>
+          <li>استخدام بسيط</li>
+          <li>وصول سريع</li>
+        </ul>
+      </div>
+    </section>
+
+    {/* 3. Product Story */}
+    {product.description && (
+      <section class="product-story">
+        <div class="product-story__container">
+          <h2 class="product-story__heading">ليه المنتج ده معمول ليكي؟</h2>
+          <div class="product-story__prose" set:html={product.description} />
+        </div>
+      </section>
+    )}
+
+    {/* 5. How to get the product */}
+    <section class="how-to-get">
+      <div class="how-to-get__container">
+        <ol class="how-to-get__steps">
+          <li>
+            <span class="how-to-get__number ds-index-number">1</span>
+            <span class="how-to-get__text">
+              {isFree ? 'اضغطي على “احصلي عليه مجانًا”' : 'اضغطي على “إتمام الشراء”'}
+            </span>
+          </li>
+          <li>
+            <span class="how-to-get__number ds-index-number">2</span>
+            <span class="how-to-get__text">كمّلي بيانات الطلب</span>
+          </li>
+          <li>
+            <span class="how-to-get__number ds-index-number">3</span>
+            <span class="how-to-get__text">حمّلي منتجك وابدئي استخدامه</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    {/* 6. Final Conversion Section */}
+    <section class="final-conversion">
+      <div class="final-conversion__container">
+        <h2 class="final-conversion__title">{product.name}</h2>
+        <p class:list={["final-conversion__price", { "final-conversion__price--free": isFree }]}>{product.price}</p>
+        <p class="final-conversion__subtitle">جاهزة تعملي خطوة صغيرة لنفسك؟</p>
+        {product.isInStock ? (
+          <a href={product.checkoutUrl} class="ds-btn ds-btn--primary-solid ds-btn--lg ds-btn--pill final-conversion__btn">
+            {isFree ? 'احصلي عليه مجانًا' : 'إتمام الشراء'}
+          </a>
+        ) : (
+          <span class="ds-btn ds-btn--primary-solid ds-btn--lg ds-btn--pill final-conversion__btn" aria-disabled="true">
+            غير متاح حاليًا
+          </span>
+        )}
+        {product.isInStock ? (
+          <p class="final-conversion__note">منتج رقمي يصلك بعد إتمام الطلب</p>
+        ) : (
+          <p class="final-conversion__note">هنعلن بمجرد ما يكون المنتج متاح</p>
         )}
       </div>
     </section>
@@ -72,80 +135,318 @@ const image = product.image?.src ?? '';
 </BaseLayout>
 
 <style>
-  .product-detail {
-    background: var(--color-bg-base);
-  }
+.product-landing {
+  background-color: var(--color-bg-base);
+  overflow-x: hidden;
+}
 
-  .product-detail__container {
-    max-width: var(--grid-max-width);
-    margin-inline: auto;
-    padding-inline: var(--grid-margin);
-  }
+/* 1. Masthead */
+.product-masthead {
+  padding-block: var(--space-8) var(--space-16);
+  background: var(--color-bg-canvas);
+}
 
-  .product-detail__back {
-    display: inline-block;
-    margin-bottom: var(--space-8);
-    font: var(--type-ar-body-sm);
-    color: var(--color-primary);
-    text-decoration: none;
-  }
+.product-masthead__container {
+  max-width: var(--grid-max-width);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+}
 
-  .product-detail__gallery {
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-  }
+.product-masthead__nav {
+  margin-bottom: var(--space-8);
+}
 
-  .product-detail__gallery img {
-    width: 100%;
-    height: 100%;
-    max-width: none;
-    max-height: none;
-    object-fit: cover;
-  }
+.product-masthead__layout {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--space-12);
+}
 
-  .product-detail__info {
-    padding-block: var(--space-4);
-  }
-
-  .product-detail__note {
+@media (min-width: 1024px) {
+  .product-masthead__layout {
     display: grid;
-    gap: var(--space-1);
-    padding: var(--space-4);
-    background: var(--color-bg-canvas);
-    border: 1px solid var(--color-border-default);
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-16);
+    align-items: center;
   }
+  .product-masthead__layout--no-image {
+    grid-template-columns: 1fr;
+    max-width: 800px;
+    margin-inline: auto;
+  }
+}
 
-  .product-detail__note strong {
-    font: var(--type-ar-h6);
-    color: var(--color-text-primary);
-  }
+.product-masthead__content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
 
-  .product-detail__note span {
-    font: var(--type-ar-body-sm);
-    color: var(--color-text-secondary);
-  }
+.product-masthead__title {
+  font: var(--type-ar-display);
+  color: var(--color-text-primary);
+  margin-block: var(--space-4) var(--space-6);
+  letter-spacing: var(--letter-spacing-ar-display);
+}
 
-  .product-detail__description {
-    margin-top: var(--space-14);
-    padding-top: var(--space-10);
-    border-top: 1px solid var(--color-border-default);
-  }
+.product-masthead__short-desc {
+  font: var(--type-ar-body-lg);
+  color: var(--color-text-secondary);
+  line-height: 1.8;
+  margin-bottom: var(--space-8);
+  max-width: 45ch;
+}
 
-  .product-detail__description h2 {
-    font: var(--type-ar-h3);
-    color: var(--color-text-primary);
-    margin: 0 0 var(--space-5);
-  }
+.product-masthead__cta-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--space-4);
+  padding-top: var(--space-6);
+  margin-top: var(--space-4);
+  border-top: 1px solid var(--color-border-default);
+  width: 100%;
+  max-width: 400px;
+}
 
-  .product-detail__prose :global(p),
-  .product-detail__prose :global(li) {
-    font: var(--type-ar-body-lg);
-    color: var(--color-text-secondary);
-    line-height: 1.9;
-  }
+.product-masthead__price {
+  font: var(--type-ar-h3);
+  color: var(--color-text-primary);
+}
 
-  .product-detail__prose :global(img) {
-    max-width: 100%;
-    border-radius: var(--radius-md);
+.product-masthead__price--free {
+  color: var(--color-primary);
+}
+
+.product-masthead__btn {
+  width: 100%;
+}
+
+.product-masthead__note {
+  font: var(--type-ar-caption);
+  color: var(--color-text-muted);
+  text-align: center;
+  width: 100%;
+}
+
+.product-masthead__visual {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  background: var(--color-bg-canvas);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-masthead__cover {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  box-shadow: none;
+  border-radius: var(--radius-sm);
+}
+
+/* 2. Value Statement */
+.value-statement {
+  padding-block: var(--space-12);
+  border-bottom: 1px solid var(--color-border-default);
+  background: var(--color-bg-base);
+}
+
+.value-statement__container {
+  max-width: var(--grid-max-width);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+@media (min-width: 768px) {
+  .value-statement__container {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
+}
+
+.value-statement__title {
+  font: var(--type-ar-h4);
+  color: var(--color-primary);
+  max-width: 25ch;
+}
+
+.value-statement__list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-6);
+  font: var(--type-ar-label);
+  color: var(--color-text-primary);
+}
+
+.value-statement__list li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.value-statement__list li::before {
+  content: '';
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--color-accent);
+  border-radius: 50%;
+}
+
+/* 3. Product Story */
+.product-story {
+  padding-block: var(--space-16);
+  background: var(--color-bg-base);
+}
+
+.product-story__container {
+  max-width: 800px;
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+}
+
+.product-story__heading {
+  font: var(--type-ar-h2);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-8);
+  text-align: center;
+}
+
+.product-story__prose :global(h1),
+.product-story__prose :global(h2),
+.product-story__prose :global(h3),
+.product-story__prose :global(h4) {
+  font-family: var(--font-headline);
+  color: var(--color-text-primary);
+  margin-top: var(--space-8);
+  margin-bottom: var(--space-4);
+}
+
+.product-story__prose :global(h1) { font: var(--type-ar-h2); }
+.product-story__prose :global(h2) { font: var(--type-ar-h3); }
+.product-story__prose :global(h3) { font: var(--type-ar-h4); }
+.product-story__prose :global(h4) { font: var(--type-ar-h5); }
+
+.product-story__prose :global(p),
+.product-story__prose :global(li) {
+  font: var(--type-ar-body-lg);
+  color: var(--color-text-secondary);
+  line-height: 1.9;
+  margin-bottom: var(--space-4);
+}
+
+.product-story__prose :global(ul),
+.product-story__prose :global(ol) {
+  margin-block: var(--space-4);
+  padding-inline-start: var(--space-6);
+}
+
+.product-story__prose :global(img) {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius-sm);
+  margin-block: var(--space-6);
+}
+
+/* 5. How to get the product */
+.how-to-get {
+  padding-block: var(--space-16);
+  background: var(--color-bg-base);
+  border-top: 1px solid var(--color-border-default);
+}
+
+.how-to-get__container {
+  max-width: var(--grid-max-width);
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+}
+
+.how-to-get__steps {
+  list-style: none;
+  display: grid;
+  gap: var(--space-8);
+}
+
+@media (min-width: 768px) {
+  .how-to-get__steps {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+  }
+}
+
+.how-to-get__steps li {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--space-4);
+}
+
+.how-to-get__number {
+  font-size: 5rem;
+  line-height: 1;
+}
+
+.how-to-get__text {
+  font: var(--type-ar-h5);
+  color: var(--color-text-primary);
+}
+
+/* 6. Final Conversion Section */
+.final-conversion {
+  padding-block: var(--space-20);
+  background: var(--gradient-hero);
+  text-align: center;
+}
+
+.final-conversion__container {
+  max-width: 600px;
+  margin-inline: auto;
+  padding-inline: var(--grid-margin);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.final-conversion__title {
+  font: var(--type-ar-h2);
+  color: var(--color-text-primary);
+}
+
+.final-conversion__price {
+  font: var(--type-ar-h3);
+  color: var(--color-text-primary);
+}
+
+.final-conversion__price--free {
+  color: var(--color-primary);
+}
+
+.final-conversion__subtitle {
+  font: var(--type-ar-body-lg);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-4);
+}
+
+.final-conversion__btn {
+  width: 100%;
+  max-width: 320px;
+}
+
+.final-conversion__note {
+  font: var(--type-ar-caption);
+  color: var(--color-text-muted);
+  margin-top: var(--space-2);
+}
 </style>

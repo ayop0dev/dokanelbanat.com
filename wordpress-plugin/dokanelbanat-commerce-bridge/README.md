@@ -47,6 +47,50 @@ openssl rand -base64 48
 
 The same secret must be set as the `DB_BRIDGE_SECRET` environment variable in Hostinger for the Astro application.
 
+## SMTP configuration
+
+Dokanelbanat Commerce Bridge can route outgoing mail through an authenticated SMTP server by adding constants to `wp-config.php`. No SMTP plugin is required.
+
+Add the following to `wp-config.php`, above the `/* That's all, stop editing */` line:
+
+```php
+define( 'DCB_SMTP_ENABLED', true );
+define( 'DCB_SMTP_HOST',    'smtp.hostinger.com' );
+define( 'DCB_SMTP_PORT',    587 );
+define( 'DCB_SMTP_USER',    'info@dokanelbanat.com' );
+define( 'DCB_SMTP_PASS',    'REPLACE_WITH_MAILBOX_PASSWORD' );
+define( 'DCB_SMTP_SECURE',  'tls' );
+```
+
+### Constants reference
+
+| Constant | Type | Description |
+|---|---|---|
+| `DCB_SMTP_ENABLED` | `bool` | Must be `true` (strict) to enable SMTP. Omitting or setting any other value leaves WordPress mail unchanged. |
+| `DCB_SMTP_HOST` | `string` | SMTP server hostname. Must be non-empty. |
+| `DCB_SMTP_PORT` | `int` | SMTP port (1–65535). Use `587` for STARTTLS (`tls`), `465` for implicit SSL (`ssl`). |
+| `DCB_SMTP_USER` | `string` | SMTP account address. Must be a valid e-mail address. |
+| `DCB_SMTP_PASS` | `string` | SMTP password. Must be non-empty. Never committed to the repository. |
+| `DCB_SMTP_SECURE` | `string` | Encryption mode. Must be exactly `tls` (STARTTLS) or `ssl` (implicit SSL). |
+
+If `DCB_SMTP_ENABLED` is `true` but any constant is missing or invalid, the plugin will not fall back silently. A generic error notice is shown in the WordPress admin to administrators only. No configuration details or credentials appear in the notice.
+
+### Manual send test (WP-CLI)
+
+```bash
+wp eval "var_dump(wp_mail('RECIPIENT_EMAIL', 'Dokanelbanat SMTP Test', 'SMTP is working.'));"
+```
+
+A `true` result means WordPress accepted the send request and handed it to PHPMailer — it does **not** confirm delivery. Final verification requires:
+
+1. Receiving the message in the target mailbox.
+2. Opening the raw email source and confirming all three authentication results are **PASS**:
+   - **SPF**: `PASS`
+   - **DKIM**: `PASS`
+   - **DMARC**: `PASS`
+
+If any of these fail, the message may be rejected or delivered to spam regardless of the `wp_mail()` return value.
+
 ## Activation
 
 1. Log in to WordPress admin.

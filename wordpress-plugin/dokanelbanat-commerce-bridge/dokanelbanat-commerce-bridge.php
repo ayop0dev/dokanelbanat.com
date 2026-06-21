@@ -18,6 +18,9 @@ defined( 'ABSPATH' ) || exit;
 define( 'DCB_VERSION', '1.0.0' );
 define( 'DCB_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 
+require_once DCB_PLUGIN_DIR . 'includes/class-dcb-smtp.php';
+DCB_SMTP::register();
+
 add_action( 'before_woocommerce_init', function () {
     if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
         \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility(

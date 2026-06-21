@@ -360,7 +360,165 @@ verify(
     !str_contains($recover_code, "'limit' => 5")
 );
 
-// ── PHP syntax check — all 12 plugin files ────────────────────────────────────
+// ══════════════════════════════════════════════════════════════
+// SMTP TESTS
+// ══════════════════════════════════════════════════════════════
+
+$smtp       = src('class-dcb-smtp.php');
+$smtp_code  = strip_comments($smtp);
+$routes     = src('class-dcb-routes.php');
+$routes_code = strip_comments($routes);
+
+// ── SMTP: Disabled when not enabled ──────────────────────────────────────────
+echo "\n=== SMTP: Disabled when not enabled ===\n";
+verify(
+    'SMTP: register() guards on DCB_SMTP_ENABLED being defined and strictly true',
+    str_contains($smtp_code, "defined( 'DCB_SMTP_ENABLED' )") &&
+    (
+        str_contains($smtp_code, 'true === DCB_SMTP_ENABLED') ||
+        str_contains($smtp_code, 'true !== DCB_SMTP_ENABLED')
+    )
+);
+verify(
+    'SMTP: phpmailer_init is only registered after the DCB_SMTP_ENABLED guard passes',
+    (bool) preg_match('/DCB_SMTP_ENABLED[\s\S]{0,600}phpmailer_init/m', $smtp_code)
+);
+verify(
+    'SMTP: admin_notices registered only after DCB_SMTP_ENABLED guard passes',
+    (bool) preg_match('/DCB_SMTP_ENABLED[\s\S]{0,600}admin_notices/m', $smtp_code)
+);
+
+// ── SMTP: Missing-constant validation ─────────────────────────────────────────
+echo "\n=== SMTP: Missing-constant validation ===\n";
+verify(
+    'SMTP: DCB_SMTP_HOST presence checked with defined()',
+    str_contains($smtp_code, "defined( 'DCB_SMTP_HOST' )")
+);
+verify(
+    'SMTP: DCB_SMTP_PORT presence checked with defined()',
+    str_contains($smtp_code, "defined( 'DCB_SMTP_PORT' )")
+);
+verify(
+    'SMTP: DCB_SMTP_USER presence checked with defined()',
+    str_contains($smtp_code, "defined( 'DCB_SMTP_USER' )")
+);
+verify(
+    'SMTP: DCB_SMTP_PASS presence checked with defined()',
+    str_contains($smtp_code, "defined( 'DCB_SMTP_PASS' )")
+);
+verify(
+    'SMTP: DCB_SMTP_SECURE presence checked with defined()',
+    str_contains($smtp_code, "defined( 'DCB_SMTP_SECURE' )")
+);
+
+// ── SMTP: Per-field validation logic ─────────────────────────────────────────
+echo "\n=== SMTP: Per-field validation ===\n";
+verify(
+    'SMTP: host validated as non-empty string (trim)',
+    str_contains($smtp_code, "'' !== trim( DCB_SMTP_HOST )")
+);
+verify(
+    'SMTP: port validated as int with is_int()',
+    str_contains($smtp_code, 'is_int( DCB_SMTP_PORT )')
+);
+verify(
+    'SMTP: port lower bound enforced (>= 1)',
+    str_contains($smtp_code, 'DCB_SMTP_PORT >= 1')
+);
+verify(
+    'SMTP: port upper bound enforced (<= 65535)',
+    str_contains($smtp_code, 'DCB_SMTP_PORT <= 65535')
+);
+verify(
+    'SMTP: user validated with FILTER_VALIDATE_EMAIL',
+    str_contains($smtp_code, 'FILTER_VALIDATE_EMAIL')
+);
+verify(
+    "SMTP: password validated as non-empty string ('' !== (string))",
+    str_contains($smtp_code, "'' !== (string) DCB_SMTP_PASS")
+);
+verify(
+    "SMTP: secure mode validated with in_array(['tls','ssl'], strict)",
+    str_contains($smtp_code, "in_array( DCB_SMTP_SECURE, [ 'tls', 'ssl' ], true )")
+);
+
+// ── SMTP: PHPMailer configuration ─────────────────────────────────────────────
+echo "\n=== SMTP: PHPMailer configuration ===\n";
+verify(
+    'SMTP: isSMTP() called',
+    str_contains($smtp_code, 'isSMTP()')
+);
+verify(
+    'SMTP: SMTPAuth set to true',
+    str_contains($smtp_code, 'SMTPAuth    = true')
+);
+verify(
+    'SMTP: Timeout set to 15 seconds',
+    str_contains($smtp_code, 'Timeout     = 15')
+);
+verify(
+    'SMTP: SMTPDebug set to 0 (disabled)',
+    str_contains($smtp_code, 'SMTPDebug   = 0')
+);
+verify(
+    "SMTP: TLS — SMTPAutoTLS true when SMTPSecure is 'tls'",
+    str_contains($smtp_code, "SMTPAutoTLS = ( 'tls' === (string) DCB_SMTP_SECURE )")
+);
+verify(
+    "SMTP: SSL — SMTPAutoTLS false when SMTPSecure is 'ssl' (expression evaluates to false)",
+    // The expression `'tls' === 'ssl'` → false; verify the ternary is present
+    str_contains($smtp_code, "'tls' === (string) DCB_SMTP_SECURE")
+);
+verify(
+    'SMTP: Host, Port, Username, Password, SMTPSecure all assigned in configure()',
+    str_contains($smtp_code, 'Host        = (string) DCB_SMTP_HOST') &&
+    str_contains($smtp_code, 'Port        = (int) DCB_SMTP_PORT') &&
+    str_contains($smtp_code, 'Username    = (string) DCB_SMTP_USER') &&
+    str_contains($smtp_code, 'Password    = (string) DCB_SMTP_PASS') &&
+    str_contains($smtp_code, 'SMTPSecure  = (string) DCB_SMTP_SECURE')
+);
+
+// ── SMTP: Security ─────────────────────────────────────────────────────────────
+echo "\n=== SMTP: Security ===\n";
+verify(
+    'SMTP: admin notice gated by current_user_can (administrators only)',
+    str_contains($smtp_code, 'current_user_can')
+);
+verify(
+    'SMTP: password never passed to error_log',
+    ! (bool) preg_match('/error_log[\s\S]{0,200}DCB_SMTP_PASS/m', $smtp_code) &&
+    ! (bool) preg_match('/DCB_SMTP_PASS[\s\S]{0,200}error_log/m', $smtp_code)
+);
+verify(
+    'SMTP: DCB_Logger never called from SMTP class (no credential leakage path)',
+    ! str_contains($smtp_code, 'DCB_Logger')
+);
+verify(
+    'SMTP: show_config_notice body does not reference credential constants',
+    (function () use ($smtp_code): bool {
+        $start = strpos($smtp_code, 'function show_config_notice');
+        if (false === $start) {
+            return false;
+        }
+        $region = substr($smtp_code, $start, 500);
+        return ! str_contains($region, 'DCB_SMTP_PASS')
+            && ! str_contains($region, 'DCB_SMTP_USER')
+            && ! str_contains($region, 'DCB_SMTP_HOST')
+            && ! str_contains($region, 'DCB_SMTP_PORT')
+            && ! str_contains($region, 'DCB_SMTP_SECURE');
+    })()
+);
+verify(
+    'SMTP: health endpoint does not expose SMTP constants',
+    ! str_contains($routes_code, 'DCB_SMTP_')
+);
+verify(
+    'SMTP: no SMTP credentials in any REST response (routes file)',
+    ! str_contains($routes_code, 'DCB_SMTP_PASS') &&
+    ! str_contains($routes_code, 'DCB_SMTP_USER')
+);
+
+// ── PHP syntax check — all 13 plugin files ────────────────────────────────────
 echo "\n=== PHP syntax check ===\n";
 $files = [
     $plugin_dir . 'class-dcb-email.php',
@@ -375,6 +533,7 @@ $files = [
     $plugin_dir . 'class-dcb-idempotency.php',
     $plugin_dir . 'class-dcb-download-token.php',
     $plugin_dir . 'class-dcb-routes.php',
+    $plugin_dir . 'class-dcb-smtp.php',
 ];
 foreach ($files as $file) {
     $output = shell_exec("php -l " . escapeshellarg($file) . " 2>&1");
