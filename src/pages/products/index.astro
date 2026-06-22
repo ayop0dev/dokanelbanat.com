@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Footer from '../../components/Footer.astro';
 import { getProducts } from '../../lib/woocommerce.js';
 
 const products = await getProducts(24);
@@ -38,17 +37,36 @@ const products = await getProducts(24);
                   )}
                 </a>
 
-                {product.category && <span class="ds-product-card__category">{product.category}</span>}
-                <h2 class="ds-product-card__title">{product.name}</h2>
-                {product.shortDescription && <p class="ds-product-card__desc">{product.shortDescription}</p>}
+                <div class="ds-product-card__content">
+                  {product.category && <span class="ds-product-card__category">{product.category}</span>}
+                  <h2 class="ds-product-card__title">{product.name}</h2>
+                  <div class="ds-product-card__divider"></div>
 
-                <div class="ds-product-card__footer">
-                  <span class:list={['ds-product-card__price', product.price === 'مجاني' && 'ds-product-card__price--free']}>
-                    {product.price}
-                  </span>
-                  <a class="ds-btn ds-btn--primary-solid ds-btn--sm" href={product.checkoutUrl}>
-                    {product.price === 'مجاني' ? 'احصلي عليه' : 'اشتري الآن'}
-                  </a>
+                  {product.shortDescription && <p class="ds-product-card__desc">{product.shortDescription}</p>}
+
+                  <div class="ds-product-card__price-row">
+                    <span class:list={['ds-product-card__price', product.price === 'مجاني' && 'ds-product-card__price--free']}>
+                      {product.price}
+                    </span>
+                  </div>
+
+                  <div class="ds-product-card__footer">
+                    <a class="ds-btn ds-product-card__btn" href={product.checkoutUrl}>
+                      {product.price === 'مجاني' ? 'احصلي عليه >' : 'اشتري الآن >'}
+                    </a>
+
+                    <div class="ds-product-card__social">
+                      <a href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent('https://dokanelbanat.com' + product.productUrl)}`} target="_blank" rel="noopener noreferrer" aria-label="مشاركة على فيسبوك">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.77 7.46H14.5v-1.9c0-.9.6-1.1 1-1.1h3V.5h-4.33C10.24.5 9.5 3.44 9.5 5.32v2.15h-3v4h3v12h5v-12h3.85l.42-4z"/></svg>
+                      </a>
+                      <a href={`https://twitter.com/intent/tweet?url=${encodeURIComponent('https://dokanelbanat.com' + product.productUrl)}&text=${encodeURIComponent(product.name)}`} target="_blank" rel="noopener noreferrer" aria-label="مشاركة على إكس">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                      </a>
+                      <a href={`https://wa.me/?text=${encodeURIComponent(product.name + ' - https://dokanelbanat.com' + product.productUrl)}`} target="_blank" rel="noopener noreferrer" aria-label="مشاركة على واتساب">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                      </a>
+                    </div>
+                  </div>
                 </div>
               </article>
             ))}
@@ -59,14 +77,19 @@ const products = await getProducts(24);
       </div>
     </section>
   </main>
-  <Footer />
 </BaseLayout>
 
 <style>
   .products-header {
     background: var(--gradient-hero);
-    padding-block: var(--space-20) var(--space-14);
+    padding-block: var(--space-24) var(--space-16);
     text-align: center;
+  }
+
+  @media (min-width: 768px) {
+    .products-header {
+      padding-block: var(--space-32) var(--space-24);
+    }
   }
 
   .products-header__inner {
@@ -142,7 +165,7 @@ const products = await getProducts(24);
 
   @media (max-width: 640px) {
     .products-header {
-      padding-block: var(--space-12) var(--space-10);
+      padding-block: var(--space-20) var(--space-12);
     }
 
     .products-header h1 {

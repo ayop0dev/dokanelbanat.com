@@ -1,5 +1,27 @@
 const WP_API = import.meta.env.WP_API_URL ?? "";
 
+function getProxyImageHost() {
+  const candidates = [
+    import.meta.env.WOO_API_URL,
+    import.meta.env.WOO_STORE_API_URL,
+    import.meta.env.WOO_BACKEND_URL,
+    import.meta.env.WP_API_URL,
+  ];
+
+  for (const candidate of candidates) {
+    if (!candidate) continue;
+    try {
+      return new URL(candidate).hostname;
+    } catch {
+      // Ignore malformed optional configuration and try the next candidate.
+    }
+  }
+
+  return "";
+}
+
+const PROXY_IMAGE_HOST = getProxyImageHost();
+
 export function proxyWpImageUrl(src) {
   if (!src) return "";
   try {
@@ -16,6 +38,11 @@ export function rewriteContentImages(html) {
     /(<img\b[^>]*?\ssrc=["'])([^"']+)(["'][^>]*>)/gi,
     (_, before, src, after) => {
       if (src.startsWith('/') || src.startsWith('data:')) return _;
+      try {
+        if (!PROXY_IMAGE_HOST || new URL(src).hostname !== PROXY_IMAGE_HOST) return _;
+      } catch {
+        return _;
+      }
       const proxied = proxyWpImageUrl(src);
       return proxied ? before + proxied + after : _;
     }

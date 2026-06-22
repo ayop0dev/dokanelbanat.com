@@ -1,208 +1,450 @@
 ---
-// props go here if needed (leave empty for now)
+const pathname = Astro.url.pathname;
+const isHome   = pathname === '/';
+const sec      = isHome ? '' : '/'; // prefix for homepage section anchors
+
+const navItems = [
+  { label: 'المجلة',       href: '/blog' },
+  { label: 'منتجاتنا',    href: '/products' },
+  { label: 'من نحن',      href: `${sec}#about` },
+  { label: 'رؤيتنا',      href: `${sec}#vision` },
+  { label: 'تواصلي معنا', href: `${sec}#cta` },
+];
+
+const isCurrent = (href: string): boolean => {
+  if (href === '/blog')     return pathname === '/blog' || pathname.startsWith('/blog/');
+  if (href === '/products') return pathname === '/products' || pathname.startsWith('/products/');
+  return false;
+};
 ---
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       1. HEADER
-       ═══════════════════════════════════════════════════════════════ -->
-  <header class="ds-header">
-    <div class="ds-header__inner">
-      <a href="/" class="ds-header__logo" aria-label="دكان البنات — الصفحة الرئيسية">
-        <img src="/assets/logo/dokanelbanatlogo-gradient.png" alt="شعار دكان البنات" height="44">
-      </a>
+<!-- ═══════════════════════════════════════════════════════════════
+     HEADER
+     ═══════════════════════════════════════════════════════════════ -->
+<header class="ds-header">
+  <div class="ds-header__inner">
 
-      <button id="canvas-trigger" class="canvas-trigger" aria-label="فتح القائمة">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
-          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <line x1="4" y1="6" x2="20" y2="6"/>
-          <line x1="4" y1="12" x2="20" y2="12"/>
-          <line x1="4" y1="18" x2="20" y2="18"/>
-        </svg>
-      </button>
-    </div>
-  </header>
+    <!-- Logo -->
+    <a href="/" class="ds-header__logo" aria-label="دكان البنات — الصفحة الرئيسية">
+      <img src="/assets/logo/dokanelbanatlogo-gradient.png" alt="شعار دكان البنات" height="44">
+    </a>
 
-  <!-- ═══════════════════════════════════════════════════════════════
-       SIDE CANVAS
-       ═══════════════════════════════════════════════════════════════ -->
-  <div id="side-canvas" aria-label="القائمة الجانبية">
-
-    <!-- Section 1: Logo + close button -->
-    <div class="canvas-logo-area">
-      <a href="/" aria-label="دكان البنات — الصفحة الرئيسية">
-        <img src="/assets/logo/dokanelbanatlogo-gradient.png" width="130" alt="دكان البنات">
-      </a>
-      <button id="canvas-close" aria-label="إغلاق القائمة">&#xd7;</button>
-    </div>
-
-    <!-- Section 2: Navigation -->
-    <nav aria-label="التنقل الرئيسي">
-      <a href="#magazine">المجلة</a>
-      <a href="#about">من نحن</a>
-      <a href="#vision">رؤيتنا</a>
-      <a href="#products">منتجاتنا</a>
-      <a href="#cta">تواصلي معنا</a>
+    <!-- Desktop navigation (visible at 1024px+) -->
+    <nav class="ds-header__desktop-nav" aria-label="التنقل الرئيسي">
+      {navItems.map(item => (
+        <a
+          href={item.href}
+          class:list={['ds-header__nav-link', isCurrent(item.href) && 'ds-header__nav-link--current']}
+          aria-current={isCurrent(item.href) ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      ))}
     </nav>
 
-    <!-- Section 3: Social media icons -->
-    <div class="canvas-social">
-      <a href="https://instagram.com/dokanelbanat" target="_blank" rel="noopener" aria-label="إنستغرام">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
-      </a>
-      <a href="https://tiktok.com/@dokanelbanat" target="_blank" rel="noopener" aria-label="تيك توك">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9.35a8.16 8.16 0 004.77 1.52V7.42a4.85 4.85 0 01-1-.73z"/></svg>
-      </a>
-      <a href="https://youtube.com/@dokanelbanat" target="_blank" rel="noopener" aria-label="يوتيوب">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
-      </a>
-      <a href="https://x.com/dokanelbanat" target="_blank" rel="noopener" aria-label="إكس (تويتر)">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.737-8.847L2.25 2.25H8.08l4.261 5.638L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-      </a>
-    </div>
+    <!-- Hamburger button (visible below 1024px) -->
+    <button
+      id="nav-trigger"
+      class="ds-header__hamburger"
+      aria-label="فتح القائمة"
+      aria-controls="mobile-nav"
+      aria-expanded="false"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="4" y1="6" x2="20" y2="6"/>
+        <line x1="4" y1="12" x2="20" y2="12"/>
+        <line x1="4" y1="18" x2="20" y2="18"/>
+      </svg>
+    </button>
 
   </div>
+</header>
 
-  <!-- Dark overlay -->
-  <div id="canvas-overlay" aria-hidden="true"></div>
+<!-- ═══════════════════════════════════════════════════════════════
+     MOBILE DRAWER (RTL: enters from inline-start = right side)
+     ═══════════════════════════════════════════════════════════════ -->
+<div
+  id="mobile-nav"
+  class="ds-mobile-nav"
+  role="dialog"
+  aria-modal="true"
+  aria-label="القائمة الجانبية"
+  aria-hidden="true"
+  inert
+>
+  <!-- Top: logo + close button -->
+  <div class="ds-mobile-nav__top">
+    <a href="/" aria-label="دكان البنات — الصفحة الرئيسية">
+      <img src="/assets/logo/dokanelbanatlogo-gradient.png" width="130" alt="دكان البنات">
+    </a>
+    <button id="nav-close" class="ds-mobile-nav__close" aria-label="إغلاق القائمة">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+           stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="18" y1="6" x2="6" y2="18"/>
+        <line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Navigation links -->
+  <nav class="ds-mobile-nav__nav" aria-label="التنقل الرئيسي">
+    {navItems.map(item => (
+      <a
+        href={item.href}
+        class:list={['ds-mobile-nav__link', isCurrent(item.href) && 'ds-mobile-nav__link--current']}
+        aria-current={isCurrent(item.href) ? 'page' : undefined}
+      >
+        {item.label}
+      </a>
+    ))}
+  </nav>
+
+  <!-- Social links -->
+  <div class="ds-mobile-nav__social">
+    <a href="https://instagram.com/dokanelbanat" target="_blank" rel="noopener noreferrer" aria-label="إنستغرام">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+    </a>
+    <a href="https://tiktok.com/@dokanelbanat" target="_blank" rel="noopener noreferrer" aria-label="تيك توك">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V9.35a8.16 8.16 0 004.77 1.52V7.42a4.85 4.85 0 01-1-.73z"/></svg>
+    </a>
+    <a href="https://youtube.com/@dokanelbanat" target="_blank" rel="noopener noreferrer" aria-label="يوتيوب">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.495 6.205a3.007 3.007 0 00-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 00.527 6.205a31.247 31.247 0 00-.522 5.805 31.247 31.247 0 00.522 5.783 3.007 3.007 0 002.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 002.088-2.088 31.247 31.247 0 00.5-5.783 31.247 31.247 0 00-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>
+    </a>
+    <a href="https://x.com/dokanelbanat" target="_blank" rel="noopener noreferrer" aria-label="إكس (تويتر)">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.738l7.737-8.847L2.25 2.25H8.08l4.261 5.638L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- Dark overlay -->
+<div id="nav-overlay" class="ds-mobile-nav-overlay" aria-hidden="true"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     DRAWER INTERACTION SCRIPT
+     ═══════════════════════════════════════════════════════════════ -->
+<script>
+(function () {
+  var trigger  = document.getElementById('nav-trigger');
+  var drawer   = document.getElementById('mobile-nav');
+  var overlay  = document.getElementById('nav-overlay');
+  var closeBtn = document.getElementById('nav-close');
+
+  if (!trigger || !drawer || !overlay || !closeBtn) return;
+  if (trigger.dataset.navReady) return; // guard against duplicate init
+  trigger.dataset.navReady = '1';
+
+  function openNav() {
+    drawer.classList.add('is-open');
+    drawer.setAttribute('aria-hidden', 'false');
+    drawer.removeAttribute('inert');
+    overlay.classList.add('is-open');
+    trigger.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(function () { closeBtn.focus(); });
+  }
+
+  function closeNav(restoreFocus) {
+    drawer.classList.remove('is-open');
+    drawer.setAttribute('aria-hidden', 'true');
+    drawer.setAttribute('inert', '');
+    overlay.classList.remove('is-open');
+    trigger.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+    if (restoreFocus !== false) trigger.focus();
+  }
+
+  // Focus trap + Escape
+  drawer.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') { closeNav(); return; }
+    if (e.key !== 'Tab') return;
+    var focusables = Array.from(drawer.querySelectorAll(
+      'a[href], button:not([disabled])'
+    ));
+    if (!focusables.length) return;
+    var first = focusables[0];
+    var last  = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault(); last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault(); first.focus();
+    }
+  });
+
+  trigger.addEventListener('click', openNav);
+  closeBtn.addEventListener('click', function () { closeNav(); });
+  overlay.addEventListener('click', function () { closeNav(); });
+
+  // Close when a nav link is selected
+  drawer.querySelectorAll('.ds-mobile-nav__nav a').forEach(function (link) {
+    link.addEventListener('click', function () { closeNav(false); });
+  });
+
+  // Close when viewport grows to desktop width
+  var mq = window.matchMedia('(min-width: 1024px)');
+  var onBreakpoint = function (e) { if (e.matches) closeNav(false); };
+  if (mq.addEventListener) {
+    mq.addEventListener('change', onBreakpoint);
+  } else {
+    mq.addListener(onBreakpoint); // Safari <14
+  }
+})();
+</script>
 
 <style is:global>
-  /* ── Menu trigger button ── */
-  .canvas-trigger {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0.5rem;
-    color: var(--color-text-primary);
-    z-index: 100;
-    display: inline-flex;
+/* ═══════════════════════════════════════════════════════════════
+   DESKTOP NAVIGATION (1024px+)
+   ═══════════════════════════════════════════════════════════════ */
+.ds-header__desktop-nav {
+  display: none;
+}
+
+.ds-header__hamburger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  padding: var(--space-2);
+}
+
+.ds-header__hamburger:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: 4px;
+}
+
+@media (min-width: 1024px) {
+  .ds-header__desktop-nav {
+    display: flex;
     align-items: center;
-    justify-content: center;
+    gap: var(--space-6);
   }
 
-  .canvas-trigger:focus-visible {
-    outline: 2px solid var(--color-primary);
-    outline-offset: 2px;
-    border-radius: 4px;
+  .ds-header__hamburger {
+    display: none;
   }
+}
 
-  /* ── Side canvas panel ── */
-  #side-canvas {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 280px;
-    height: 100vh;
-    background: #fff5fb;
-    z-index: 9999;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    padding: 2rem 1.5rem;
-    gap: 2rem;
-    overflow-y: auto;
-  }
+.ds-header__nav-link {
+  font: var(--type-ar-body);
+  letter-spacing: var(--letter-spacing-ar-body);
+  color: var(--color-text-primary);
+  text-decoration: none;
+  padding-block: var(--space-2);
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: color var(--duration-quick) var(--ease-editorial),
+              border-color var(--duration-quick) var(--ease-editorial);
+}
 
-  #side-canvas.is-open {
-    transform: translateX(0);
-  }
+@media (prefers-reduced-motion: reduce) {
+  .ds-header__nav-link { transition: none; }
+}
 
-  /* ── Dark overlay ── */
-  #canvas-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    z-index: 9998;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-  }
+.ds-header__nav-link:hover {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
 
-  #canvas-overlay.is-open {
-    opacity: 1;
-    pointer-events: all;
-  }
+.ds-header__nav-link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: 2px;
+}
 
-  /* ── Logo area (section 1) ── */
-  .canvas-logo-area {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
+.ds-header__nav-link--current {
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
+}
 
-  .canvas-logo-area img {
-    display: block;
-  }
+/* ═══════════════════════════════════════════════════════════════
+   MOBILE DRAWER (below 1024px)
+   Enters from inline-start = right side in RTL
+   ═══════════════════════════════════════════════════════════════ */
+.ds-mobile-nav {
+  position: fixed;
+  inset-block: 0;
+  inset-inline-start: 0;  /* right: 0 in RTL */
+  inset-inline-end: auto;
+  width: min(300px, 85vw);
+  background: var(--color-bg-base, #fff5fb);
+  z-index: 9999;
+  transform: translateX(100%); /* pushed off-screen to the right */
+  transition: transform var(--duration-default, 0.25s) var(--ease-editorial, ease);
+  display: flex;
+  flex-direction: column;
+  padding: 0 1.5rem 2rem; /* top padding lives on the sticky top row */
+  gap: 2rem;
+  overflow-y: auto;
+}
 
-  /* Close button */
-  #canvas-close {
-    background: none;
-    border: 1px solid rgba(0, 0, 0, 0.15);
-    cursor: pointer;
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: 50%;
-    font-size: 1.4rem;
-    line-height: 1;
-    color: #1a1a1a;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s ease, color 0.2s ease;
-  }
+@media (prefers-reduced-motion: reduce) {
+  .ds-mobile-nav { transition: none; }
+}
 
-  #canvas-close:hover {
-    background: rgba(0, 0, 0, 0.06);
-    color: var(--color-primary);
-  }
+.ds-mobile-nav.is-open {
+  transform: translateX(0);
+}
 
-  /* ── Navigation (section 2) ── */
-  #side-canvas nav {
-    display: flex;
-    flex-direction: column;
-  }
+/* Top row: logo left, close button right — one horizontal row */
+.ds-mobile-nav__top {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-bg-base, #fff5fb);
+  padding-block: 1.25rem;
+  z-index: 1;
+}
 
-  #side-canvas nav a {
-    display: block;
-    font-family: var(--font-heading);
-    font-size: 1.4rem;
-    color: #1a1a1a;
-    padding: 0.5rem 0;
-    text-decoration: none;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.07);
-    transition: color 0.2s ease;
-  }
+/* Constrain logo image — it is a 512×512 square; pin height, let width follow */
+.ds-mobile-nav__top a img {
+  height: 44px;
+  width: auto;
+  display: block;
+}
 
-  #side-canvas nav a:last-child {
-    border-bottom: none;
-  }
+/* Close button */
+.ds-mobile-nav__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  background: none;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--color-text-primary);
+  flex-shrink: 0;
+  transition: background var(--duration-quick, 0.15s) ease,
+              color var(--duration-quick, 0.15s) ease;
+}
 
-  #side-canvas nav a:hover {
-    color: var(--color-primary);
-  }
+@media (prefers-reduced-motion: reduce) {
+  .ds-mobile-nav__close { transition: none; }
+}
 
-  /* ── Social icons row (section 3) ── */
-  .canvas-social {
-    display: flex;
-    gap: 1rem;
-    margin-top: auto;
-  }
+.ds-mobile-nav__close:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--color-primary);
+}
 
-  .canvas-social a {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: #1a1a1a;
-    transition: color 0.2s ease;
-  }
+.ds-mobile-nav__close:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
 
-  .canvas-social a svg {
-    width: 24px;
-    height: 24px;
-    fill: currentColor;
-  }
+/* Nav links */
+.ds-mobile-nav__nav {
+  display: flex;
+  flex-direction: column;
+}
 
-  .canvas-social a:hover {
-    color: var(--color-primary);
+.ds-mobile-nav__link {
+  display: block;
+  font: var(--type-ar-body);
+  letter-spacing: var(--letter-spacing-ar-body);
+  font-size: 1.25rem;
+  color: var(--color-text-primary);
+  text-decoration: none;
+  padding: var(--space-3, 0.75rem) 0;
+  border-bottom: 1px solid var(--color-border-default, rgba(0, 0, 0, 0.07));
+  transition: color var(--duration-quick, 0.15s) ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-mobile-nav__link { transition: none; }
+}
+
+.ds-mobile-nav__link:last-child {
+  border-bottom: none;
+}
+
+.ds-mobile-nav__link:hover {
+  color: var(--color-primary);
+}
+
+.ds-mobile-nav__link:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: 2px;
+}
+
+.ds-mobile-nav__link--current {
+  color: var(--color-primary);
+}
+
+/* Social row */
+.ds-mobile-nav__social {
+  display: flex;
+  gap: var(--space-3, 0.75rem);
+  margin-top: auto;
+}
+
+.ds-mobile-nav__social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 44px;
+  min-height: 44px;
+  color: var(--color-text-primary);
+  transition: color var(--duration-quick, 0.15s) ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-mobile-nav__social a { transition: none; }
+}
+
+.ds-mobile-nav__social a:hover {
+  color: var(--color-primary);
+}
+
+.ds-mobile-nav__social a:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+  border-radius: 4px;
+}
+
+.ds-mobile-nav__social a svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  display: block;
+}
+
+/* Overlay */
+.ds-mobile-nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 9998;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--duration-default, 0.25s) ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ds-mobile-nav-overlay { transition: none; }
+}
+
+.ds-mobile-nav-overlay.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Belt-and-braces: ensure drawer is hidden at desktop */
+@media (min-width: 1024px) {
+  .ds-mobile-nav,
+  .ds-mobile-nav-overlay {
+    display: none !important;
   }
+}
 </style>

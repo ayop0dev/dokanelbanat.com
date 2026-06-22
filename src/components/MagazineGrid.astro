@@ -1,11 +1,8 @@
 ---
 import { getPosts } from '../lib/wordpress.js';
+import { toPlainText } from '../lib/sanitize-content.js';
 
 const allPosts = await getPosts(6);
-
-function stripHtml(html) {
-  return html.replace(/<[^>]*>/g, '').trim();
-}
 
 function truncate(text, len = 80) {
   return text.length > len ? text.slice(0, len).trimEnd() + '…' : text;
@@ -35,7 +32,8 @@ const standardPosts = allPosts.slice(1, -1);
         {featuredPost && (() => {
           const featImg = featuredPost._embedded?.['wp:featuredmedia']?.[0];
           const featCat = featuredPost._embedded?.['wp:term']?.[0]?.[0]?.name;
-          const featExcerpt = truncate(stripHtml(featuredPost.excerpt.rendered), 210);
+          const featTitle = toPlainText(featuredPost.title.rendered);
+          const featExcerpt = truncate(toPlainText(featuredPost.excerpt.rendered), 210);
           return (
             <article class="mag-featured">
               {featImg?.source_url && (
@@ -50,8 +48,8 @@ const standardPosts = allPosts.slice(1, -1);
               )}
               <div class="mag-featured__body">
                 {featCat && <span class="mag-category">{featCat}</span>}
-                <h3 class="mag-featured__title" set:html={featuredPost.title.rendered} />
-                <p class="mag-featured__excerpt" set:html={featExcerpt} />
+                <h3 class="mag-featured__title">{featTitle}</h3>
+                <p class="mag-featured__excerpt">{featExcerpt}</p>
                 <a href={`/blog/${featuredPost.slug}`} class="mag-read-more">اقرأي المزيد</a>
               </div>
             </article>
@@ -63,7 +61,8 @@ const standardPosts = allPosts.slice(1, -1);
           {standardPosts.map((post) => {
             const postImg = post._embedded?.['wp:featuredmedia']?.[0];
             const postCat = post._embedded?.['wp:term']?.[0]?.[0]?.name;
-            const postExcerpt = truncate(stripHtml(post.excerpt.rendered));
+            const postTitle = toPlainText(post.title.rendered);
+            const postExcerpt = truncate(toPlainText(post.excerpt.rendered));
             return (
               <article class="mag-card">
                 {postImg?.source_url && (
@@ -79,9 +78,9 @@ const standardPosts = allPosts.slice(1, -1);
                 <div class="mag-card__body">
                   {postCat && <span class="mag-category">{postCat}</span>}
                   <h4 class="mag-card__title">
-                    <a href={`/blog/${post.slug}`} set:html={post.title.rendered} />
+                    <a href={`/blog/${post.slug}`}>{postTitle}</a>
                   </h4>
-                  <p class="mag-card__excerpt" set:html={postExcerpt} />
+                  <p class="mag-card__excerpt">{postExcerpt}</p>
                 </div>
               </article>
             );

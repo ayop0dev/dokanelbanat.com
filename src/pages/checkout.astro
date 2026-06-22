@@ -1,6 +1,5 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Footer from '../components/Footer.astro';
 import { getProductById } from '../lib/woocommerce.js';
 
 const rawProductId    = Astro.url.searchParams.get('product') ?? '';
@@ -184,7 +183,6 @@ if (numericProductId > 0) {
       </div>
     </section>
   </main>
-  <Footer />
 </BaseLayout>
 
 <script define:vars={{ serverProductId: product?.id ?? null }}>

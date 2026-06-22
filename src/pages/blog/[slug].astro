@@ -1,10 +1,7 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { getPostBySlug, getAllPostSlugs, proxyWpImageUrl, rewriteContentImages } from '../../lib/wordpress.js';
-
-export async function getStaticPaths() {
-  return await getAllPostSlugs();
-}
+import { getPostBySlug, proxyWpImageUrl, rewriteContentImages } from '../../lib/wordpress.js';
+import { toPlainText, sanitizeRichHtml } from '../../lib/sanitize-content.js';
 
 const { slug } = Astro.params;
 const post = await getPostBySlug(slug);
@@ -14,11 +11,11 @@ if (!post) {
 }
 
 const title = post.title?.rendered
-  ? post.title.rendered.replace(/<[^>]*>/g, '')
+  ? toPlainText(post.title.rendered)
   : 'مقال دكان البنات';
 
 const description = post.excerpt?.rendered
-  ? post.excerpt.rendered.replace(/<[^>]*>/g, '').slice(0, 160)
+  ? toPlainText(post.excerpt.rendered).slice(0, 160)
   : '';
 
 const featuredImage = proxyWpImageUrl(post._embedded?.['wp:featuredmedia']?.[0]?.source_url ?? '');
@@ -29,6 +26,8 @@ const date = new Date(post.date).toLocaleDateString('ar-SA', {
   month: 'long',
   day: 'numeric',
 });
+
+const safeContent = sanitizeRichHtml(rewriteContentImages(post.content?.rendered ?? ''));
 ---
 
 <BaseLayout title={`${title} — دكان البنات`} description={description} ogImage={featuredImage}>
@@ -47,7 +46,7 @@ const date = new Date(post.date).toLocaleDateString('ar-SA', {
     <div class="article-container">
       {category && <span class="article-category">{category}</span>}
 
-      <h1 class="article-title" set:html={post.title.rendered} />
+      <h1 class="article-title">{title}</h1>
 
       <div class="article-meta">
         <time datetime={post.date}>{date}</time>
@@ -59,7 +58,7 @@ const date = new Date(post.date).toLocaleDateString('ar-SA', {
         )}
       </div>
 
-      <div class="article-prose" set:html={rewriteContentImages(post.content.rendered)} />
+      <div class="article-prose" set:html={safeContent} />
 
       <a class="article-back" href="/#magazine">← العودة إلى المجلة</a>
     </div>

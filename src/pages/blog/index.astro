@@ -1,12 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getAllPosts, proxyWpImageUrl } from '../../lib/wordpress.js';
+import { toPlainText } from '../../lib/sanitize-content.js';
 
 const posts = await getAllPosts(100);
-
-function stripHtml(html) {
-  return html.replace(/<[^>]*>/g, '').trim();
-}
 
 function truncate(text, len = 90) {
   return text.length > len ? text.slice(0, len).trimEnd() + '…' : text;
@@ -42,7 +39,8 @@ function truncate(text, len = 90) {
             {posts.map((post) => {
               const img = post._embedded?.['wp:featuredmedia']?.[0];
               const cat = post._embedded?.['wp:term']?.[0]?.[0]?.name;
-              const excerpt = truncate(stripHtml(post.excerpt?.rendered ?? ''));
+              const postTitle = toPlainText(post.title?.rendered ?? '');
+              const excerpt = truncate(toPlainText(post.excerpt?.rendered ?? ''));
               const date = new Date(post.date).toLocaleDateString('ar-SA', {
                 year: 'numeric', month: 'long', day: 'numeric',
               });
@@ -61,7 +59,7 @@ function truncate(text, len = 90) {
                   <div class="arc-card__body">
                     {cat && <span class="arc-card__cat">{cat}</span>}
                     <h2 class="arc-card__title">
-                      <a href={`/blog/${post.slug}`} set:html={post.title.rendered} />
+                      <a href={`/blog/${post.slug}`}>{postTitle}</a>
                     </h2>
                     {excerpt && <p class="arc-card__excerpt">{excerpt}</p>}
                     <time class="arc-card__date" datetime={post.date}>{date}</time>
@@ -280,7 +278,7 @@ function truncate(text, len = 90) {
 
   @media (max-width: 640px) {
     .archive-header {
-      padding-block: var(--space-12) var(--space-10);
+      padding-block: var(--space-20) var(--space-12);
     }
 
     .archive-header h1 {
@@ -289,7 +287,7 @@ function truncate(text, len = 90) {
     }
 
     .archive-section {
-      padding-block: var(--space-10);
+      padding-block: var(--space-12);
     }
 
     .archive-grid {

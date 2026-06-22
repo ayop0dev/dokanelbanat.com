@@ -1,11 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import Footer from '../../components/Footer.astro';
-import { getAllProductSlugs, getProductBySlug } from '../../lib/woocommerce.js';
-
-export async function getStaticPaths() {
-  return await getAllProductSlugs();
-}
+import { getProductBySlug } from '../../lib/woocommerce.js';
+import { rewriteContentImages } from '../../lib/wordpress.js';
+import { sanitizeRichHtml } from '../../lib/sanitize-content.js';
 
 const { slug } = Astro.params;
 const product = await getProductBySlug(slug);
@@ -19,6 +16,9 @@ const description = product.shortDescription || 'منتج رقمي من دكان
 const image = product.image?.src ?? '';
 
 const isFree = product.price === 'مجاني';
+const safeDescription = product.description
+  ? sanitizeRichHtml(rewriteContentImages(product.description))
+  : '';
 ---
 
 <BaseLayout title={title} description={description} ogImage={image}>
@@ -86,11 +86,11 @@ const isFree = product.price === 'مجاني';
     </section>
 
     {/* 3. Product Story */}
-    {product.description && (
+    {safeDescription && (
       <section class="product-story">
         <div class="product-story__container">
           <h2 class="product-story__heading">ليه المنتج ده معمول ليكي؟</h2>
-          <div class="product-story__prose" set:html={product.description} />
+          <div class="product-story__prose" set:html={safeDescription} />
         </div>
       </section>
     )}
@@ -102,7 +102,7 @@ const isFree = product.price === 'مجاني';
           <li>
             <span class="how-to-get__number ds-index-number">١</span>
             <span class="how-to-get__text">
-              {isFree ? 'اضغطي على “احصلي عليه مجانًا”' : 'اضغطي على “إتمام الشراء”'}
+              {isFree ? 'اضغطي على "احصلي عليه مجانًا"' : 'اضغطي على "إتمام الشراء"'}
             </span>
           </li>
           <li>
@@ -143,7 +143,6 @@ const isFree = product.price === 'مجاني';
       </div>
     </section>
   </main>
-  <Footer />
 </BaseLayout>
 
 <style>
@@ -300,6 +299,12 @@ const isFree = product.price === 'مجاني';
   text-align: center;
 }
 
+@media (min-width: 768px) {
+  .value-statement__title {
+    font: var(--type-ar-h3);
+  }
+}
+
 .value-statement__list {
   list-style: none;
   display: flex;
@@ -360,6 +365,12 @@ const isFree = product.price === 'مجاني';
   color: var(--color-text-primary);
   margin-bottom: var(--space-6);
   text-align: center;
+}
+
+@media (min-width: 768px) {
+  .product-story__heading {
+    font: var(--type-ar-h2);
+  }
 }
 
 .product-story__prose :global(h1),

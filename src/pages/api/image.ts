@@ -1,8 +1,5 @@
 import type { APIRoute } from 'astro';
 
-const WOO_BACKEND_URL = import.meta.env.WOO_BACKEND_URL as string | undefined;
-const ALLOWED_IMAGE_HOSTS = (import.meta.env.WOO_API_URL || import.meta.env.WOO_STORE_API_URL || '');
-
 const TIMEOUT_MS = 10_000;
 // SVG excluded: it can contain embedded <script> tags and would execute on the first-party origin.
 const ALLOWED_MIME = new Set([
@@ -14,6 +11,7 @@ function extractAllowedHost(): string {
     import.meta.env.WOO_API_URL,
     import.meta.env.WOO_STORE_API_URL,
     import.meta.env.WOO_BACKEND_URL,
+    import.meta.env.WP_API_URL,
   ];
   for (const c of candidates) {
     if (!c) continue;

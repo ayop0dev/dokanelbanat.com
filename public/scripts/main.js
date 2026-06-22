@@ -2,42 +2,11 @@
  * dokanelbanat Landing Page — Main JavaScript
  *
  * Handles:
- * - Off-canvas side navigation
  * - Section entrance animations (IntersectionObserver)
  * - Smooth scroll offset for sticky header
+ *
+ * Note: Mobile drawer interaction is self-contained in Header.astro.
  */
-
-/* ═══════════════════════════════════════════════════════════════
-   OFF-CANVAS SIDE NAVIGATION
-   ═══════════════════════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', function () {
-  var trigger  = document.getElementById('canvas-trigger');
-  var canvas   = document.getElementById('side-canvas');
-  var overlay  = document.getElementById('canvas-overlay');
-  var closeBtn = document.getElementById('canvas-close');
-
-  function openCanvas() {
-    canvas.classList.add('is-open');
-    overlay.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-  }
-
-  function closeCanvas() {
-    canvas.classList.remove('is-open');
-    overlay.classList.remove('is-open');
-    document.body.style.overflow = '';
-  }
-
-  if (trigger)  trigger.addEventListener('click', openCanvas);
-  if (closeBtn) closeBtn.addEventListener('click', closeCanvas);
-  if (overlay)  overlay.addEventListener('click', closeCanvas);
-
-  document.querySelectorAll('#side-canvas nav a[href^="#"]').forEach(function (link) {
-    link.addEventListener('click', function () {
-      setTimeout(closeCanvas, 300);
-    });
-  });
-});
 
 (function () {
   'use strict';
@@ -66,8 +35,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
   /* ═══════════════════════════════════════════════════════════════
      SMOOTH SCROLL OFFSET (sticky header compensation)
-     Canvas nav links are excluded — browser handles their scroll,
-     then the canvas closes after 300ms.
+     Mobile nav links are excluded — the drawer closes first and
+     the browser handles the anchor scroll natively.
      ═══════════════════════════════════════════════════════════════ */
   var headerHeight = parseInt(
     getComputedStyle(document.documentElement).getPropertyValue('--header-height'),
@@ -75,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
   ) || 72;
 
   document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
-    if (anchor.closest('#side-canvas')) return;
+    if (anchor.closest('#mobile-nav')) return;
 
     anchor.addEventListener('click', function (e) {
       var targetId = anchor.getAttribute('href');

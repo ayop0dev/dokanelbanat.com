@@ -7,12 +7,14 @@
     "start": "node ./dist/server/entry.mjs",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "verify:content": "node scripts/verify-content-sanitization.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^9.5.5",
     "@tailwindcss/vite": "^4.2.4",
     "astro": "^5.18.1",
+    "sanitize-html": "^2.17.5",
     "tailwindcss": "^4.2.4"
   },
   "devDependencies": {

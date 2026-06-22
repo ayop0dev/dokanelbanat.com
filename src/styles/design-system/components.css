@@ -912,10 +912,11 @@ textarea.ds-input {
 .ds-product-card {
   display: flex;
   flex-direction: column;
-  background: var(--color-bg-surface);
-  border: 1px solid var(--color-border-default);
-  padding: var(--space-5);
-  transition: box-shadow var(--duration-default) var(--ease-editorial);
+  background: #ffffff; /* pure white for editorial feel */
+  transition: box-shadow var(--duration-default) var(--ease-editorial), transform var(--duration-default) var(--ease-editorial);
+  overflow: hidden; /* round corners for the whole card if desired, or keep square */
+  border-radius: var(--radius-sm);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); /* very subtle drop shadow */
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -925,16 +926,16 @@ textarea.ds-input {
 }
 
 .ds-product-card:hover {
-  box-shadow: var(--shadow-dropdown);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 .ds-product-card__mockup {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 4 / 3;
   background: var(--color-bg-canvas);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: var(--space-4);
   overflow: hidden;
 }
 
@@ -943,46 +944,113 @@ textarea.ds-input {
   height: 100%;
   display: block;
   object-fit: cover;
+  transition: transform var(--duration-slow) var(--ease-editorial);
+}
+
+.ds-product-card:hover .ds-product-card__mockup img {
+  transform: scale(1.05);
+}
+
+.ds-product-card__content {
+  padding: var(--space-6) var(--space-5) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .ds-product-card__category {
   font: var(--type-ar-label);
   letter-spacing: var(--letter-spacing-ar-label);
-  color: var(--color-accent);
+  color: var(--color-text-muted);
   text-transform: uppercase;
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-3);
+  font-size: 0.75rem;
 }
 
 .ds-product-card__title {
-  font: var(--type-ar-h5);
-  letter-spacing: var(--letter-spacing-ar-h5);
+  font: var(--type-ar-h4); /* Larger, more editorial title */
+  letter-spacing: var(--letter-spacing-ar-h4);
   color: var(--color-text-primary);
-  margin-bottom: var(--space-2);
+  margin-bottom: var(--space-4);
+  line-height: 1.3;
+}
+
+.ds-product-card__divider {
+  width: 60px;
+  height: 8px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 8' width='60' height='8'%3E%3Cpath d='M0 4 l5 -3 l10 6 l10 -6 l10 6 l10 -6 l10 6 l5 -3' fill='none' stroke='%23d1d5db' stroke-width='1.5' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: repeat-x;
+  background-position: left center;
+  margin-bottom: var(--space-5);
 }
 
 .ds-product-card__desc {
   font: var(--type-ar-body-sm);
-  letter-spacing: var(--letter-spacing-ar-body-sm);
   color: var(--color-text-secondary);
-  margin-bottom: var(--space-4);
+  margin-bottom: var(--space-6);
   flex: 1;
+}
+
+.ds-product-card__price-row {
+  margin-bottom: var(--space-4);
+  font-family: var(--font-en); /* Using english font for numbers if preferred */
+}
+
+.ds-product-card__price {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--color-text-primary);
+}
+
+.ds-product-card__price--free {
+  color: var(--color-success);
 }
 
 .ds-product-card__footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-4);
+  border-top: 1px solid var(--color-border-subtle);
+  padding-top: var(--space-4);
+  margin-top: auto;
+}
+
+.ds-product-card__btn {
+  background: var(--color-text-primary); /* Almost black */
+  color: var(--color-bg-base);
+  border-radius: var(--radius-sm);
+  padding: var(--space-2) var(--space-4);
+  font: var(--type-ar-button);
+  font-size: 0.85rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background var(--duration-fast) var(--ease-editorial);
+}
+
+.ds-product-card__btn:hover {
+  background: var(--color-primary);
+  color: white;
+}
+
+.ds-product-card__social {
+  display: flex;
+  align-items: center;
   gap: var(--space-3);
 }
 
-.ds-product-card__price {
-  font: var(--type-ar-h5);
-  letter-spacing: var(--letter-spacing-ar-h5);
-  color: var(--color-text-primary);
+.ds-product-card__social a {
+  color: var(--color-text-muted);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--duration-fast) var(--ease-editorial);
 }
 
-.ds-product-card__price--free {
-  color: var(--color-success);
+.ds-product-card__social a:hover {
+  color: var(--color-primary);
 }
 
 /* ── Pillar Card ── */
@@ -1288,121 +1356,6 @@ textarea.ds-input {
   height: 80px;
   width: auto;
 }
-
-.ds-nav {
-  display: flex;
-  align-items: center;
-  gap: var(--space-6);
-}
-
-.ds-nav__link {
-  font: var(--type-ar-body);
-  letter-spacing: var(--letter-spacing-ar-body);
-  color: var(--color-text-primary);
-  text-decoration: none;
-  padding: var(--space-2) 0;
-  border-bottom: 2px solid transparent;
-  transition: color var(--duration-quick) var(--ease-editorial),
-    border-color var(--duration-quick) var(--ease-editorial);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ds-nav__link {
-    transition: none;
-  }
-}
-
-.ds-nav__link:hover {
-  color: var(--color-primary);
-}
-
-.ds-nav__link--active {
-  color: var(--color-primary);
-  border-bottom-color: var(--color-primary);
-}
-
-.ds-nav__link:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-}
-
-/* Menu toggle — visible on all breakpoints */
-.ds-header__menu-toggle {
-  display: inline-flex;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--color-text-primary);
-  padding: var(--space-2);
-}
-
-.ds-header__menu-toggle:focus-visible {
-  outline: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-}
-
-/* Off-canvas nav drawer — all breakpoints */
-.ds-nav {
-  display: flex;
-  position: fixed;
-  inset: 0 auto 0 0;
-  width: min(320px, 80vw);
-  flex-direction: column;
-  gap: 0;
-  background: var(--color-light);
-  border-inline-end: 1px solid var(--color-border-default);
-  padding: var(--space-6);
-  padding-top: calc(var(--header-height) + var(--space-4));
-  box-shadow: var(--shadow-modal);
-  z-index: var(--z-modal);
-  transform: translateX(-100%);
-  transition: transform var(--duration-default) var(--ease-editorial);
-  pointer-events: none;
-}
-
-.ds-nav .ds-nav__link {
-  color: var(--color-text-primary);
-}
-
-.ds-nav .ds-nav__link:hover,
-.ds-nav .ds-nav__link:focus-visible {
-  color: var(--color-primary);
-  border-bottom-color: var(--color-primary);
-}
-
-[dir="ltr"] .ds-nav {
-  inset: 0 0 0 auto;
-  transform: translateX(100%);
-}
-
-.ds-nav.is-open {
-  transform: translateX(0);
-  pointer-events: auto;
-}
-
-.ds-nav__link {
-  padding: var(--space-3) var(--space-4);
-  border-bottom: 1px solid var(--color-border-default);
-  width: 100%;
-}
-
-/* Overlay — all breakpoints */
-.ds-nav-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(26, 5, 18, var(--opacity-48));
-  z-index: calc(var(--z-modal) - 1);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity var(--duration-default) var(--ease-editorial);
-}
-
-.ds-nav-overlay.is-open {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* Header CTA removed; nav drawer is primary navigation on all breakpoints */
 
 @media (max-width: 640px) {
   .ds-header {

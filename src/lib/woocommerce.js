@@ -1,3 +1,6 @@
+import { Buffer } from 'node:buffer';
+import { toPlainText } from './sanitize-content.js';
+
 const WOO_STORE_API = import.meta.env.WOO_STORE_API_URL ?? "";
 const WOO_API = import.meta.env.WOO_API_URL ?? "";
 const WOO_CONSUMER_KEY = import.meta.env.WOO_CONSUMER_KEY;
@@ -13,37 +16,16 @@ function proxyImageUrl(src) {
   }
 }
 
-async function wooFetch(url, source) {
+async function wooFetch(url, source, fetchOptions = {}) {
   if (!url) return null;
   try {
-    const res = await fetch(url);
+    const res = await fetch(url, fetchOptions);
     if (!res.ok) throw new Error(`${source} ${res.status}`);
     return await res.json();
   } catch (err) {
     console.error("[woocommerce.js]", err.message);
     return null;
   }
-}
-
-function decodeHtml(value = "") {
-  return value
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#039;/g, "'");
-}
-
-function stripHtml(value = "") {
-  return decodeHtml(value.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim());
-}
-
-function getCheckoutUrl(productId) {
-  return `/checkout?product=${encodeURIComponent(productId)}`;
-}
-
-function getInternalProductUrl(slug) {
-  return `/products/${slug}`;
 }
 
 function formatStorePrice(prices) {
@@ -80,25 +62,25 @@ function normalizeStoreProduct(product) {
 
   return {
     id: product.id,
-    name: decodeHtml(product.name),
+    name: toPlainText(product.name),
     slug: product.slug,
     type: product.type,
     permalink: product.permalink,
     productUrl: getInternalProductUrl(product.slug),
     checkoutUrl: getCheckoutUrl(product.id),
-    shortDescription: stripHtml(product.short_description || product.description || ""),
+    shortDescription: toPlainText(product.short_description || product.description || ""),
     description: product.description || "",
     price: formatStorePrice(product.prices),
     isInStock: product.is_in_stock,
     image: image
       ? {
           src: proxyImageUrl(image.src),
-          alt: image.alt || product.name,
+          alt: image.alt || toPlainText(product.name),
         }
       : null,
     images: (product.images ?? []).map((item) => ({
       src: proxyImageUrl(item.src),
-      alt: item.alt || product.name,
+      alt: item.alt || toPlainText(product.name),
     })),
     category: category?.name ?? "",
   };
@@ -110,43 +92,58 @@ function normalizeAdminProduct(product) {
 
   return {
     id: product.id,
-    name: decodeHtml(product.name),
+    name: toPlainText(product.name),
     slug: product.slug,
     type: product.type,
     permalink: product.permalink,
     productUrl: getInternalProductUrl(product.slug),
     checkoutUrl: getCheckoutUrl(product.id),
-    shortDescription: stripHtml(product.short_description || product.description || ""),
+    shortDescription: toPlainText(product.short_description || product.description || ""),
     description: product.description || "",
     price: formatAdminPrice(product),
     isInStock: product.stock_status === "instock",
     image: image
       ? {
           src: proxyImageUrl(image.src),
-          alt: image.alt || product.name,
+          alt: image.alt || toPlainText(product.name),
         }
       : null,
     images: (product.images ?? []).map((item) => ({
       src: proxyImageUrl(item.src),
-      alt: item.alt || product.name,
+      alt: item.alt || toPlainText(product.name),
     })),
     category: category?.name ?? "",
   };
 }
 
+function getCheckoutUrl(productId) {
+  return `/checkout?product=${encodeURIComponent(productId)}`;
+}
+
+function getInternalProductUrl(slug) {
+  return `/products/${slug}`;
+}
+
 async function getAdminProducts(perPage) {
   if (!WOO_CONSUMER_KEY || !WOO_CONSUMER_SECRET || !WOO_API) return null;
+
+  const encodedCredentials = Buffer.from(
+    `${WOO_CONSUMER_KEY}:${WOO_CONSUMER_SECRET}`,
+    'utf8'
+  ).toString('base64');
 
   const params = new URLSearchParams({
     per_page: String(perPage),
     status: "publish",
     orderby: "date",
     order: "desc",
-    consumer_key: WOO_CONSUMER_KEY,
-    consumer_secret: WOO_CONSUMER_SECRET,
   });
 
-  const data = await wooFetch(`${WOO_API}/products?${params}`, "WooCommerce REST API");
+  const data = await wooFetch(
+    `${WOO_API}/products?${params}`,
+    "WooCommerce REST API",
+    { headers: { Authorization: `Basic ${encodedCredentials}` } }
+  );
   return Array.isArray(data) ? data.map(normalizeAdminProduct) : null;
 }
 
