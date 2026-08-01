@@ -15,6 +15,8 @@ export type DlbSubmissionServices = {
   mail: DlbMailService;
   now?: () => Date;
   log?: (event: string, details?: Record<string, unknown>) => void;
+  stage?: (stage: string) => void;
+  reportError?: (stage: string, error: unknown) => void;
 };
 
 export type DlbSubmissionOutcome =
@@ -55,18 +57,22 @@ export async function processDlbSubmission(
   const submittedAt = (services.now ?? (() => new Date()))().toISOString();
 
   const persisted = await withSubmissionLock(async () => {
-    const state = await services.sheets.readState().catch((error: unknown) => {
+    services.stage?.('spreadsheet-open');
+    const state = await services.sheets.readState(services.stage).catch((error: unknown) => {
       if (error instanceof DlbHeaderSchemaMismatchError) {
         services.log?.('header_schema_mismatch');
       }
       throw error;
     });
+    services.stage?.('duplicate-check');
     if (state.emails.has(submission.email) || state.whatsapps.has(submission.whatsapp)) {
       services.log?.('duplicate_detected');
       return null;
     }
 
+    services.stage?.('id-generation');
     const applicationId = formatApplicationId(getNextApplicationSequence(state.applicationIds));
+    services.stage?.('append-row');
     const rowNumber = await services.sheets.appendSubmission({
       applicationId,
       submittedAt,
@@ -74,7 +80,7 @@ export async function processDlbSubmission(
       submission,
       userAgent: context.userAgent.slice(0, 500),
       clientIp: context.clientIp,
-    });
+    }, services.stage);
 
     return { applicationId, rowNumber };
   });
@@ -82,32 +88,37 @@ export async function processDlbSubmission(
   if (!persisted) return { type: 'duplicate' };
 
   let applicantEmailSent = false;
+  services.stage?.('send-applicant-email');
   try {
     await services.mail.sendApplicantConfirmation(persisted.applicationId, submission);
     applicantEmailSent = true;
-  } catch {
-    services.log?.('applicant_email_failure', { applicationId: persisted.applicationId });
+  } catch (error: unknown) {
+    services.reportError?.('send-applicant-email', error);
+    services.log?.('applicant_email_failure');
   }
 
+  services.stage?.('send-admin-email');
   try {
     await services.mail.sendAdminNotification(persisted.applicationId, submittedAt, submission);
-  } catch {
-    services.log?.('admin_email_failure', { applicationId: persisted.applicationId });
+  } catch (error: unknown) {
+    services.reportError?.('send-admin-email', error);
+    services.log?.('admin_email_failure');
   }
 
+  services.stage?.('update-email-status');
   try {
     await services.sheets.updateEmailStatus(
       persisted.rowNumber,
       applicantEmailSent ? 'Sent' : 'Failed',
+      services.stage,
     );
-  } catch {
-    services.log?.('email_status_update_failure', { applicationId: persisted.applicationId });
+  } catch (error: unknown) {
+    services.reportError?.('update-email-status', error);
+    services.log?.('email_status_update_failure');
   }
 
-  services.log?.('submission_success', {
-    applicationId: persisted.applicationId,
-    applicantEmailSent,
-  });
+  services.stage?.('success');
+  services.log?.('submission_success');
   return { type: 'success', applicationId: persisted.applicationId };
 }
 
