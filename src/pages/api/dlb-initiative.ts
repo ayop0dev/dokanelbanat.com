@@ -7,7 +7,7 @@ import {
   processDlbSubmission,
 } from '../../lib/dlb-submission-service';
 import type { DlbSubmissionServices } from '../../lib/dlb-submission-service';
-import { GoogleSheetsDlbService } from '../../lib/google-sheets';
+import { GoogleSheetsDlbService, resolveGooglePrivateKey } from '../../lib/google-sheets';
 
 const MAX_BODY_BYTES = 64 * 1024;
 const GENERIC_ERROR = 'حدث خطأ، يرجى المحاولة مرة أخرى.';
@@ -17,6 +17,7 @@ const ENV: Record<string, string | undefined> = {
   GOOGLE_SPREADSHEET_ID: import.meta.env?.GOOGLE_SPREADSHEET_ID,
   GOOGLE_SERVICE_ACCOUNT_EMAIL: import.meta.env?.GOOGLE_SERVICE_ACCOUNT_EMAIL,
   GOOGLE_PRIVATE_KEY: import.meta.env?.GOOGLE_PRIVATE_KEY,
+  GOOGLE_PRIVATE_KEY_BASE64: process.env.GOOGLE_PRIVATE_KEY_BASE64,
   SMTP_HOST: import.meta.env?.SMTP_HOST,
   SMTP_PORT: import.meta.env?.SMTP_PORT,
   SMTP_USERNAME: import.meta.env?.SMTP_USERNAME,
@@ -57,7 +58,10 @@ function createServices(
     sheets: new GoogleSheetsDlbService({
       spreadsheetId: ENV.GOOGLE_SPREADSHEET_ID ?? '',
       serviceAccountEmail: ENV.GOOGLE_SERVICE_ACCOUNT_EMAIL ?? '',
-      privateKey: ENV.GOOGLE_PRIVATE_KEY ?? '',
+      privateKey: resolveGooglePrivateKey(
+        ENV.GOOGLE_PRIVATE_KEY,
+        ENV.GOOGLE_PRIVATE_KEY_BASE64,
+      ),
     }),
     mail: new NodemailerDlbMailService({
       host: ENV.SMTP_HOST ?? '',

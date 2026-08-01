@@ -19,6 +19,7 @@ import {
   DLB_SHEET_HEADERS,
   ensureDlbSheetHeaders,
   getNextApplicationSequence,
+  resolveGooglePrivateKey,
 } from '../src/lib/google-sheets';
 import type { DlbHeaderStore, DlbSheetRow, DlbSheetsService } from '../src/lib/google-sheets';
 import {
@@ -134,6 +135,11 @@ class MockMail implements DlbMailService {
 
 const context = { clientIp: '203.0.113.10', userAgent: 'DLB test agent' };
 const fixedNow = () => new Date('2026-08-01T12:00:00.000Z');
+const testPrivateKey = [
+  '-----BEGIN PRIVATE KEY-----',
+  'ZmFrZS1wZW0ta2V5',
+  '-----END PRIVATE KEY-----',
+].join('\n');
 
 test('validates and normalizes a complete application', () => {
   const result = validateDlbSubmission(validInput());
@@ -211,6 +217,39 @@ test('maps the exact required Google Sheets column order', () => {
   assert.equal(row[22], '+201012345678');
   assert.equal(row[23], 'sara@example.com');
   assert.equal(row[27], '/dlb-initiative');
+});
+
+test('resolves a valid Base64-encoded PEM private key', () => {
+  const encoded = Buffer.from(testPrivateKey, 'utf8').toString('base64');
+  assert.equal(resolveGooglePrivateKey('-----BEGIN PRIVATE KEY-----wrong-----END PRIVATE KEY-----', encoded), testPrivateKey);
+});
+
+test('rejects malformed Base64 private keys without exposing their value', () => {
+  const secretFragment = 'SENSITIVE_PRIVATE_KEY_FRAGMENT';
+  const malformed = `%%%${secretFragment}`;
+  assert.throws(
+    () => resolveGooglePrivateKey(undefined, malformed),
+    (error: unknown) => {
+      assert.ok(error instanceof Error);
+      assert.doesNotMatch(error.message, new RegExp(secretFragment));
+      return true;
+    },
+  );
+});
+
+test('gives Base64 private key priority over the direct environment value', () => {
+  const encoded = Buffer.from(testPrivateKey, 'utf8').toString('base64');
+  const directValue = '-----BEGIN PRIVATE KEY-----\nwrong\n-----END PRIVATE KEY-----';
+  assert.equal(resolveGooglePrivateKey(directValue, encoded), testPrivateKey);
+});
+
+test('normalizes the existing literal-newline private key fallback', () => {
+  const literalValue = '-----BEGIN PRIVATE KEY-----\\nZmFrZS1wZW0ta2V5\\n-----END PRIVATE KEY-----';
+  assert.equal(resolveGooglePrivateKey(literalValue), testPrivateKey);
+});
+
+test('preserves the existing multiline PEM private key fallback', () => {
+  assert.equal(resolveGooglePrivateKey(testPrivateKey), testPrivateKey);
 });
 
 test('empty row 1 creates and verifies the exact 28 headers', async () => {

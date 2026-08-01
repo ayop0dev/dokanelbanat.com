@@ -50,9 +50,13 @@ export type DlbSheetRow = {
 };
 
 export interface DlbSheetsService {
-  readState(): Promise<DlbSheetState>;
-  appendSubmission(row: DlbSheetRow): Promise<number>;
-  updateEmailStatus(rowNumber: number, status: 'Sent' | 'Failed'): Promise<void>;
+  readState(stage?: (stage: string) => void): Promise<DlbSheetState>;
+  appendSubmission(row: DlbSheetRow, stage?: (stage: string) => void): Promise<number>;
+  updateEmailStatus(
+    rowNumber: number,
+    status: 'Sent' | 'Failed',
+    stage?: (stage: string) => void,
+  ): Promise<void>;
 }
 
 export interface DlbHeaderStore {
@@ -83,8 +87,49 @@ type SpreadsheetMetadataResponse = {
   sheets?: Array<{ properties?: { title?: string } }>;
 };
 
-function parsePrivateKey(value: string): string {
-  return value.replace(/\\n/g, '\n');
+const PRIVATE_KEY_BEGIN = '-----BEGIN PRIVATE KEY-----';
+const PRIVATE_KEY_END = '-----END PRIVATE KEY-----';
+
+function removeMatchingOuterQuotes(value: string): string {
+  if (
+    value.length >= 2 &&
+    ((value.startsWith('"') && value.endsWith('"')) ||
+      (value.startsWith("'") && value.endsWith("'")))
+  ) {
+    return value.slice(1, -1);
+  }
+  return value;
+}
+
+function decodeBase64PrivateKey(value: string): string {
+  const encoded = value.trim();
+  if (!/^[A-Za-z0-9+/]+={0,2}$/.test(encoded) || encoded.length % 4 !== 0) {
+    throw new Error('DLB Google private key Base64 value is invalid.');
+  }
+
+  const decoded = Buffer.from(encoded, 'base64').toString('utf8');
+  if (Buffer.from(decoded, 'utf8').toString('base64') !== encoded) {
+    throw new Error('DLB Google private key Base64 value is invalid.');
+  }
+  return decoded;
+}
+
+export function resolveGooglePrivateKey(
+  directValue: string | undefined,
+  base64Value?: string,
+): string {
+  const resolved = base64Value?.trim()
+    ? decodeBase64PrivateKey(base64Value)
+    : directValue ?? '';
+  const normalized = removeMatchingOuterQuotes(resolved.trim())
+    .replace(/\\n/g, '\n')
+    .replace(/\r\n?/g, '\n')
+    .trim();
+
+  if (!normalized.startsWith(PRIVATE_KEY_BEGIN) || !normalized.endsWith(PRIVATE_KEY_END)) {
+    throw new Error('DLB Google private key must be a PKCS#8 PEM value.');
+  }
+  return normalized;
 }
 
 function isCompletelyEmptyHeader(header: readonly unknown[]): boolean {
@@ -154,22 +199,25 @@ export class GoogleSheetsDlbService implements DlbSheetsService {
     this.auth = new GoogleAuth({
       credentials: {
         client_email: config.serviceAccountEmail,
-        private_key: parsePrivateKey(config.privateKey),
+        private_key: config.privateKey,
       },
       scopes: ['https://www.googleapis.com/auth/spreadsheets'],
     });
   }
 
-  async readState(): Promise<DlbSheetState> {
-    await this.verifyWorkbook();
+  async readState(stage?: (stage: string) => void): Promise<DlbSheetState> {
+    await this.verifyWorkbook(stage);
     await ensureDlbSheetHeaders({
-      readHeader: () => this.readHeader(),
-      writeHeader: (headers) => this.writeHeader(headers),
+      readHeader: () => this.readHeader(stage),
+      writeHeader: (headers) => this.writeHeader(headers, stage),
     });
 
     const range = `'${DLB_WORKSHEET_NAME}'!A2:AB`;
     const data = await this.request<ValuesResponse>(
       `/values/${encodeURIComponent(range)}?majorDimension=ROWS`,
+      {},
+      stage,
+      'duplicate-check',
     );
     const values = Array.isArray(data.values) ? data.values : [];
     return {
@@ -179,16 +227,22 @@ export class GoogleSheetsDlbService implements DlbSheetsService {
     };
   }
 
-  private async readHeader(): Promise<unknown[]> {
+  private async readHeader(stage?: (stage: string) => void): Promise<unknown[]> {
     const range = `'${DLB_WORKSHEET_NAME}'!1:1`;
     const data = await this.request<ValuesResponse>(
       `/values/${encodeURIComponent(range)}?majorDimension=ROWS&valueRenderOption=FORMULA`,
+      {},
+      stage,
+      'headers-check',
     );
     const header = data.values?.[0];
     return Array.isArray(header) ? header : [];
   }
 
-  private async writeHeader(headers: readonly string[]): Promise<void> {
+  private async writeHeader(
+    headers: readonly string[],
+    stage?: (stage: string) => void,
+  ): Promise<void> {
     const range = `'${DLB_WORKSHEET_NAME}'!A1:AB1`;
     await this.request<ValuesResponse>(
       `/values/${encodeURIComponent(range)}?valueInputOption=RAW`,
@@ -196,17 +250,23 @@ export class GoogleSheetsDlbService implements DlbSheetsService {
         method: 'PUT',
         body: JSON.stringify({ values: [[...headers]] }),
       },
+      stage,
+      'headers-check',
     );
   }
 
-  private async verifyWorkbook(): Promise<void> {
+  private async verifyWorkbook(stage?: (stage: string) => void): Promise<void> {
     if (this.workbookVerified) return;
     const metadata = await this.request<SpreadsheetMetadataResponse>(
       '?fields=properties.title%2Csheets.properties.title',
+      {},
+      stage,
+      'spreadsheet-open',
     );
     if (metadata.properties?.title !== 'dlb-initiative-2026') {
       throw new Error('The configured spreadsheet has the wrong title.');
     }
+    stage?.('worksheet-open');
     const worksheetExists = metadata.sheets?.some(
       (sheet) => sheet.properties?.title === DLB_WORKSHEET_NAME,
     );
@@ -214,7 +274,10 @@ export class GoogleSheetsDlbService implements DlbSheetsService {
     this.workbookVerified = true;
   }
 
-  async appendSubmission(row: DlbSheetRow): Promise<number> {
+  async appendSubmission(
+    row: DlbSheetRow,
+    stage?: (stage: string) => void,
+  ): Promise<number> {
     const range = `'${DLB_WORKSHEET_NAME}'!A:AB`;
     const data = await this.request<ValuesResponse>(
       `/values/${encodeURIComponent(range)}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
@@ -222,6 +285,8 @@ export class GoogleSheetsDlbService implements DlbSheetsService {
         method: 'POST',
         body: JSON.stringify({ values: [buildDlbSheetRow(row)] }),
       },
+      stage,
+      'append-row',
     );
 
     const updatedRange = data.updates?.updatedRange ?? '';
@@ -233,7 +298,11 @@ export class GoogleSheetsDlbService implements DlbSheetsService {
     return rowNumber;
   }
 
-  async updateEmailStatus(rowNumber: number, status: 'Sent' | 'Failed'): Promise<void> {
+  async updateEmailStatus(
+    rowNumber: number,
+    status: 'Sent' | 'Failed',
+    stage?: (stage: string) => void,
+  ): Promise<void> {
     const range = `'${DLB_WORKSHEET_NAME}'!D${rowNumber}`;
     await this.request<ValuesResponse>(
       `/values/${encodeURIComponent(range)}?valueInputOption=RAW`,
@@ -241,15 +310,24 @@ export class GoogleSheetsDlbService implements DlbSheetsService {
         method: 'PUT',
         body: JSON.stringify({ values: [[status]] }),
       },
+      stage,
+      'update-email-status',
     );
   }
 
-  private async request<T>(path: string, init: RequestInit = {}): Promise<T> {
+  private async request<T>(
+    path: string,
+    init: RequestInit = {},
+    stage?: (stage: string) => void,
+    operationStage = 'google-request',
+  ): Promise<T> {
+    stage?.('google-auth');
     const client = await this.auth.getClient();
     const tokenResult = await client.getAccessToken();
     const accessToken = typeof tokenResult === 'string' ? tokenResult : tokenResult.token;
     if (!accessToken) throw new Error('Google authentication returned no access token.');
 
+    stage?.(operationStage);
     const response = await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${encodeURIComponent(this.spreadsheetId)}${path}`,
       {
