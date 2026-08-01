@@ -224,6 +224,15 @@ test('resolves a valid Base64-encoded PEM private key', () => {
   assert.equal(resolveGooglePrivateKey('-----BEGIN PRIVATE KEY-----wrong-----END PRIVATE KEY-----', encoded), testPrivateKey);
 });
 
+test('accepts a direct PEM value in GOOGLE_PRIVATE_KEY', () => {
+  assert.equal(resolveGooglePrivateKey(testPrivateKey), testPrivateKey);
+});
+
+test('accepts a Base64 PEM value in GOOGLE_PRIVATE_KEY', () => {
+  const encoded = Buffer.from(testPrivateKey, 'utf8').toString('base64');
+  assert.equal(resolveGooglePrivateKey(encoded), testPrivateKey);
+});
+
 test('rejects malformed Base64 private keys without exposing their value', () => {
   const secretFragment = 'SENSITIVE_PRIVATE_KEY_FRAGMENT';
   const malformed = `%%%${secretFragment}`;
@@ -250,6 +259,13 @@ test('normalizes the existing literal-newline private key fallback', () => {
 
 test('preserves the existing multiline PEM private key fallback', () => {
   assert.equal(resolveGooglePrivateKey(testPrivateKey), testPrivateKey);
+});
+
+test('rejects a non-PEM and non-Base64 private key value', () => {
+  assert.throws(
+    () => resolveGooglePrivateKey('not a PEM or Base64 value'),
+    /private key/i,
+  );
 });
 
 test('empty row 1 creates and verifies the exact 28 headers', async () => {

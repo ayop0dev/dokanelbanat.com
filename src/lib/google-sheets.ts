@@ -102,7 +102,7 @@ function removeMatchingOuterQuotes(value: string): string {
 }
 
 function decodeBase64PrivateKey(value: string): string {
-  const encoded = value.trim();
+  const encoded = removeMatchingOuterQuotes(value.trim());
   if (!/^[A-Za-z0-9+/]+={0,2}$/.test(encoded) || encoded.length % 4 !== 0) {
     throw new Error('DLB Google private key Base64 value is invalid.');
   }
@@ -118,18 +118,25 @@ export function resolveGooglePrivateKey(
   directValue: string | undefined,
   base64Value?: string,
 ): string {
-  const resolved = base64Value?.trim()
-    ? decodeBase64PrivateKey(base64Value)
-    : directValue ?? '';
-  const normalized = removeMatchingOuterQuotes(resolved.trim())
+  const normalize = (value: string): string => removeMatchingOuterQuotes(value.trim())
     .replace(/\\n/g, '\n')
     .replace(/\r\n?/g, '\n')
     .trim();
+  const validate = (value: string): string => {
+    if (!value.startsWith(PRIVATE_KEY_BEGIN) || !value.endsWith(PRIVATE_KEY_END)) {
+      throw new Error('DLB Google private key must be a PKCS#8 PEM value.');
+    }
+    return value;
+  };
 
-  if (!normalized.startsWith(PRIVATE_KEY_BEGIN) || !normalized.endsWith(PRIVATE_KEY_END)) {
-    throw new Error('DLB Google private key must be a PKCS#8 PEM value.');
+  if (base64Value?.trim()) {
+    return validate(normalize(decodeBase64PrivateKey(base64Value)));
   }
-  return normalized;
+
+  const direct = normalize(directValue ?? '');
+  if (direct.startsWith(PRIVATE_KEY_BEGIN)) return validate(direct);
+
+  return validate(normalize(decodeBase64PrivateKey(direct)));
 }
 
 function isCompletelyEmptyHeader(header: readonly unknown[]): boolean {
