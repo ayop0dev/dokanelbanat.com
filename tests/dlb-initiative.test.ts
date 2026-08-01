@@ -12,7 +12,11 @@ import {
   processDlbSubmission,
 } from '../src/lib/dlb-submission-service';
 import type { DlbMailService } from '../src/lib/dlb-mail';
-import { buildAdminMessage, buildApplicantMessage } from '../src/lib/dlb-mail';
+import {
+  buildAdminMessage,
+  buildApplicantMessage,
+  buildDlbSmtpTransportOptions,
+} from '../src/lib/dlb-mail';
 import {
   buildDlbSheetRow,
   DlbHeaderSchemaMismatchError,
@@ -140,6 +144,14 @@ const testPrivateKey = [
   'ZmFrZS1wZW0ta2V5',
   '-----END PRIVATE KEY-----',
 ].join('\n');
+const smtpConfig = {
+  host: 'smtp.titan.email',
+  port: 465,
+  username: 'smtp-test@example.invalid',
+  password: 'smtp-test-secret',
+  fromName: 'DokanElbanat.com',
+  fromEmail: 'info@dokanelbanat.com',
+};
 
 test('validates and normalizes a complete application', () => {
   const result = validateDlbSubmission(validInput());
@@ -266,6 +278,41 @@ test('rejects a non-PEM and non-Base64 private key value', () => {
     () => resolveGooglePrivateKey('not a PEM or Base64 value'),
     /private key/i,
   );
+});
+
+test('configures secure implicit TLS for SMTP port 465', () => {
+  const options = buildDlbSmtpTransportOptions(smtpConfig);
+  assert.equal(options.host, 'smtp.titan.email');
+  assert.equal(options.port, 465);
+  assert.equal(options.secure, true);
+  assert.equal('requireTLS' in options, false);
+});
+
+test('configures STARTTLS for SMTP port 587', () => {
+  const options = buildDlbSmtpTransportOptions({ ...smtpConfig, port: 587 });
+  assert.equal(options.host, 'smtp.titan.email');
+  assert.equal(options.port, 587);
+  assert.equal(options.secure, false);
+  assert.equal(options.requireTLS, true);
+});
+
+test('rejects unsupported SMTP ports without logging credentials', () => {
+  const logs: unknown[][] = [];
+  const originalInfo = console.info;
+  const originalError = console.error;
+  console.info = (...args: unknown[]) => logs.push(args);
+  console.error = (...args: unknown[]) => logs.push(args);
+  try {
+    assert.throws(
+      () => buildDlbSmtpTransportOptions({ ...smtpConfig, port: 2525 }),
+      /SMTP configuration is incomplete or invalid/,
+    );
+  } finally {
+    console.info = originalInfo;
+    console.error = originalError;
+  }
+  assert.equal(logs.length, 0);
+  assert.doesNotMatch(JSON.stringify(logs), /smtp-test-secret|smtp-test@example\.invalid/);
 });
 
 test('empty row 1 creates and verifies the exact 28 headers', async () => {

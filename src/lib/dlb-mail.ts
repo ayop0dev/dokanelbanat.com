@@ -4,7 +4,7 @@ import type { DlbSubmission } from './dlb-initiative';
 
 const ADMIN_EMAIL = 'dlb.egy@gmail.com';
 
-type DlbMailConfig = {
+export type DlbMailConfig = {
   host: string;
   port: number;
   username: string;
@@ -36,7 +36,7 @@ function escapeHtml(value: string): string {
 function validateConfig(config: DlbMailConfig): void {
   if (
     config.host !== 'smtp.titan.email' ||
-    config.port !== 465 ||
+    ![465, 587].includes(config.port) ||
     !config.username ||
     !config.password ||
     config.fromName !== 'DokanElbanat.com' ||
@@ -46,25 +46,31 @@ function validateConfig(config: DlbMailConfig): void {
   }
 }
 
+export function buildDlbSmtpTransportOptions(config: DlbMailConfig) {
+  validateConfig(config);
+  return {
+    host: config.host,
+    port: config.port,
+    secure: config.port === 465,
+    ...(config.port === 587 ? { requireTLS: true } : {}),
+    auth: {
+      user: config.username,
+      pass: config.password,
+    },
+    connectionTimeout: 15_000,
+    greetingTimeout: 15_000,
+    socketTimeout: 30_000,
+  };
+}
+
 export class NodemailerDlbMailService implements DlbMailService {
   private readonly transporter: Transporter;
   private readonly from: string;
 
   constructor(config: DlbMailConfig) {
-    validateConfig(config);
+    const transportOptions = buildDlbSmtpTransportOptions(config);
     this.from = `"${config.fromName.replace(/["\r\n]/g, '')}" <${config.fromEmail}>`;
-    this.transporter = nodemailer.createTransport({
-      host: config.host,
-      port: config.port,
-      secure: true,
-      auth: {
-        user: config.username,
-        pass: config.password,
-      },
-      connectionTimeout: 15_000,
-      greetingTimeout: 15_000,
-      socketTimeout: 30_000,
-    });
+    this.transporter = nodemailer.createTransport(transportOptions);
   }
 
   async sendApplicantConfirmation(applicationId: string, submission: DlbSubmission): Promise<void> {

@@ -56,6 +56,7 @@ Configure these variables in the Astro Node.js application. Do not add their val
 GOOGLE_SPREADSHEET_ID
 GOOGLE_SERVICE_ACCOUNT_EMAIL
 GOOGLE_PRIVATE_KEY
+GOOGLE_PRIVATE_KEY_BASE64
 SMTP_HOST
 SMTP_PORT
 SMTP_USERNAME
@@ -66,9 +67,18 @@ DLB_RATE_LIMIT_MAX
 DLB_RATE_LIMIT_WINDOW_SECONDS
 ```
 
-`GOOGLE_PRIVATE_KEY` may be stored with escaped newline sequences (`\n`); the server converts them to real newlines at runtime.
+For the most reliable Hostinger deployment, set `GOOGLE_PRIVATE_KEY_BASE64` to a Base64-encoded UTF-8 PKCS#8 PEM private key. When it is present, it takes priority over `GOOGLE_PRIVATE_KEY`. The server decodes it, normalizes line endings, validates the `-----BEGIN PRIVATE KEY-----` and `-----END PRIVATE KEY-----` delimiters, and never exposes the value to the browser or logs.
 
-The DLB SMTP configuration must use Titan SMTP with SSL on port 465. The sender is `DokanElbanat.com <info@dokanelbanat.com>`. The administrator notification recipient is fixed by the approved specification.
+If `GOOGLE_PRIVATE_KEY_BASE64` is not set, `GOOGLE_PRIVATE_KEY` remains supported. It may be stored with escaped newline sequences (`\n`) or as a multiline PEM; the server converts escaped sequences to real newlines, normalizes line endings, and validates the same PKCS#8 PEM delimiters.
+
+For Hostinger production, configure Titan SMTP as follows:
+
+```text
+SMTP_HOST=smtp.titan.email
+SMTP_PORT=587
+```
+
+Port 587 uses STARTTLS. Port 465 remains supported with implicit SSL. The sender is `DokanElbanat.com <info@dokanelbanat.com>`. The administrator notification recipient is fixed by the approved specification.
 
 The two rate-limit variables are optional. Defaults are 5 attempts per client IP per 3600 seconds.
 
