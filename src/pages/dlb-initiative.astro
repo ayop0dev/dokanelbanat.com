@@ -1,0 +1,1002 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="مبادرة 100 دكان لـ100 بنت - دكان البنات"
+  description="قدّمي طلب الانضمام إلى مبادرة 100 دكان لـ100 بنت."
+>
+  <div class="dlb-progress-anchor" id="dlb-progress-anchor">
+    <span class="dlb-progress-sentinel" id="dlb-progress-sentinel" aria-hidden="true"></span>
+    <div
+      class="dlb-progress"
+      id="dlb-progress"
+      role="progressbar"
+      aria-label="تقدمك في صفحة طلب الانضمام"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      aria-valuenow="0"
+    >
+      <span class="dlb-progress__bar" id="dlb-progress-bar"></span>
+    </div>
+  </div>
+
+  <main class="dlb-page" dir="rtl">
+    <section class="dlb-intro" aria-labelledby="dlb-page-title">
+      <div class="dlb-container">
+        <span class="ds-section-label">مبادرة دكان البنات</span>
+        <h1 id="dlb-page-title">100 دكان لـ100 بنت</h1>
+        <p>
+          مساحة تساعدك تبدأي مشروعك بخطوات أوضح. احكيلنا عنك وعن الفكرة اللي نفسك توصليلها،
+          وخدي وقتك في الإجابات؛ مفيش إجابة مثالية.
+        </p>
+        <div class="dlb-intro__note">
+          <strong>قبل ما تبدأي</strong>
+          <span>الطلب في صفحة واحدة، وإجاباتك تُستخدم فقط للمراجعة والتواصل بخصوص المبادرة.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="dlb-application" aria-labelledby="dlb-form-title">
+      <div class="dlb-form-container" id="dlb-form-container">
+        <form id="dlb-form" class="dlb-form" novalidate aria-labelledby="dlb-form-title">
+          <div class="dlb-form__heading">
+            <p class="dlb-form__kicker">طلب الانضمام</p>
+            <h2 id="dlb-form-title">احكيلنا عنك</h2>
+            <p>الحقول المعلّمة بعلامة <span aria-hidden="true">*</span> مطلوبة.</p>
+          </div>
+
+          <input
+            class="dlb-honeypot"
+            type="text"
+            name="website"
+            tabindex="-1"
+            autocomplete="off"
+            aria-hidden="true"
+          />
+
+          <section class="dlb-section" aria-labelledby="dlb-section-1">
+            <header class="dlb-section__header">
+              <span class="dlb-section__number" aria-hidden="true">01</span>
+              <div>
+                <h3 id="dlb-section-1">التعارف</h3>
+                <p>خلينا نتعرف عليكي الأول.</p>
+              </div>
+            </header>
+
+            <div class="dlb-fields dlb-fields--two">
+              <div class="ds-form-group">
+                <label class="ds-form-group__label" for="dlb-full-name">
+                  الاسم بالكامل <span class="ds-form-group__required" aria-label="مطلوب">*</span>
+                </label>
+                <input class="ds-input" id="dlb-full-name" name="full_name" type="text" minlength="3" maxlength="100" autocomplete="name" required aria-required="true" aria-describedby="dlb-full-name-error" placeholder="اكتبي اسمك كما تحبي أن نناديكي." />
+                <span class="ds-form-group__error" id="dlb-full-name-error" role="alert" aria-live="assertive"></span>
+              </div>
+
+              <div class="ds-form-group">
+                <label class="ds-form-group__label" for="dlb-age">
+                  السن <span class="ds-form-group__required" aria-label="مطلوب">*</span>
+                </label>
+                <input class="ds-input" id="dlb-age" name="age" type="number" min="16" max="80" step="1" inputmode="numeric" required aria-required="true" aria-describedby="dlb-age-error" />
+                <span class="ds-form-group__error" id="dlb-age-error" role="alert" aria-live="assertive"></span>
+              </div>
+
+              <div class="ds-form-group">
+                <label class="ds-form-group__label" for="dlb-governorate">
+                  المحافظة / المدينة <span class="ds-form-group__required" aria-label="مطلوب">*</span>
+                </label>
+                <input class="ds-input" id="dlb-governorate" name="governorate" type="text" maxlength="100" autocomplete="address-level1" required aria-required="true" aria-describedby="dlb-governorate-error" placeholder="مثال: أسيوط - منفلوط" />
+                <span class="ds-form-group__error" id="dlb-governorate-error" role="alert" aria-live="assertive"></span>
+              </div>
+
+              <div class="ds-form-group">
+                <label class="ds-form-group__label" for="dlb-study-work-status">
+                  بتدرسي ولا بتشتغلي؟ <span class="ds-form-group__required" aria-label="مطلوب">*</span>
+                </label>
+                <select class="ds-select" id="dlb-study-work-status" name="study_work_status" required aria-required="true" aria-describedby="dlb-study-work-status-error">
+                  <option value="">اختاري الإجابة الأقرب لك</option>
+                  <option value="طالبة">طالبة</option>
+                  <option value="بشتغل">بشتغل</option>
+                  <option value="الاتنين">الاتنين</option>
+                  <option value="حاليًا لا ده ولا ده">حاليًا لا ده ولا ده</option>
+                </select>
+                <span class="ds-form-group__error" id="dlb-study-work-status-error" role="alert" aria-live="assertive"></span>
+              </div>
+            </div>
+
+            <div class="dlb-fields">
+              <div class="ds-form-group">
+                <label class="ds-form-group__label" for="dlb-study-work-details">احكيلنا أكتر عن دراستك أو شغلك.</label>
+                <textarea class="ds-input" id="dlb-study-work-details" name="study_work_details" maxlength="500" aria-describedby="dlb-study-work-details-counter dlb-study-work-details-error" placeholder="التخصص، الكلية، طبيعة الشغل... إلخ."></textarea>
+                <div class="dlb-field-meta"><span class="ds-form-group__error" id="dlb-study-work-details-error" role="alert" aria-live="assertive"></span><span class="dlb-counter" id="dlb-study-work-details-counter" data-counter-for="dlb-study-work-details" aria-live="polite">0 / 500</span></div>
+              </div>
+
+              <div class="ds-form-group">
+                <label class="ds-form-group__label" for="dlb-proud-achievement">
+                  إيه أكتر حاجة فخورة إنك عملتيها في حياتك؟ <span class="ds-form-group__required" aria-label="مطلوب">*</span>
+                </label>
+                <textarea class="ds-input" id="dlb-proud-achievement" name="proud_achievement" maxlength="500" required aria-required="true" aria-describedby="dlb-proud-achievement-counter dlb-proud-achievement-error" placeholder="حتى لو الناس شايفاها بسيطة."></textarea>
+                <div class="dlb-field-meta"><span class="ds-form-group__error" id="dlb-proud-achievement-error" role="alert" aria-live="assertive"></span><span class="dlb-counter" id="dlb-proud-achievement-counter" data-counter-for="dlb-proud-achievement" aria-live="polite">0 / 500</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="dlb-section" aria-labelledby="dlb-section-2">
+            <header class="dlb-section__header">
+              <span class="dlb-section__number" aria-hidden="true">02</span>
+              <div><h3 id="dlb-section-2">ليه المبادرة؟</h3><p>عايزين نفهم إيه اللي خلاكي تقدمي.</p></div>
+            </header>
+            <div class="dlb-fields">
+              <div class="ds-form-group">
+                <label class="ds-form-group__label" for="dlb-initiative-reason">إيه اللي خلاكي تقدمي في 100 دكان لـ100 بنت؟ <span class="ds-form-group__required" aria-label="مطلوب">*</span></label>
+                <textarea class="ds-input" id="dlb-initiative-reason" name="initiative_reason" maxlength="500" required aria-required="true" aria-describedby="dlb-initiative-reason-counter dlb-initiative-reason-error"></textarea>
+                <div class="dlb-field-meta"><span class="ds-form-group__error" id="dlb-initiative-reason-error" role="alert" aria-live="assertive"></span><span class="dlb-counter" id="dlb-initiative-reason-counter" data-counter-for="dlb-initiative-reason" aria-live="polite">0 / 500</span></div>
+              </div>
+              <div class="ds-form-group">
+                <label class="ds-form-group__label" for="dlb-expected-outcome">إيه اللي بتتمني تطلعي بيه من المبادرة؟ <span class="ds-form-group__required" aria-label="مطلوب">*</span></label>
+                <textarea class="ds-input" id="dlb-expected-outcome" name="expected_outcome" maxlength="500" required aria-required="true" aria-describedby="dlb-expected-outcome-counter dlb-expected-outcome-error"></textarea>
+                <div class="dlb-field-meta"><span class="ds-form-group__error" id="dlb-expected-outcome-error" role="alert" aria-live="assertive"></span><span class="dlb-counter" id="dlb-expected-outcome-counter" data-counter-for="dlb-expected-outcome" aria-live="polite">0 / 500</span></div>
+              </div>
+              <div class="ds-form-group">
+                <label class="ds-form-group__label" for="dlb-if-not-accepted">لو متقبلتيش في الدفعة دي، هتعملي إيه؟ <span class="ds-form-group__required" aria-label="مطلوب">*</span></label>
+                <textarea class="ds-input" id="dlb-if-not-accepted" name="if_not_accepted" maxlength="500" required aria-required="true" aria-describedby="dlb-if-not-accepted-counter dlb-if-not-accepted-error"></textarea>
+                <div class="dlb-field-meta"><span class="ds-form-group__error" id="dlb-if-not-accepted-error" role="alert" aria-live="assertive"></span><span class="dlb-counter" id="dlb-if-not-accepted-counter" data-counter-for="dlb-if-not-accepted" aria-live="polite">0 / 500</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="dlb-section" aria-labelledby="dlb-section-3">
+            <header class="dlb-section__header">
+              <span class="dlb-section__number" aria-hidden="true">03</span>
+              <div><h3 id="dlb-section-3">المشروع</h3><p>احكيلنا عن فكرتك.</p></div>
+            </header>
+            <div class="dlb-fields">
+              <fieldset class="dlb-radio-group" aria-describedby="dlb-has-project-idea-error">
+                <legend>هل عندك فكرة مشروع حاليًا؟ <span class="ds-form-group__required" aria-label="مطلوب">*</span></legend>
+                <div class="dlb-radio-options">
+                  <label class="dlb-choice"><input type="radio" name="has_project_idea" value="أيوه" required /><span>أيوه</span></label>
+                  <label class="dlb-choice"><input type="radio" name="has_project_idea" value="لسه بدور على فكرة" required /><span>لسه بدور على فكرة</span></label>
+                </div>
+                <span class="ds-form-group__error" id="dlb-has-project-idea-error" role="alert" aria-live="assertive"></span>
+              </fieldset>
+
+              <div class="ds-form-group dlb-conditional" id="dlb-project-idea-field" hidden>
+                <label class="ds-form-group__label" for="dlb-project-idea">احكيلنا عن فكرتك. <span class="ds-form-group__required" aria-label="مطلوب">*</span></label>
+                <textarea class="ds-input" id="dlb-project-idea" name="project_idea" maxlength="500" disabled aria-describedby="dlb-project-idea-counter dlb-project-idea-error"></textarea>
+                <div class="dlb-field-meta"><span class="ds-form-group__error" id="dlb-project-idea-error" role="alert" aria-live="assertive"></span><span class="dlb-counter" id="dlb-project-idea-counter" data-counter-for="dlb-project-idea" aria-live="polite">0 / 500</span></div>
+              </div>
+
+              <div class="ds-form-group dlb-conditional" id="dlb-desired-field-field" hidden>
+                <label class="ds-form-group__label" for="dlb-desired-field">إيه المجال اللي نفسك تبدأي فيه؟ وليه؟ <span class="ds-form-group__required" aria-label="مطلوب">*</span></label>
+                <textarea class="ds-input" id="dlb-desired-field" name="desired_field" maxlength="500" disabled aria-describedby="dlb-desired-field-counter dlb-desired-field-error"></textarea>
+                <div class="dlb-field-meta"><span class="ds-form-group__error" id="dlb-desired-field-error" role="alert" aria-live="assertive"></span><span class="dlb-counter" id="dlb-desired-field-counter" data-counter-for="dlb-desired-field" aria-live="polite">0 / 500</span></div>
+              </div>
+
+              <div class="ds-form-group">
+                <label class="ds-form-group__label" for="dlb-biggest-fear">إيه أكتر حاجة مخوفاكي في فكرة المشروع؟ <span class="ds-form-group__required" aria-label="مطلوب">*</span></label>
+                <textarea class="ds-input" id="dlb-biggest-fear" name="biggest_fear" maxlength="500" required aria-required="true" aria-describedby="dlb-biggest-fear-counter dlb-biggest-fear-error"></textarea>
+                <div class="dlb-field-meta"><span class="ds-form-group__error" id="dlb-biggest-fear-error" role="alert" aria-live="assertive"></span><span class="dlb-counter" id="dlb-biggest-fear-counter" data-counter-for="dlb-biggest-fear" aria-live="polite">0 / 500</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="dlb-section" aria-labelledby="dlb-section-4">
+            <header class="dlb-section__header">
+              <span class="dlb-section__number" aria-hidden="true">04</span>
+              <div><h3 id="dlb-section-4">شخصيتك</h3><p>مفيش إجابة صح أو غلط.</p></div>
+            </header>
+            <div class="dlb-fields">
+              <div class="ds-form-group">
+                <label class="ds-form-group__label" for="dlb-failure-story">احكيلنا عن موقف حسيتي فيه إنك فشلتي... واتعلمتي منه إيه؟ <span class="ds-form-group__required" aria-label="مطلوب">*</span></label>
+                <textarea class="ds-input" id="dlb-failure-story" name="failure_story" maxlength="700" required aria-required="true" aria-describedby="dlb-failure-story-counter dlb-failure-story-error"></textarea>
+                <div class="dlb-field-meta"><span class="ds-form-group__error" id="dlb-failure-story-error" role="alert" aria-live="assertive"></span><span class="dlb-counter" id="dlb-failure-story-counter" data-counter-for="dlb-failure-story" aria-live="polite">0 / 700</span></div>
+              </div>
+              <div class="ds-form-group">
+                <label class="ds-form-group__label" for="dlb-idea-change-reaction">لو اكتشفتي بعد شهر إن فكرتك محتاجة تتغير بالكامل، هيكون رد فعلك إيه؟ وليه؟ <span class="ds-form-group__required" aria-label="مطلوب">*</span></label>
+                <textarea class="ds-input" id="dlb-idea-change-reaction" name="idea_change_reaction" maxlength="700" required aria-required="true" aria-describedby="dlb-idea-change-reaction-counter dlb-idea-change-reaction-error"></textarea>
+                <div class="dlb-field-meta"><span class="ds-form-group__error" id="dlb-idea-change-reaction-error" role="alert" aria-live="assertive"></span><span class="dlb-counter" id="dlb-idea-change-reaction-counter" data-counter-for="dlb-idea-change-reaction" aria-live="polite">0 / 700</span></div>
+              </div>
+              <div class="ds-form-group">
+                <label class="ds-form-group__label" for="dlb-biggest-strength">إيه أكتر نقطة قوة في شخصيتك هتساعدك تنجحي؟ <span class="ds-form-group__required" aria-label="مطلوب">*</span></label>
+                <textarea class="ds-input" id="dlb-biggest-strength" name="biggest_strength" maxlength="500" required aria-required="true" aria-describedby="dlb-biggest-strength-counter dlb-biggest-strength-error"></textarea>
+                <div class="dlb-field-meta"><span class="ds-form-group__error" id="dlb-biggest-strength-error" role="alert" aria-live="assertive"></span><span class="dlb-counter" id="dlb-biggest-strength-counter" data-counter-for="dlb-biggest-strength" aria-live="polite">0 / 500</span></div>
+              </div>
+              <div class="ds-form-group">
+                <label class="ds-form-group__label" for="dlb-trait-to-improve">وإيه الصفة اللي نفسك تطوريها؟ <span class="ds-form-group__required" aria-label="مطلوب">*</span></label>
+                <textarea class="ds-input" id="dlb-trait-to-improve" name="trait_to_improve" maxlength="500" required aria-required="true" aria-describedby="dlb-trait-to-improve-counter dlb-trait-to-improve-error"></textarea>
+                <div class="dlb-field-meta"><span class="ds-form-group__error" id="dlb-trait-to-improve-error" role="alert" aria-live="assertive"></span><span class="dlb-counter" id="dlb-trait-to-improve-counter" data-counter-for="dlb-trait-to-improve" aria-live="polite">0 / 500</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="dlb-section" aria-labelledby="dlb-section-5">
+            <header class="dlb-section__header">
+              <span class="dlb-section__number" aria-hidden="true">05</span>
+              <div><h3 id="dlb-section-5">رسالة لنفسك</h3><p>خدي دقيقة واكتبي رسالة لنفسك بعد سنة.</p></div>
+            </header>
+            <div class="dlb-letter-prompt">
+              <p>ابدئي بـ</p>
+              <strong>عزيزتي (اسمك)...</strong>
+              <p>واحكيلها:</p>
+              <ul>
+                <li>نفسك تكوني وصلتي لإيه؟</li>
+                <li>وليه حلم المشروع ده مهم بالنسبة لك؟</li>
+              </ul>
+              <p>مش مطلوب كلام كبير... المطلوب يكون كلام حقيقي.</p>
+            </div>
+            <div class="dlb-fields">
+              <div class="ds-form-group">
+                <label class="ds-form-group__label" for="dlb-future-letter">رسالتك لنفسك بعد سنة <span class="ds-form-group__required" aria-label="مطلوب">*</span></label>
+                <textarea class="ds-input dlb-letter-textarea" id="dlb-future-letter" name="future_letter" maxlength="1000" required aria-required="true" aria-describedby="dlb-future-letter-counter dlb-future-letter-error"></textarea>
+                <div class="dlb-field-meta"><span class="ds-form-group__error" id="dlb-future-letter-error" role="alert" aria-live="assertive"></span><span class="dlb-counter" id="dlb-future-letter-counter" data-counter-for="dlb-future-letter" aria-live="polite">0 / 1000</span></div>
+              </div>
+            </div>
+          </section>
+
+          <section class="dlb-section" aria-labelledby="dlb-section-6">
+            <header class="dlb-section__header">
+              <span class="dlb-section__number" aria-hidden="true">06</span>
+              <div><h3 id="dlb-section-6">بيانات التواصل</h3><p>دي البيانات اللي هنتواصل معاكي من خلالها.</p></div>
+            </header>
+            <div class="dlb-fields dlb-fields--two dlb-contact-grid">
+              <div class="ds-form-group dlb-contact-field">
+                <label class="ds-form-group__label" for="dlb-whatsapp">رقم الواتساب <span class="ds-form-group__required" aria-label="مطلوب">*</span></label>
+                <input class="ds-input" id="dlb-whatsapp" name="whatsapp" type="tel" maxlength="20" inputmode="tel" autocomplete="tel" required aria-required="true" aria-describedby="dlb-whatsapp-helper dlb-whatsapp-error" placeholder="01xxxxxxxxx" />
+                <div class="dlb-contact-field__support">
+                  <span class="ds-form-group__helper" id="dlb-whatsapp-helper">رقم مصري يبدأ بـ 01 أو +20.</span>
+                  <span class="ds-form-group__error" id="dlb-whatsapp-error" role="alert" aria-live="assertive"></span>
+                </div>
+              </div>
+              <div class="ds-form-group dlb-contact-field">
+                <label class="ds-form-group__label" for="dlb-email">البريد الإلكتروني <span class="ds-form-group__required" aria-label="مطلوب">*</span></label>
+                <input class="ds-input" id="dlb-email" name="email" type="email" maxlength="254" inputmode="email" autocomplete="email" required aria-required="true" aria-describedby="dlb-email-error" />
+                <div class="dlb-contact-field__support">
+                  <span class="ds-form-group__error" id="dlb-email-error" role="alert" aria-live="assertive"></span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section class="dlb-section dlb-section--agreement" aria-labelledby="dlb-section-7">
+            <header class="dlb-section__header">
+              <span class="dlb-section__number" aria-hidden="true">07</span>
+              <div><h3 id="dlb-section-7">الموافقة</h3></div>
+            </header>
+            <div class="dlb-agreement">
+              <label class="dlb-choice dlb-choice--checkbox" for="dlb-privacy-accepted">
+                <input id="dlb-privacy-accepted" name="privacy_accepted" type="checkbox" required aria-required="true" aria-describedby="dlb-privacy-accepted-error" />
+                <span>أوافق على استخدام بياناتي لمراجعة طلب الانضمام والتواصل معي بخصوص المبادرة، وفقًا لـ<a href="https://dokanelbanat.com/privacy">سياسة الخصوصية</a>. <span class="ds-form-group__required" aria-label="مطلوب">*</span></span>
+              </label>
+              <span class="ds-form-group__error" id="dlb-privacy-accepted-error" role="alert" aria-live="assertive"></span>
+            </div>
+          </section>
+
+          <div class="dlb-form-message" id="dlb-form-message" role="status" aria-live="polite" tabindex="-1" hidden></div>
+
+          <div class="dlb-submit-area">
+            <button class="ds-btn ds-btn--primary-solid ds-btn--lg ds-btn--pill" id="dlb-submit" type="submit">
+              <span class="dlb-submit__label">إرسال طلب الانضمام</span>
+              <span class="dlb-submit__loading" hidden aria-hidden="true">جارٍ إرسال طلبك...</span>
+            </button>
+            <p>راجعي إجاباتك قبل الإرسال. لا يمكن تعديل الطلب بعد تسجيله.</p>
+          </div>
+        </form>
+
+        <section class="dlb-success" id="dlb-success" aria-labelledby="dlb-success-title" tabindex="-1" hidden>
+          <p class="dlb-success__label">تم استلام طلبك</p>
+          <h2 id="dlb-success-title">طلبك وصل بنجاح</h2>
+          <p>أرسلنا رسالة تأكيد إلى بريدك الإلكتروني. سيتم مراجعة طلبك بعناية، من غير وعد بالقبول أو بموعد محدد للرد.</p>
+          <div class="dlb-success__id">
+            <span>رقم الطلب</span>
+            <strong id="dlb-application-id" dir="ltr"></strong>
+          </div>
+          <p class="dlb-success__note">احتفظي برقم الطلب للرجوع إليه عند الحاجة.</p>
+          <a class="ds-btn ds-btn--secondary-outline ds-btn--md ds-btn--pill" href="/">العودة للرئيسية</a>
+        </section>
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<script>
+  const form = document.getElementById('dlb-form') as HTMLFormElement | null;
+  const submitButton = document.getElementById('dlb-submit') as HTMLButtonElement | null;
+  const submitLabel = submitButton?.querySelector('.dlb-submit__label') as HTMLElement | null;
+  const submitLoading = submitButton?.querySelector('.dlb-submit__loading') as HTMLElement | null;
+  const formMessage = document.getElementById('dlb-form-message');
+  const successState = document.getElementById('dlb-success');
+  const applicationIdElement = document.getElementById('dlb-application-id');
+  const progressAnchor = document.getElementById('dlb-progress-anchor');
+  const progressSentinel = document.getElementById('dlb-progress-sentinel');
+  const progress = document.getElementById('dlb-progress');
+  const progressBar = document.getElementById('dlb-progress-bar');
+  const projectIdeaField = document.getElementById('dlb-project-idea-field');
+  const desiredFieldField = document.getElementById('dlb-desired-field-field');
+  const projectIdea = document.getElementById('dlb-project-idea') as HTMLTextAreaElement | null;
+  const desiredField = document.getElementById('dlb-desired-field') as HTMLTextAreaElement | null;
+  let submitting = false;
+  let progressFrame = 0;
+  const observesProgressPosition = 'IntersectionObserver' in window && Boolean(progressSentinel);
+
+  const requiredTextFields = [
+    'governorate', 'proud_achievement', 'initiative_reason', 'expected_outcome',
+    'if_not_accepted', 'biggest_fear', 'failure_story', 'idea_change_reaction',
+    'biggest_strength', 'trait_to_improve', 'future_letter',
+  ];
+
+  function normalizeSingleLine(value: string): string {
+    return value.trim().replace(/\s+/g, ' ');
+  }
+
+  function normalizeMultiline(value: string): string {
+    return value
+      .replace(/\r\n?/g, '\n')
+      .split('\n')
+      .map((line) => line.trim().replace(/[\t ]+/g, ' '))
+      .join('\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+  }
+
+  function normalizeWhatsApp(value: string): string | null {
+    const compact = value.trim().replace(/[\s().-]/g, '');
+    if (/^01[0125]\d{8}$/.test(compact)) return `+20${compact.slice(1)}`;
+    if (/^\+201[0125]\d{8}$/.test(compact)) return compact;
+    return null;
+  }
+
+  function errorId(field: string): string {
+    return `dlb-${field.replaceAll('_', '-')}-error`;
+  }
+
+  function controlsFor(field: string): HTMLElement[] {
+    if (!form) return [];
+    return Array.from(form.querySelectorAll<HTMLElement>(`[name="${field}"]`));
+  }
+
+  function setFieldError(field: string, message: string): void {
+    const error = document.getElementById(errorId(field));
+    if (error) error.textContent = message;
+    controlsFor(field).forEach((control) => control.setAttribute('aria-invalid', 'true'));
+  }
+
+  function clearErrors(): void {
+    form?.querySelectorAll<HTMLElement>('.ds-form-group__error').forEach((error) => {
+      error.textContent = '';
+    });
+    form?.querySelectorAll<HTMLElement>('[aria-invalid="true"]').forEach((control) => {
+      control.removeAttribute('aria-invalid');
+    });
+    setMessage('');
+  }
+
+  function setMessage(message: string, type = 'error'): void {
+    if (!formMessage) return;
+    formMessage.textContent = message;
+    formMessage.dataset.type = type;
+    formMessage.hidden = !message;
+  }
+
+  function focusFirstError(errors: Record<string, string>): void {
+    const firstField = Object.keys(errors)[0];
+    const firstControl = controlsFor(firstField)[0];
+    if (firstControl) {
+      firstControl.focus();
+      firstControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      formMessage?.focus();
+    }
+  }
+
+  function setLoading(active: boolean): void {
+    if (!submitButton) return;
+    submitButton.disabled = active;
+    submitLabel?.toggleAttribute('hidden', active);
+    submitLoading?.toggleAttribute('hidden', !active);
+  }
+
+  function updateConditionalField(): void {
+    const selection = form?.querySelector<HTMLInputElement>('input[name="has_project_idea"]:checked')?.value ?? '';
+    const hasIdea = selection === 'أيوه';
+    const isSearching = selection === 'لسه بدور على فكرة';
+
+    if (projectIdeaField && projectIdea) {
+      projectIdeaField.hidden = !hasIdea;
+      projectIdea.disabled = !hasIdea;
+      projectIdea.required = hasIdea;
+      projectIdea.setAttribute('aria-required', String(hasIdea));
+      if (!hasIdea) projectIdea.value = '';
+    }
+    if (desiredFieldField && desiredField) {
+      desiredFieldField.hidden = !isSearching;
+      desiredField.disabled = !isSearching;
+      desiredField.required = isSearching;
+      desiredField.setAttribute('aria-required', String(isSearching));
+      if (!isSearching) desiredField.value = '';
+    }
+    updateCounters();
+  }
+
+  function updateCounters(): void {
+    document.querySelectorAll<HTMLElement>('[data-counter-for]').forEach((counter) => {
+      const textarea = document.getElementById(counter.dataset.counterFor ?? '') as HTMLTextAreaElement | null;
+      if (!textarea) return;
+      const maximum = Number(textarea.maxLength);
+      const length = textarea.value.length;
+      counter.textContent = `${length} / ${maximum}`;
+      counter.classList.toggle('is-warning', length >= maximum * 0.9);
+    });
+  }
+
+  function updateProgress(): void {
+    progressFrame = 0;
+    const maximum = document.documentElement.scrollHeight - window.innerHeight;
+    const percentage = maximum > 0 ? Math.min(100, Math.max(0, (window.scrollY / maximum) * 100)) : 100;
+    if (!observesProgressPosition) {
+      progress?.classList.toggle('is-fixed', (progressAnchor?.getBoundingClientRect().top ?? 1) <= 0);
+    }
+    if (progressBar) progressBar.style.transform = `scaleX(${percentage / 100})`;
+    progress?.setAttribute('aria-valuenow', String(Math.round(percentage)));
+  }
+
+  function requestProgressUpdate(): void {
+    if (!progressFrame) progressFrame = window.requestAnimationFrame(updateProgress);
+  }
+
+  function validateClient(data: FormData): Record<string, string> {
+    const errors: Record<string, string> = {};
+    const fullName = normalizeSingleLine(String(data.get('full_name') ?? ''));
+    if (!fullName) errors.full_name = 'هذا الحقل مطلوب.';
+    else if (fullName.length < 3) errors.full_name = 'يجب ألا يقل هذا الحقل عن 3 أحرف.';
+
+    const age = Number(data.get('age'));
+    if (!Number.isInteger(age) || age < 16 || age > 80) errors.age = 'يرجى إدخال سن صحيح من 16 إلى 80.';
+
+    for (const field of requiredTextFields) {
+      if (!normalizeMultiline(String(data.get(field) ?? ''))) errors[field] = 'هذا الحقل مطلوب.';
+    }
+    if (!normalizeSingleLine(String(data.get('study_work_status') ?? ''))) errors.study_work_status = 'هذا الحقل مطلوب.';
+    if (!normalizeSingleLine(String(data.get('has_project_idea') ?? ''))) errors.has_project_idea = 'هذا الحقل مطلوب.';
+
+    const hasIdea = String(data.get('has_project_idea') ?? '');
+    if (hasIdea === 'أيوه' && !normalizeMultiline(String(data.get('project_idea') ?? ''))) errors.project_idea = 'هذا الحقل مطلوب.';
+    if (hasIdea === 'لسه بدور على فكرة' && !normalizeMultiline(String(data.get('desired_field') ?? ''))) errors.desired_field = 'هذا الحقل مطلوب.';
+
+    const whatsappValue = String(data.get('whatsapp') ?? '');
+    if (!normalizeWhatsApp(whatsappValue) || whatsappValue.trim().length > 20) errors.whatsapp = 'يرجى إدخال رقم واتساب صحيح.';
+
+    const emailInput = document.getElementById('dlb-email') as HTMLInputElement | null;
+    const email = normalizeSingleLine(String(data.get('email') ?? '')).toLowerCase();
+    if (!email || email.length > 254 || !emailInput?.validity.valid) errors.email = 'يرجى إدخال بريد إلكتروني صحيح.';
+    if (!data.get('privacy_accepted')) errors.privacy_accepted = 'يجب الموافقة على سياسة الخصوصية.';
+    return errors;
+  }
+
+  form?.querySelectorAll<HTMLInputElement>('input[name="has_project_idea"]').forEach((radio) => {
+    radio.addEventListener('change', updateConditionalField);
+  });
+  form?.querySelectorAll<HTMLTextAreaElement>('textarea').forEach((textarea) => {
+    textarea.addEventListener('input', updateCounters);
+  });
+  if (observesProgressPosition && progressSentinel) {
+    const progressObserver = new IntersectionObserver(([entry]) => {
+      const isPastOriginalPosition = !entry.isIntersecting && entry.boundingClientRect.top < 0;
+      progress?.classList.toggle('is-fixed', isPastOriginalPosition);
+    }, { threshold: [0, 1] });
+    progressObserver.observe(progressSentinel);
+  }
+  window.addEventListener('scroll', requestProgressUpdate, { passive: true });
+  window.addEventListener('resize', requestProgressUpdate);
+  updateConditionalField();
+  updateCounters();
+  updateProgress();
+
+  form?.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (submitting || !form) return;
+    clearErrors();
+
+    const data = new FormData(form);
+    if (data.get('website')) return;
+    const clientErrors = validateClient(data);
+    if (Object.keys(clientErrors).length > 0) {
+      Object.entries(clientErrors).forEach(([field, message]) => setFieldError(field, message));
+      setMessage('راجعي الحقول المعلّمة وأكملي البيانات المطلوبة.');
+      focusFirstError(clientErrors);
+      return;
+    }
+
+    const payload = Object.fromEntries(data.entries()) as Record<string, FormDataEntryValue | boolean>;
+    payload.age = Number(data.get('age')) as unknown as FormDataEntryValue;
+    payload.privacy_accepted = true;
+
+    submitting = true;
+    setLoading(true);
+    setMessage('جارٍ إرسال طلبك...', 'info');
+
+    try {
+      const response = await fetch('/api/dlb-initiative', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json().catch(() => ({}));
+
+      if (response.ok && result.success && typeof result.applicationId === 'string') {
+        form.hidden = true;
+        if (applicationIdElement) applicationIdElement.textContent = result.applicationId;
+        if (successState) {
+          successState.hidden = false;
+          successState.focus();
+          successState.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        if (progressBar) progressBar.style.transform = 'scaleX(1)';
+        progress?.setAttribute('aria-valuenow', '100');
+        return;
+      }
+
+      if (response.status === 422 && result.errors && typeof result.errors === 'object') {
+        const serverErrors = result.errors as Record<string, string>;
+        Object.entries(serverErrors).forEach(([field, message]) => setFieldError(field, message));
+        setMessage('راجعي الحقول المعلّمة وأكملي البيانات المطلوبة.');
+        focusFirstError(serverErrors);
+      } else if (response.status === 409 && result.duplicate) {
+        setMessage('يوجد طلب مسجل بالفعل باستخدام البريد الإلكتروني أو رقم الواتساب الذي أدخلتيه.\n\nإذا كنتِ تعتقدين أن هناك خطأ، يمكنك التواصل معنا.');
+        formMessage?.focus();
+      } else {
+        const message = typeof result.message === 'string' ? result.message : 'حدث خطأ، يرجى المحاولة مرة أخرى.';
+        setMessage(message);
+        formMessage?.focus();
+      }
+    } catch {
+      setMessage('تعذّر إرسال الطلب. تحققي من اتصالك بالإنترنت وحاولي مرة أخرى.');
+      formMessage?.focus();
+    } finally {
+      submitting = false;
+      setLoading(false);
+    }
+  });
+</script>
+
+<style>
+  .dlb-progress-anchor {
+    position: relative;
+    height: 3px;
+  }
+
+  .dlb-progress-sentinel {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+  }
+
+  .dlb-progress {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    height: 3px;
+    background: var(--color-border-default);
+    z-index: var(--z-sticky);
+    overflow: hidden;
+  }
+
+  .dlb-progress.is-fixed {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+  }
+
+  .dlb-progress__bar {
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: var(--color-primary);
+    transform: scaleX(0);
+    transform-origin: right center;
+    transition: transform var(--duration-quick) var(--ease-editorial-quick);
+  }
+
+  .dlb-page {
+    min-width: 0;
+    background: var(--color-bg-base);
+  }
+
+  .dlb-container,
+  .dlb-form-container {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline-start: max(var(--space-4), env(safe-area-inset-right));
+    padding-inline-end: max(var(--space-4), env(safe-area-inset-left));
+  }
+
+  .dlb-container { max-width: 52rem; }
+  .dlb-form-container { max-width: 48rem; }
+
+  .dlb-intro {
+    padding-block: var(--space-12);
+    background: var(--color-bg-canvas);
+    border-bottom: 1px solid var(--color-border-default);
+  }
+
+  .dlb-intro h1 {
+    max-width: 100%;
+    margin-block: var(--space-3);
+    font-family: var(--font-headline);
+    font-size: clamp(2rem, 10vw, 4rem);
+    font-weight: 700;
+    line-height: 1.08;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+  }
+
+  .dlb-intro > .dlb-container > p {
+    max-width: 65ch;
+    font: var(--type-ar-body-lg);
+    color: var(--color-text-secondary);
+  }
+
+  .dlb-intro__note {
+    display: grid;
+    gap: var(--space-1);
+    max-width: 65ch;
+    margin-block-start: var(--space-6);
+    padding: var(--space-4);
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-default);
+    color: var(--color-text-secondary);
+  }
+
+  .dlb-intro__note strong { color: var(--color-text-primary); }
+
+  .dlb-application { padding-block: var(--space-8) var(--space-16); }
+
+  .dlb-form {
+    position: relative;
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .dlb-form :is(input, select, textarea, button) {
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .dlb-form__heading {
+    display: grid;
+    gap: var(--space-1);
+    margin-block-end: var(--space-8);
+  }
+
+  .dlb-form__kicker {
+    font: var(--type-ar-label);
+    color: var(--color-primary);
+  }
+
+  .dlb-form__heading h2 { font: var(--type-ar-h2); }
+  .dlb-form__heading > p:last-child { color: var(--color-text-secondary); }
+
+  .dlb-honeypot {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .dlb-section {
+    display: grid;
+    gap: var(--space-6);
+    min-width: 0;
+    max-width: 100%;
+    padding-block: var(--space-8);
+    border-top: 1px solid var(--color-border-default);
+  }
+
+  .dlb-section__header {
+    display: grid;
+    grid-template-columns: var(--space-8) minmax(0, 1fr);
+    gap: var(--space-3);
+    align-items: start;
+  }
+
+  .dlb-section__header > div { min-width: 0; }
+
+  .dlb-section__number {
+    font: 600 1rem/1 var(--font-en);
+    color: var(--color-primary);
+    padding-block-start: var(--space-2);
+  }
+
+  .dlb-section__header h3 { margin: 0; font: var(--type-ar-h3); }
+  .dlb-section__header p { margin-block-start: var(--space-1); color: var(--color-text-secondary); }
+
+  .dlb-fields {
+    display: grid;
+    gap: var(--space-5);
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .dlb-fields > * { min-width: 0; max-width: 100%; }
+  .dlb-fields--two { grid-template-columns: minmax(0, 1fr); }
+  .ds-form-group {
+    display: grid;
+    gap: var(--space-2);
+    min-width: 0;
+    max-width: 100%;
+    align-content: start;
+  }
+
+  .ds-form-group__label,
+  .dlb-radio-group legend {
+    font: var(--type-ar-body);
+    font-weight: 600;
+    line-height: 1.65;
+    color: var(--color-text-primary);
+    overflow-wrap: anywhere;
+    text-wrap: pretty;
+  }
+
+  .ds-form-group__required { white-space: nowrap; }
+
+  .ds-form-group__required,
+  .ds-form-group__error { color: var(--color-danger); }
+
+  .ds-form-group__error {
+    font: var(--type-ar-caption);
+    line-height: 1.5;
+  }
+
+  .ds-form-group__error:empty { display: none; }
+  .ds-form-group__helper { color: var(--color-text-muted); }
+
+  .ds-form-group__helper,
+  .ds-form-group__error {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+  }
+
+  .ds-select[aria-invalid="true"] { border-color: var(--color-danger); }
+
+  .dlb-form .ds-input,
+  .dlb-form .ds-select {
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    height: 48px;
+    min-height: 48px;
+    padding-block: var(--space-2);
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .dlb-form .ds-select {
+    padding-inline-start: var(--space-4);
+    padding-inline-end: var(--space-12);
+  }
+
+  .dlb-form textarea.ds-input {
+    width: 100%;
+    height: auto;
+    min-height: 7rem;
+    resize: vertical;
+  }
+
+  #dlb-age,
+  #dlb-whatsapp,
+  #dlb-email {
+    direction: ltr;
+    text-align: start;
+    unicode-bidi: plaintext;
+  }
+
+  .dlb-field-meta {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+    align-items: center;
+  }
+
+  .dlb-field-meta > * { min-width: 0; }
+
+  .dlb-field-meta .ds-form-group__error { flex: 1 1 12rem; }
+
+  .dlb-counter {
+    flex: none;
+    direction: ltr;
+    font: var(--type-ar-caption);
+    color: var(--color-text-muted);
+    margin-inline-start: auto;
+  }
+
+  .dlb-counter.is-warning { color: var(--color-warning); }
+
+  .dlb-radio-group {
+    display: grid;
+    gap: var(--space-3);
+    min-width: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+  }
+
+  .dlb-radio-options {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .dlb-choice {
+    display: flex;
+    gap: var(--space-3);
+    align-items: center;
+    min-width: 0;
+    max-width: 100%;
+    width: 100%;
+    min-height: 48px;
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-border-default);
+    background: var(--color-bg-surface);
+    line-height: 1.65;
+    cursor: pointer;
+  }
+
+  .dlb-choice > span { min-width: 0; overflow-wrap: anywhere; }
+
+  .dlb-choice:hover { border-color: var(--color-border-strong); }
+
+  .dlb-choice:has(input:checked) {
+    border-color: var(--color-primary);
+    background: var(--color-bg-canvas);
+  }
+
+  .dlb-choice input {
+    width: 20px;
+    height: 20px;
+    margin-block-start: 2px;
+    accent-color: var(--color-primary);
+    flex: none;
+  }
+
+  .dlb-choice input:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-ring-offset); }
+  .dlb-choice--checkbox { align-items: flex-start; min-height: 48px; }
+  .dlb-choice a { color: var(--color-primary-dark); text-decoration: underline; }
+  .dlb-choice a:focus-visible { outline: var(--focus-ring); outline-offset: var(--focus-ring-offset); }
+
+  .dlb-letter-prompt {
+    display: grid;
+    gap: var(--space-1);
+    padding: var(--space-4);
+    background: var(--color-bg-canvas);
+    border: 1px solid var(--color-border-default);
+    color: var(--color-text-secondary);
+  }
+
+  .dlb-letter-prompt strong { font: var(--type-ar-h5); color: var(--color-text-primary); }
+  .dlb-letter-prompt ul { padding-inline-start: var(--space-6); }
+  .dlb-form textarea.dlb-letter-textarea { min-height: 9rem; }
+
+  .dlb-agreement { display: grid; gap: var(--space-2); }
+
+  .dlb-contact-field__support {
+    display: grid;
+    gap: var(--space-1);
+    min-width: 0;
+    max-width: 100%;
+    align-content: start;
+  }
+  .dlb-form-message {
+    white-space: pre-line;
+    margin-block-start: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border: 1px solid var(--color-danger);
+    background: color-mix(in srgb, var(--color-danger) 6%, var(--color-bg-surface));
+    font: var(--type-ar-body-sm);
+    line-height: 1.6;
+    color: var(--color-danger);
+  }
+
+  .dlb-form-message[data-type="info"] {
+    border-color: var(--color-border-default);
+    background: var(--color-bg-canvas);
+    color: var(--color-text-secondary);
+  }
+
+  .dlb-form-message:focus { outline: var(--focus-ring); outline-offset: var(--focus-ring-offset); }
+
+  .dlb-submit-area {
+    display: grid;
+    gap: var(--space-2);
+    padding-block-start: var(--space-4);
+    padding-block-end: max(var(--space-2), env(safe-area-inset-bottom));
+  }
+
+  .dlb-submit-area p { font: var(--type-ar-caption); color: var(--color-text-muted); }
+  .dlb-submit-area .ds-btn {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .dlb-success {
+    display: grid;
+    justify-items: start;
+    gap: var(--space-4);
+    padding: clamp(var(--space-6), 6vw, var(--space-12));
+    border: 1px solid var(--color-border-default);
+    background: var(--color-bg-surface);
+  }
+
+  .dlb-success[hidden] { display: none; }
+  .dlb-success:focus { outline: var(--focus-ring); outline-offset: var(--focus-ring-offset); }
+  .dlb-success__label { font: var(--type-ar-label); color: var(--color-success-dark); }
+  .dlb-success h2 { font: var(--type-ar-h2); }
+  .dlb-success > p:not(.dlb-success__label) { max-width: 60ch; color: var(--color-text-secondary); }
+  .dlb-success__id {
+    display: grid;
+    gap: var(--space-2);
+    width: 100%;
+    min-width: 0;
+    padding: var(--space-4);
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-bg-canvas);
+  }
+  .dlb-success__id span { color: var(--color-text-secondary); }
+  .dlb-success__id strong {
+    max-width: 100%;
+    font: 600 clamp(1.15rem, 5vw, 2rem)/1.2 var(--font-en);
+    color: var(--color-primary-dark);
+    overflow-wrap: anywhere;
+  }
+  .dlb-success__note { font: var(--type-ar-body-sm); }
+
+  @media (min-width: 768px) {
+    .dlb-container,
+    .dlb-form-container {
+      padding-inline-start: max(var(--space-6), env(safe-area-inset-right));
+      padding-inline-end: max(var(--space-6), env(safe-area-inset-left));
+    }
+
+    .dlb-intro { padding-block: var(--space-16); }
+    .dlb-application { padding-block: var(--space-12) var(--space-20); }
+    .dlb-form__heading { margin-block-end: var(--space-12); }
+    .dlb-section { gap: var(--space-8); padding-block: var(--space-8); }
+    .dlb-section__header { grid-template-columns: var(--space-12) minmax(0, 1fr); gap: var(--space-4); }
+    .dlb-section__number { font-size: 1.125rem; }
+    .dlb-fields { gap: var(--space-6); }
+    .dlb-fields--two,
+    .dlb-radio-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dlb-contact-grid {
+      column-gap: var(--space-6);
+      row-gap: var(--space-2);
+      align-items: start;
+    }
+    .dlb-contact-field {
+      grid-row: span 3;
+      grid-template-rows: subgrid;
+      align-self: stretch;
+    }
+    .dlb-letter-prompt { padding: var(--space-5); }
+    .dlb-form textarea.ds-input { min-height: 7.5rem; }
+    .dlb-form textarea.dlb-letter-textarea { min-height: 10rem; }
+    .dlb-submit-area { justify-items: start; }
+    .dlb-submit-area .ds-btn { width: auto; }
+    .dlb-success__id { padding: var(--space-5); }
+  }
+
+  @media (min-width: 1024px) {
+    .dlb-intro { padding-block: var(--space-20); }
+    .dlb-application { padding-block-end: var(--space-24); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dlb-progress__bar { transition: none; }
+  }
+</style>

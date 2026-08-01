@@ -8,17 +8,25 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "verify:content": "node scripts/verify-content-sanitization.mjs"
+    "verify:content": "node scripts/verify-content-sanitization.mjs",
+    "verify:dlb": "tsx --test tests/dlb-initiative.test.ts",
+    "verify:commerce-bridge": "php wordpress-plugin/dokanelbanat-commerce-bridge/tests/verify.php"
   },
   "dependencies": {
     "@astrojs/node": "^9.5.5",
     "@tailwindcss/vite": "^4.2.4",
     "astro": "^5.18.1",
+    "google-auth-library": "^11.0.0",
+    "nodemailer": "^9.0.3",
     "sanitize-html": "^2.17.5",
-    "tailwindcss": "^4.2.4"
+    "tailwindcss": "^4.2.4",
+    "validator": "^13.15.35"
   },
   "devDependencies": {
-    "lightningcss": "^1.32.0"
+    "@types/nodemailer": "^8.0.1",
+    "@types/validator": "^13.15.10",
+    "lightningcss": "^1.32.0",
+    "tsx": "^4.23.1"
   },
   "optionalDependencies": {
     "lightningcss-win32-x64-msvc": "^1.32.0"

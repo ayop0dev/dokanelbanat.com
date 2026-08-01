@@ -205,3 +205,60 @@ M  wordpress-plugin/dokanelbanat-commerce-bridge/tests/verify.php
 ```
 
 Do not include `.claude/settings.local.json` in a product commit.
+
+---
+
+## DLB Initiative — Local Implementation Update
+
+**Date:** 2026-08-01
+**Production status:** Not deployed or externally verified.
+
+The DLB Initiative application system is implemented locally as an isolated Astro feature:
+
+- Public route: `/dlb-initiative`
+- API route: `POST /api/dlb-initiative`
+- Persistence: Google Sheets API using a server-side Service Account
+- Spreadsheet title: `dlb-initiative-2026`
+- Worksheet: `submissions`
+- The exact 28-column header row is initialized automatically only when row 1 is completely empty, then re-read and verified before any applicant data is appended.
+- Email: server-only Nodemailer integration using Titan SMTP over SSL
+- Applicant sender: `DokanElbanat.com <info@dokanelbanat.com>`
+- Administrator recipient: `dlb.egy@gmail.com`
+- WordPress and WooCommerce are not used by this feature.
+- The Commerce Bridge SMTP implementation remains unchanged and continues to serve WordPress/WooCommerce only.
+
+Local DLB verification currently passes:
+
+```text
+32 passed, 0 failed
+```
+
+The production build, focused TypeScript check, existing content verification, and existing Commerce Bridge verification also pass locally.
+
+Required DLB environment variables:
+
+```text
+GOOGLE_SPREADSHEET_ID
+GOOGLE_SERVICE_ACCOUNT_EMAIL
+GOOGLE_PRIVATE_KEY
+SMTP_HOST
+SMTP_PORT
+SMTP_USERNAME
+SMTP_PASSWORD
+SMTP_FROM_NAME
+SMTP_FROM_EMAIL
+DLB_RATE_LIMIT_MAX                 (optional; defaults to 5)
+DLB_RATE_LIMIT_WINDOW_SECONDS      (optional; defaults to 3600)
+```
+
+Remaining external work:
+
+1. Enable the Google Sheets API and create the Service Account credentials.
+2. Create the `dlb-initiative-2026` spreadsheet and `submissions` worksheet; row 1 may remain completely empty for safe first-submission initialization.
+3. Share the spreadsheet with the Service Account as Editor.
+4. Configure all real Google and Titan values in the Hostinger Node environment.
+5. Deploy and verify one real submission, both duplicate paths, applicant email, administrator email, and Email Status updates.
+6. Verify production client-IP resolution and the configured rate-limit behavior.
+7. Verify SPF, DKIM, and DMARC for Titan delivery.
+
+See `docs/dlb-initiative-setup.md` for the ordered deployment checklist and exact sheet headers.

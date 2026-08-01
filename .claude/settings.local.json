@@ -35,7 +35,17 @@
       "Bash(node *)",
       "Bash(php *)",
       "Bash(git *)",
-      "PowerShell(php wordpress-plugin/dokanelbanat-commerce-bridge/tests/verify.php)"
+      "PowerShell(php wordpress-plugin/dokanelbanat-commerce-bridge/tests/verify.php)",
+      "PowerShell(Receive-Job *)",
+      "mcp__plugin_playwright_playwright__browser_resize",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://localhost:4321/\" -TimeoutSec 5 -UseBasicParsing; \"UP: $\\($r.StatusCode\\)\" } catch { \"DOWN: $_\" })",
+      "PowerShell(cd \"D:\\\\claude-Projects\\\\dokanelbanat\"; $script = { Set-Location \"D:\\\\claude-Projects\\\\dokanelbanat\"; & \"C:\\\\Program Files\\\\nodejs\\\\npm.cmd\" run dev -- --port 4321 2>&1 | Out-File \"C:\\\\Users\\\\AIO\\\\AppData\\\\Local\\\\Temp\\\\astro-dev.log\" -Encoding utf8 }; $global:devJob = Start-Job -ScriptBlock $script; \"Job ID: $\\($global:devJob.Id\\)\"; Start-Sleep 10; Get-Content \"C:\\\\Users\\\\AIO\\\\AppData\\\\Local\\\\Temp\\\\astro-dev.log\" -Tail 5 -ErrorAction SilentlyContinue)",
+      "Bash(echo \"PID=$!\")",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "mcp__plugin_playwright_playwright__browser_click",
+      "mcp__plugin_playwright_playwright__browser_console_messages",
+      "Bash(npm ls *)"
     ]
   }
 }
