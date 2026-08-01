@@ -47,10 +47,13 @@ function jsonResponse(data: unknown, status: number, extraHeaders: Record<string
   });
 }
 
-let services: DlbSubmissionServices | undefined;
+let integrations: Pick<DlbSubmissionServices, 'sheets' | 'mail'> | undefined;
 
-function createServices() {
-  services ??= {
+function createServices(
+  stage: NonNullable<DlbSubmissionServices['stage']>,
+  reportError: NonNullable<DlbSubmissionServices['reportError']>,
+): DlbSubmissionServices {
+  integrations ??= {
     sheets: new GoogleSheetsDlbService({
       spreadsheetId: ENV.GOOGLE_SPREADSHEET_ID ?? '',
       serviceAccountEmail: ENV.GOOGLE_SERVICE_ACCOUNT_EMAIL ?? '',
@@ -64,11 +67,30 @@ function createServices() {
       fromName: ENV.SMTP_FROM_NAME ?? '',
       fromEmail: ENV.SMTP_FROM_EMAIL ?? '',
     }),
-    log(event: string, details: Record<string, unknown> = {}) {
-      console.info('[dlb-initiative]', event, details);
-    },
   };
-  return services;
+  return { ...integrations, stage, reportError };
+}
+
+function sanitizedErrorName(error: unknown): string {
+  const name = error instanceof Error ? error.name : 'UnknownError';
+  return /^[A-Za-z][A-Za-z0-9_.-]{0,63}$/.test(name) ? name : 'Error';
+}
+
+function sanitizedErrorCode(error: unknown): string | undefined {
+  if (!error || typeof error !== 'object' || !('code' in error)) return undefined;
+  const code = (error as { code?: unknown }).code;
+  if (typeof code !== 'string' && typeof code !== 'number') return undefined;
+  const normalized = String(code);
+  return /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,63}$/.test(normalized) ? normalized : undefined;
+}
+
+function logOperationalError(stage: string, error: unknown): void {
+  const code = sanitizedErrorCode(error);
+  console.error('[dlb]', {
+    stage,
+    error_name: sanitizedErrorName(error),
+    ...(code ? { error_code: code } : {}),
+  });
 }
 
 export const GET: APIRoute = () => jsonResponse(
@@ -80,7 +102,7 @@ export const GET: APIRoute = () => jsonResponse(
 export async function handleDlbInitiativePost(
   request: Request,
   clientAddress: string,
-  servicesFactory: () => DlbSubmissionServices = createServices,
+  servicesFactory?: () => DlbSubmissionServices,
 ): Promise<Response> {
   const contentType = request.headers.get('content-type')?.split(';', 1)[0].trim().toLowerCase();
   if (contentType !== 'application/json') {
@@ -113,6 +135,15 @@ export async function handleDlbInitiativePost(
     return jsonResponse({ success: false, message: 'تم إرسال محاولات كثيرة. حاولي مرة أخرى لاحقًا.' }, 429);
   }
 
+  let currentStage = 'request';
+  const stage = (nextStage: string) => {
+    currentStage = nextStage;
+    console.info(`[dlb] stage=${nextStage}`);
+  };
+  const reportError = (failedStage: string, error: unknown) => {
+    logOperationalError(failedStage, error);
+  };
+
   try {
     const outcome = await processDlbSubmission(
       body,
@@ -120,7 +151,16 @@ export async function handleDlbInitiativePost(
         clientIp,
         userAgent: request.headers.get('user-agent') ?? '',
       },
-      servicesFactory,
+      servicesFactory
+        ? () => {
+            stage('config');
+            const customServices = servicesFactory();
+            return { ...customServices, stage, reportError };
+          }
+        : () => {
+            stage('config');
+            return createServices(stage, reportError);
+          },
     );
 
     if (outcome.type === 'validation') {
@@ -130,8 +170,8 @@ export async function handleDlbInitiativePost(
       return jsonResponse({ success: false, duplicate: true }, 409);
     }
     return jsonResponse({ success: true, applicationId: outcome.applicationId }, 200);
-  } catch {
-    console.error('[dlb-initiative] submission_failure');
+  } catch (error: unknown) {
+    logOperationalError(currentStage, error);
     return jsonResponse({ success: false, message: GENERIC_ERROR }, 500);
   }
 }
